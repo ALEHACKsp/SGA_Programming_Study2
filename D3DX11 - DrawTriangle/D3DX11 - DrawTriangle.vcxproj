@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Executes\ExeRect.cpp" />
     <ClCompile Include="Executes\ExeTriangle.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Program.cpp" />
@@ -172,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Executes\Execute.h" />
+    <ClInclude Include="Executes\ExeRect.h" />
     <ClInclude Include="Executes\ExeTriangle.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="Renders\GlobalBuffers.h" />

@@ -1,4 +1,4 @@
-cbuffer VS_ViewProjection : register(b0)
+cbuffer VS_ViewProjection : register(b0) // register buffer 0번 쓰겠다는거
 {
     matrix _view;
     matrix _projection;
@@ -31,5 +31,5 @@ PixelInput VS(VertexInput input)
 
 float4 PS(PixelInput input) : SV_TARGET
 {
-    return float4(1, 1, 1, 1);
+    return float4(1, 0, 0, 1);
 }
