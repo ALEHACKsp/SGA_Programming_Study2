@@ -5,6 +5,7 @@ ExeCube::ExeCube(ExecuteValues * values)
 	:Execute(values)
 	, vertexCount(6 * 4), indexCount(6 * 6)
 	, location(0, 0, 0), rotation(0, 0, 0), scale(1, 1, 1)
+	, ratioAll(0.5f), isAllRatio(false)
 	//srv(NULL), srv2(NULL)
 {
 	shader = new Shader(Shaders + L"/Homework/" + L"TextureUV.hlsl");
@@ -153,9 +154,6 @@ ExeCube::~ExeCube()
 
 	for (int i = 0; i < 12; i++)
 		SAFE_RELEASE(srv[i]);
-
-	for (int i = 0; i < 6; i++)
-		dice[i];
 }
 
 void ExeCube::Update()
@@ -270,7 +268,10 @@ void ExeCube::Render()
 	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	colorBuffer->SetPSBuffer(0); // 레지스터 번호
-	//uvBuffer->SetPSBuffer(1);
+	if (isAllRatio) {
+		uvBuffer->Data.ratio = ratioAll;
+		uvBuffer->SetPSBuffer(1);
+	}
 	worldBuffer->SetVSBuffer(1);
 	shader->Render();
 
@@ -287,8 +288,10 @@ void ExeCube::Render()
 		D3D::GetDC()->PSSetShaderResources(0, 1, &srv[i*2 + 0]);
 		D3D::GetDC()->PSSetShaderResources(1, 1, &srv[i*2 + 1]);
 
-		uvBuffer->Data.ratio = ratio[i];
-		uvBuffer->SetPSBuffer(1);
+		if (!isAllRatio) {
+			uvBuffer->Data.ratio = ratio[i];
+			uvBuffer->SetPSBuffer(1);
+		}
 
 		D3D::GetDC()->DrawIndexed(6, i * 6 + 0, 0);
 	}
@@ -301,6 +304,9 @@ void ExeCube::PostRender()
 	// 창 만들 수 있음
 	ImGui::Begin("Texture");
 	{
+		if (ImGui::SliderFloat("Tex Ratio All", &ratioAll, 0.0f, 1.0f))
+			isAllRatio = true;
+
 		for (int i = 0; i < 6; i++) {
 			// ImVec2 안써주면 글자 크기만 하면 됨
 			if (ImGui::Button((str[i] + " Tex1 Select").c_str())) {
@@ -318,9 +324,11 @@ void ExeCube::PostRender()
 			}
 
 			if (srv[i * 2 + 0] != NULL &&
-				srv[i * 2 + 1] != NULL)
+				srv[i * 2 + 1] != NULL &&
 				ImGui::SliderFloat((str[i] + " Tex Ratio").c_str(),
-					&ratio[i], 0.0f, 1.0f);
+					&ratio[i], 0.0f, 1.0f)) {
+				isAllRatio = false;
+			}
 		}
 	}
 	ImGui::End();

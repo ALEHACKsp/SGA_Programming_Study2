@@ -35,9 +35,11 @@ private:
 	ColorBuffer * colorBuffer;
 	UVBuffer * uvBuffer;
 
+	float ratioAll;
 	ID3D11ShaderResourceView * srv[12];
-	ID3D11ShaderResourceView * dice[6];
+	//ID3D11ShaderResourceView * dice[6];
 	float ratio[6];
+	bool isAllRatio;
 
 	D3DXVECTOR3 location;
 	D3DXVECTOR3 rotation;
