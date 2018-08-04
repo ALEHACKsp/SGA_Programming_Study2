@@ -1,4 +1,0 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (D3DX11 - World.vcxproj, D3DX11 - DrawTexture.vcxproj, D3DX11 - TextureUV.vcxproj, D3DX11 - UpdateTextureCoord.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Program.cpp
-  D3DX11 - DrawGrid.vcxproj -> D:\SGA\D3DX11 - DrawGrid\Debug\D3DX11 - DrawGrid.exe
-  D3DX11 - DrawGrid.vcxproj -> D:\SGA\D3DX11 - DrawGrid\Debug\D3DX11 - DrawGrid.pdb (Full PDB)
