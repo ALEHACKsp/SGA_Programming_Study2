@@ -38,6 +38,11 @@ Texture2D Map2 : register(t1); // 2번째 texture
 PixelInput VS(VertexInput input)
 {
     PixelInput output;
+
+    // 이렇게 써놓고 시작하는 사람도 있음
+    //input.position.w = 1.0f;
+    // 여기선 w 안쓰고 있는데 shader가 알아서 1의 근사값으로 넘어오게 해줌
+
     output.position = mul(input.position, _world);
     output.position = mul(output.position, _view);
     output.position = mul(output.position, _projection);

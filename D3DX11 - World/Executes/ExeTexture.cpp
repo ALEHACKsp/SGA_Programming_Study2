@@ -142,6 +142,9 @@ ExeTexture::~ExeTexture()
 
 	SAFE_DELETE(worldBuffer);
 	SAFE_DELETE(shader);
+
+	SAFE_RELEASE(srv);
+	SAFE_RELEASE(srv2);
 }
 
 void ExeTexture::Update()
