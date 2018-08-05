@@ -5,20 +5,14 @@ ExeGrid::ExeGrid(ExecuteValues * values)
 	:Execute(values)
 {
 	// loadInfo 이미지 불러올 때 쓰는거 그냥 읽어오면 256으로 맞춰짐(계산빠르게하기위해서)
-	Texture* heightMap = new Texture(Contents + 
-		//L"HeightMaps/Homework/SGA Logo.png");
-		//L"HeightMaps/Homework/SGA Logo2.png");
-		//L"HeightMaps/Homework/SGA Logo3.png");
-		L"HeightMaps/Homework/SGA Logo4.png");
-		//L"HeightMaps/Homework/test.png");
-		//L"HeightMaps/Homework/test2.png");
+	Texture* heightMap = new Texture(Contents + L"HeightMaps/HeightMap.png");
 	vector<D3DXCOLOR> heights;
 	heightMap->ReadPixels(DXGI_FORMAT_R8G8B8A8_UNORM, &heights);
 
 	width = heightMap->GetWidth() - 1; // 점의 갯수 때문에 -1 한 거
 	height = heightMap->GetHeight() - 1; // 점의 갯수 때문에 -1 한 거
 
-	shader = new Shader(Shaders + L"/Homework/HeightMap.hlsl");
+	shader = new Shader(Shaders + L"006_HeightMap.hlsl");
 	worldBuffer = new WorldBuffer();
 
 	colorBuffer = new ColorBuffer;
@@ -35,19 +29,10 @@ ExeGrid::ExeGrid(ExecuteValues * values)
 
 				vertices[index].Position.x = (float)x;
 				// 선생님은 r값을 씀 그냥 쓰면 너무 높아져서 임의로 나눠준거
-				vertices[index].Position.y = (float)(heights[index].a * 255.0f) / 7.5f;
-				vertices[index].Position.z = (float)(height - z);
-				//vertices[index].Position.z = (float)(height - z);
+				vertices[index].Position.y = (float)(heights[index].r * 255.0f) / 7.5f;
+				vertices[index].Position.z = (float)z;
 
-				if (heights[index].a == 0) {
-					vertices[index].Color = D3DXCOLOR(1, 1, 1, 1);
-				}
-				else {
-					vertices[index].Color = D3DXCOLOR(
-						heights[index].r,
-						heights[index].g,
-						heights[index].b, 1);
-				}
+				vertices[index].Color = D3DXCOLOR(1, 1, 1, 1);
 			}
 		} // for(z) 
 	}
@@ -63,16 +48,16 @@ ExeGrid::ExeGrid(ExecuteValues * values)
 				// 0번 index 좌측 하단
 				indices[index + 0] = (width + 1) * z + x; 
 				// 1번 index 좌측 상단
-				indices[index + 1] = (width + 1) * (z - 1) + x; 
+				indices[index + 1] = (width + 1) * (z + 1) + x; 
 				// 2번 index 우측 하단
 				indices[index + 2] = (width + 1) * z + x + 1; 
 			
 				// 2번 index 우측 하단
 				indices[index + 3] = (width + 1) * z + x + 1; 
 				// 1번 index 좌측 상단
-				indices[index + 4] = (width + 1) * (z - 1) + x; 
+				indices[index + 4] = (width + 1) * (z + 1) + x; 
 				// 3번 index 좌측 상단
-				indices[index + 5] = (width + 1) * (z - 1) + x + 1; 
+				indices[index + 5] = (width + 1) * (z + 1) + x + 1; 
 
 				index += 6;
 			}

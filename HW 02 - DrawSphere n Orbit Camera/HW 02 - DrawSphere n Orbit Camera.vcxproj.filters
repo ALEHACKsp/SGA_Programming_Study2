@@ -48,9 +48,6 @@
     </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Executes\ExeGrid.cpp">
-      <Filter>Executes</Filter>
-    </ClCompile>
     <ClCompile Include="Viewer\Camera.cpp">
       <Filter>Viewer</Filter>
     </ClCompile>
@@ -65,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="Viewer\Orbit.cpp">
       <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ExeGrid.cpp">
+      <Filter>Executes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -127,9 +127,6 @@
       <Filter>Executes</Filter>
     </ClInclude>
     <ClInclude Include="Program.h" />
-    <ClInclude Include="Executes\ExeGrid.h">
-      <Filter>Executes</Filter>
-    </ClInclude>
     <ClInclude Include="Viewer\Camera.h">
       <Filter>Viewer</Filter>
     </ClInclude>
@@ -144,6 +141,9 @@
     </ClInclude>
     <ClInclude Include="Viewer\Orbit.h">
       <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ExeGrid.h">
+      <Filter>Executes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

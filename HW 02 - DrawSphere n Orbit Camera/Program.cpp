@@ -21,6 +21,7 @@ Program::Program()
 
 	//values->mainCamera = new Freedom(20.0f, 1.5f);
 
+	executes.push_back(new ExeGrid(values));
 
 #if USINGVECTOR
 	values->mainCamera = new Orbit(D3DXVECTOR3(0, 0, 0), 5.0f);
