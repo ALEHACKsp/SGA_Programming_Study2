@@ -63,6 +63,9 @@
     <ClCompile Include="Executes\ExeSphere.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
+    <ClCompile Include="Viewer\Orbit.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -138,6 +141,9 @@
     </ClInclude>
     <ClInclude Include="Executes\ExeSphere.h">
       <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Orbit.h">
+      <Filter>Viewer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

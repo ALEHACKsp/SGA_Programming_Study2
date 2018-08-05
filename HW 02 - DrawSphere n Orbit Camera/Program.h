@@ -17,4 +17,8 @@ public:
 private:
 	ExecuteValues* values;
 	vector<class Execute *> executes;
+
+	class Freedom* freedom;
+	class Orbit* orbit;
+	int camState;
 };

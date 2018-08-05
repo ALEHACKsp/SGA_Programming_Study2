@@ -121,6 +121,8 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 		desc.FillMode = D3D11_FILL_WIREFRAME;
 		States::CreateRasterizer(&desc, &fillMode[1]);
 	}
+
+	D3DXMatrixIdentity(&mat);
 }
 
 ExeSphere::~ExeSphere()

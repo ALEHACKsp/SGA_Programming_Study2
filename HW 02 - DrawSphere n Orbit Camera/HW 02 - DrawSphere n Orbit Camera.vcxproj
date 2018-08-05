@@ -171,6 +171,7 @@
     <ClCompile Include="Utilities\Xml.cpp" />
     <ClCompile Include="Viewer\Camera.cpp" />
     <ClCompile Include="Viewer\Freedom.cpp" />
+    <ClCompile Include="Viewer\Orbit.cpp" />
     <ClCompile Include="Viewer\Perspective.cpp" />
     <ClCompile Include="Viewer\Viewport.cpp" />
   </ItemGroup>
@@ -199,6 +200,7 @@
     <ClInclude Include="Utilities\Xml.h" />
     <ClInclude Include="Viewer\Camera.h" />
     <ClInclude Include="Viewer\Freedom.h" />
+    <ClInclude Include="Viewer\Orbit.h" />
     <ClInclude Include="Viewer\Perspective.h" />
     <ClInclude Include="Viewer\Viewport.h" />
   </ItemGroup>

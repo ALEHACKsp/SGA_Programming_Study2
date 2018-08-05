@@ -16,6 +16,8 @@ public:
 	void Render();
 	void PostRender();
 	void ResizeScreen();
+
+	D3DXMATRIX* GetMatrix() { return &mat; }
 private:
 	Shader* shader;
 	WorldBuffer * worldBuffer;
@@ -36,6 +38,7 @@ private:
 	int fillModeNumber;
 	ID3D11RasterizerState* fillMode[2];
 
+	D3DXMATRIX mat;
 private:
 	class ColorBuffer : public ShaderBuffer
 	{

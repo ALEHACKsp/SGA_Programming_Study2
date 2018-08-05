@@ -1,5 +1,3 @@
-﻿  ExeSphere.cpp
-d:\sga\hw 02 - drawsphere n orbit camera\executes\exesphere.cpp(13): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\sga\hw 02 - drawsphere n orbit camera\executes\exesphere.cpp(14): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+﻿  Program.cpp
   HW 02 - DrawSphere n Orbit Camera.vcxproj -> D:\SGA\HW 02 - DrawSphere n Orbit Camera\Debug\HW 02 - DrawSphere n Orbit Camera.exe
   HW 02 - DrawSphere n Orbit Camera.vcxproj -> D:\SGA\HW 02 - DrawSphere n Orbit Camera\Debug\HW 02 - DrawSphere n Orbit Camera.pdb (Full PDB)

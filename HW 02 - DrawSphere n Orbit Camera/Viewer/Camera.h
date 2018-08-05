@@ -40,7 +40,7 @@ public:
 	{
 		//rotation = D3DXVECTOR2(x, y) * (float)D3DX_PI / 180.0f;
 		// 0.01745328f = 이게 1 라디안 값 그냥 실무에선 이렇게 씀
-		rotation = D3DXVECTOR2(x, y) * 0.01745328f; 
+		rotation = D3DXVECTOR2(x, y) * 0.01745328f;
 		Rotation();
 	}
 
