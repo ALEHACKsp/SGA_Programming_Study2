@@ -76,8 +76,19 @@ ExeGrid::ExeGrid(ExecuteValues * values)
 
 	// Draw Normal Line
 	{
-		normalLine = new ExeLine(values, vertices, vertexCount, 
+		D3DXVECTOR3 * startPos = new D3DXVECTOR3[vertexCount];
+		D3DXVECTOR3 * dir = new D3DXVECTOR3[vertexCount];
+
+		for (UINT i = 0; i < vertexCount; i++) {
+			startPos[i] = vertices[i].Position;
+			dir[i] = vertices[i].Normal;
+		}
+
+		normalLine = new ExeLine(values, startPos, dir, vertexCount, 
 			lineLength);
+
+		SAFE_DELETE_ARRAY(startPos);
+		SAFE_DELETE_ARRAY(dir);
 	}
 
 	// CreateVertexBuffer

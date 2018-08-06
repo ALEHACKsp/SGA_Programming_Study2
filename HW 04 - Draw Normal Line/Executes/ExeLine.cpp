@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "ExeLine.h"
 
-ExeLine::ExeLine(ExecuteValues * values, VertexInputType * inputVertices,
-	UINT inputVertexCount, float length)
+ExeLine::ExeLine(ExecuteValues* values,
+	D3DXVECTOR3 * startPos, D3DXVECTOR3 * direction,
+	UINT lineCount, float length)
 	:Execute(values),
-	vertexCount(inputVertexCount * 2), length(length)
+	vertexCount(lineCount * 2), length(length)
 {
 	shader = new Shader(Shaders + L"003_Color.hlsl");
 	worldBuffer = new WorldBuffer();
@@ -18,14 +19,14 @@ ExeLine::ExeLine(ExecuteValues * values, VertexInputType * inputVertices,
 
 		for (UINT i = 0; i < vertexCount; i++) {
 			if (i % 2 == 0) {
-				vertices[i].Position = inputVertices[i / 2].Position;
+				vertices[i].Position = startPos[i / 2];
 				vertices[i].Color = D3DXCOLOR(1,1,1,1);
 			}
 			else {
-				dir[i/2] = inputVertices[i / 2].Normal;
+				dir[i/2] = direction[i / 2];
 				vertices[i].Color = vertices[i - 1].Color;
 				vertices[i].Position =
-					inputVertices[i/2].Position + dir[i/2] * length;
+					startPos[i/2] + dir[i/2] * length;
 			}
 		}
 	}

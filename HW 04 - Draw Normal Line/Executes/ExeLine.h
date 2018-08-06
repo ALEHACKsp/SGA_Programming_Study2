@@ -6,12 +6,11 @@ class ExeLine : public Execute
 private:
 	class ColorBuffer; // 내부 클래스라서 클래스 안에서 전방선언 해줘야함
 
-	typedef VertexTextureNormal VertexInputType;
 	typedef VertexColor VertexType;
 public:
 	ExeLine(ExecuteValues* values, 
-		VertexInputType * inputVertices,
-		UINT inputVertexCount, float length = 10);
+		D3DXVECTOR3 * startPos, D3DXVECTOR3 * direction,
+		UINT lineCount, float length = 10);
 	~ExeLine();
 
 	// Execute을(를) 통해 상속됨
@@ -32,11 +31,13 @@ private:
 	UINT vertexCount, indexCount;
 	
 	VertexType * vertices;
-	UINT * indices;
+	//UINT * indices;
 	
 	ColorBuffer * colorBuffer;
 
+	D3DXVECTOR3 * startPos;
 	D3DXVECTOR3 * dir;
+	UINT lineCount;
 	float length;
 private:
 	// 컬러버퍼 라이트로 쓸꺼
