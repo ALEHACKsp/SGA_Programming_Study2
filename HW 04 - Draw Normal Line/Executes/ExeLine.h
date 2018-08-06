@@ -9,7 +9,7 @@ private:
 	typedef VertexColor VertexType;
 public:
 	ExeLine(ExecuteValues* values, 
-		D3DXVECTOR3 * startPos, D3DXVECTOR3 * direction,
+		D3DXVECTOR3 * startPos, D3DXVECTOR3 * endPos,
 		UINT lineCount, float length = 10);
 	~ExeLine();
 
@@ -20,7 +20,7 @@ public:
 	void PostRender();
 	void ResizeScreen();
 	
-	void ResizeLength(float length);
+	void ResizeLength(D3DXVECTOR3 * endPos);
 private:
 	Shader* shader;
 	WorldBuffer * worldBuffer;
@@ -36,9 +36,8 @@ private:
 	ColorBuffer * colorBuffer;
 
 	D3DXVECTOR3 * startPos;
-	D3DXVECTOR3 * dir;
+	D3DXVECTOR3 * endPos;
 	UINT lineCount;
-	float length;
 private:
 	// 컬러버퍼 라이트로 쓸꺼
 	class ColorBuffer : public ShaderBuffer

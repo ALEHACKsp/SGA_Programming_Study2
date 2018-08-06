@@ -2,10 +2,10 @@
 #include "ExeLine.h"
 
 ExeLine::ExeLine(ExecuteValues* values,
-	D3DXVECTOR3 * startPos, D3DXVECTOR3 * direction,
+	D3DXVECTOR3 * startPos, D3DXVECTOR3 * endPos,
 	UINT lineCount, float length)
 	:Execute(values),
-	vertexCount(lineCount * 2), length(length)
+	vertexCount(lineCount * 2)
 {
 	shader = new Shader(Shaders + L"003_Color.hlsl");
 	worldBuffer = new WorldBuffer();
@@ -15,19 +15,15 @@ ExeLine::ExeLine(ExecuteValues* values,
 	// Create VertexData
 	{
 		vertices = new VertexType[vertexCount];
-		dir = new D3DXVECTOR3[vertexCount / 2];
 
 		for (UINT i = 0; i < vertexCount; i++) {
 			if (i % 2 == 0) {
 				vertices[i].Position = startPos[i / 2];
-				vertices[i].Color = D3DXCOLOR(1,1,1,1);
 			}
 			else {
-				dir[i/2] = direction[i / 2];
-				vertices[i].Color = vertices[i - 1].Color;
-				vertices[i].Position =
-					startPos[i/2] + dir[i/2] * length;
+				vertices[i].Position = endPos[i / 2];
 			}
+			vertices[i].Color = D3DXCOLOR(1, 1, 1, 1);
 		}
 	}
 
@@ -81,8 +77,6 @@ ExeLine::~ExeLine()
 
 	SAFE_DELETE(worldBuffer);
 	SAFE_DELETE(shader);
-
-	SAFE_DELETE_ARRAY(dir);
 }
 
 void ExeLine::Update()
@@ -124,13 +118,13 @@ void ExeLine::ResizeScreen()
 {
 }
 
-void ExeLine::ResizeLength(float length)
+void ExeLine::ResizeLength(D3DXVECTOR3 * endPos)
 {
-	this->length = length;
 	for (UINT i = 0; i < vertexCount; i++) {
+		// 시작점 패스
 		if (i % 2 == 0) continue;
-		vertices[i].Position =
-			vertices[i - 1].Position + dir[i / 2] * length;	
+		// 끝점 변경
+		vertices[i].Position = endPos[i / 2];
 	}
 
 	// 기존 vertexBuffer release

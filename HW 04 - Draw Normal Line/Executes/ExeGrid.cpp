@@ -77,17 +77,20 @@ ExeGrid::ExeGrid(ExecuteValues * values)
 	// Draw Normal Line
 	{
 		D3DXVECTOR3 * startPos = new D3DXVECTOR3[vertexCount];
+		D3DXVECTOR3 * endPos = new D3DXVECTOR3[vertexCount];
 		D3DXVECTOR3 * dir = new D3DXVECTOR3[vertexCount];
 
 		for (UINT i = 0; i < vertexCount; i++) {
 			startPos[i] = vertices[i].Position;
 			dir[i] = vertices[i].Normal;
+			endPos[i] = startPos[i] + dir[i] * lineLength;
 		}
 
-		normalLine = new ExeLine(values, startPos, dir, vertexCount, 
+		normalLine = new ExeLine(values, startPos, endPos, vertexCount, 
 			lineLength);
 
 		SAFE_DELETE_ARRAY(startPos);
+		SAFE_DELETE_ARRAY(endPos);
 		SAFE_DELETE_ARRAY(dir);
 	}
 
@@ -187,8 +190,18 @@ void ExeGrid::PostRender()
 	ImGui::SliderFloat3("Direction", 
 		(float *)colorBuffer->Data.Light, -1, 1);
 	ImGui::SliderInt("DrawLine", &isDrawLine, 0, 1);
-	if (ImGui::SliderFloat("LineLength", &lineLength, 0.01f, 10.0f))
-		normalLine->ResizeLength(lineLength);
+	if (ImGui::SliderFloat("LineLength", &lineLength, 0.01f, 10.0f)) {
+		D3DXVECTOR3 * endPos = new D3DXVECTOR3[vertexCount];
+
+		for (UINT i = 0; i < vertexCount; i++) {
+			endPos[i] = vertices[i].Position 
+				+ vertices[i].Normal * lineLength;
+		}
+
+		normalLine->ResizeLength(endPos);
+
+		SAFE_DELETE(endPos);
+	}
 	normalLine->PostRender();
 }
 
