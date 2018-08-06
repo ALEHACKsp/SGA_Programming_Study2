@@ -19,6 +19,7 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 		vertices = new VertexColor[vertexCount];
 
 		UINT index = 0;
+		// ¿ß ≤¿¡ˆ¡°
 		vertices[index].Position = D3DXVECTOR3(0, radius, 0);
 		vertices[index].Color = D3DXCOLOR(1, 1, 1, 1);
 		index++;
@@ -37,6 +38,7 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 			}
 		}
 
+		// πÿ ≤¿¡ˆ¡°
 		vertices[index].Position = D3DXVECTOR3(0, -radius, 0);
 		vertices[index].Color = D3DXCOLOR(1, 1, 1, 1);
 		index++;
@@ -50,6 +52,7 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 			sliceCount * 3;
 		indices = new UINT[indexCount];
 
+		// ¿≠∏È
 		UINT index = 0;
 		for (UINT i = 1; i <= sliceCount; i++) {
 			indices[index++] = 0;
@@ -57,6 +60,7 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 			indices[index++] = i;
 		}
 
+		// ø∑∏È
 		UINT baseIndex = 1;
 		UINT ringVertexCount = sliceCount + 1;
 		for (UINT i = 0; i < stackCount - 2; i++) {
@@ -71,6 +75,7 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 			}
 		}
 
+		// πŸ¥⁄∏È
 		UINT southPoleIndex = vertexCount - 1;
 		baseIndex = southPoleIndex - ringVertexCount;
 		for (UINT i = 0; i < sliceCount; i++) {
