@@ -60,6 +60,9 @@
     <ClCompile Include="Renders\Texture.cpp">
       <Filter>Renders</Filter>
     </ClCompile>
+    <ClCompile Include="Renders\Material.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -133,6 +136,12 @@
     <ClInclude Include="Renders\Texture.h">
       <Filter>Renders</Filter>
     </ClInclude>
+    <ClInclude Include="Renders\Material.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ICloneable.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -149,6 +158,9 @@
     </Filter>
     <Filter Include="Viewer">
       <UniqueIdentifier>{e5b6a2bd-96a6-4061-a759-2e729951f814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{f2d1f7d4-de9d-4242-9253-c2abfda9fe8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
