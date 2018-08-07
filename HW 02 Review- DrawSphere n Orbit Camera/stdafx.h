@@ -71,3 +71,5 @@ const wstring Textures = L"../_Contents/Textures/";
 #include "./Utilities/Json.h"
 #include "./Utilities/String.h"
 #include "./Utilities/Path.h"
+
+#define CASE 0 // 일진씨 스타일 1 도영씨 스타일 0

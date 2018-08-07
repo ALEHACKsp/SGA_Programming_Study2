@@ -1,9 +1,20 @@
 #include "stdafx.h"
 #include "ExeSphere.h"
 
+#if CASE
 ExeSphere::ExeSphere(ExecuteValues * values)
 	:Execute(values)
 	, radius(5.0f), stackCount(20), sliceCount(20)
+#else
+ExeSphere::ExeSphere(ExecuteValues* values, D3DXVECTOR3* basePos,
+	float scale, float rotateSpeed,
+	bool isTransduction, float dist, D3DXCOLOR color)
+	: Execute(values)
+	, radius(5.0f), stackCount(20), sliceCount(20)
+	, basePos(basePos), scale(scale), rotateSpeed(rotateSpeed)
+	, isTransduction(isTransduction), dist(dist)
+	, pos(*basePos), deltaRadian(0)
+#endif
 {
 	shader = new Shader(Shaders + L"003_Color.hlsl");
 	worldBuffer = new WorldBuffer();
@@ -23,7 +34,11 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 			// 위와 밑의 꼭지점 처리
 			if (i == 0 || i == stackCount) {
 				vertices[index].Position = D3DXVECTOR3(0, i == 0 ? radius : -radius, 0);
+#if CASE
 				vertices[index].Color = D3DXCOLOR(1, 1, 1, 1);
+#else
+				vertices[index].Color = color;
+#endif
 				index++;
 			}
 			else {
@@ -34,7 +49,11 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 						(radius * sinf(phi) * cosf(theta)),
 						(radius * cosf(phi)),
 						(radius * sinf(phi) * sinf(theta)));
+#if CASE
 					vertices[index].Color = D3DXCOLOR(1, 1, 1, 1);
+#else
+					vertices[index].Color = color;
+#endif
 					index++;
 				}
 			}
@@ -48,7 +67,7 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 		
 		UINT index = 0;
 		// 윗면
-		for (UINT i = 0; i < sliceCount; i++) {
+		for (UINT i = 1; i <= sliceCount; i++) {
 			indices[index++] = 0;
 			indices[index++] = i + 1;
 			indices[index++] = i;
@@ -110,6 +129,7 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 		assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
 	}
 
+	// fillMode
 	{
 		fillModeNumber = 0;
 
@@ -122,7 +142,14 @@ ExeSphere::ExeSphere(ExecuteValues * values)
 		States::CreateRasterizer(&desc, &fillMode[1]);
 	}
 
-	D3DXMatrixIdentity(&mat);
+#if CASE
+#else
+	D3DXMatrixIdentity(&matScale);
+	D3DXMatrixScaling(&matScale, scale, scale, scale);
+
+	D3DXMatrixIdentity(&matDist);
+	D3DXMatrixTranslation(&matDist, 0, 0, dist);
+#endif
 }
 
 ExeSphere::~ExeSphere()
@@ -146,7 +173,27 @@ ExeSphere::~ExeSphere()
 
 void ExeSphere::Update()
 {
+#if  CASE
 
+#else
+	deltaRadian += rotateSpeed * Time::Delta();
+
+	D3DXMatrixIdentity(&matTrans);
+	D3DXMatrixIdentity(&matRot);
+
+	D3DXMatrixTranslation(&matTrans, basePos->x, basePos->y, basePos->z);
+	D3DXMatrixRotationY(&matRot, deltaRadian);
+
+	if (isTransduction)
+		// 여기서 2번째 matRot은 공전을 위한 회전행렬
+		matFinal = matScale * matRot * matDist * matRot * matTrans;
+	else
+		matFinal = matScale * matRot * matTrans;
+
+	// 공전할 상대를 위해 내 위치 변경
+	D3DXVec3TransformCoord(&pos, &D3DXVECTOR3(0, 0, 0), &matFinal);
+
+#endif
 }
 
 void ExeSphere::PreRender()
@@ -168,12 +215,19 @@ void ExeSphere::Render()
 	D3D::GetDC()->RSSetState(fillMode[fillModeNumber]);
 
 	colorBuffer->SetPSBuffer(0); // 레지스터 번호
+
+#if  CASE
+#else
+	worldBuffer->SetMatrix(matFinal);
+#endif
+
 	worldBuffer->SetVSBuffer(1);
 	shader->Render();
 
 	// 실제로 그리는 거
 	D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
 }
+
 
 void ExeSphere::PostRender()
 {

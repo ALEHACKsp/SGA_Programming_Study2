@@ -1,7 +1,5 @@
 #pragma once
 
-#define CASE 0 // 일진씨 스타일 1 도영씨 스타일 0
-
 class Camera
 {
 public:

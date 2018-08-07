@@ -33,6 +33,12 @@ public:
 
 	virtual void ResizeScreen() = 0;
 
+#if CASE
+#else
+	//virtual void Position(D3DXVECTOR3 * vec) = 0;
+	virtual D3DXVECTOR3* GetPosition() = 0;
+#endif
+
 protected:
 	ExecuteValues* values;
 };

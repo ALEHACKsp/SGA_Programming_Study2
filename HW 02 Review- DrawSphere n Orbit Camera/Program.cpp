@@ -19,25 +19,36 @@ Program::Program()
 	values->Perspective = new Perspective(desc.Width, desc.Height);
 	values->Viewport = new Viewport(desc.Width, desc.Height);
 
-	executes.push_back(new ExeGrid(values));
-
 	freedom = new Freedom();
-	freedom->Position(0, 0, -20);
-
+	freedom->Position(0, 0, -150);
 	orbit = new Orbit();
-#if CASE
-
-#else
-	orbit->Position(0, 0, -20);
-	orbit->SetMoveValue(-20);
-#endif
-
-	ExeSphere* sphere = new ExeSphere(values);
 
 	values->mainCamera = orbit;
-	executes.push_back(sphere);
 
 	camState = 1;
+
+#if CASE
+	ExeSphere* sphere = new ExeSphere(values);
+	executes.push_back(sphere);
+#else
+	orbit->Position(0, 0, -150);
+	orbit->SetMoveValue(-150);
+
+	// test
+	//ExeSphere* sphere = new ExeSphere(values, &D3DXVECTOR3(0,0,0));
+	//executes.push_back(sphere);
+
+	// Sun
+	executes.push_back(new ExeSphere(values, new D3DXVECTOR3(0, 0, 0), 
+		3, 0.25, false, 0, D3DXCOLOR(1,0,0,1)));
+	// Earth
+	executes.push_back(new ExeSphere(values, new D3DXVECTOR3(0, 0, 0), 
+		1, 0.75, true, 75, D3DXCOLOR(0,0,1,1)));
+	// Moon
+	executes.push_back(new ExeSphere(values, 
+		executes[1]->GetPosition(), 0.3f, 2.0f, true, 10));
+
+#endif
 }
 
 Program::~Program()
