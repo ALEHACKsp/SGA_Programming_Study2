@@ -48,9 +48,6 @@
     </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Executes\ExeGrid.cpp">
-      <Filter>Executes</Filter>
-    </ClCompile>
     <ClCompile Include="Viewer\Camera.cpp">
       <Filter>Viewer</Filter>
     </ClCompile>
@@ -64,6 +61,12 @@
       <Filter>Renders</Filter>
     </ClCompile>
     <ClCompile Include="Fbx\Exporter.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ExPortModel.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Fbx\Utility.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
   </ItemGroup>
@@ -127,9 +130,6 @@
       <Filter>Executes</Filter>
     </ClInclude>
     <ClInclude Include="Program.h" />
-    <ClInclude Include="Executes\ExeGrid.h">
-      <Filter>Executes</Filter>
-    </ClInclude>
     <ClInclude Include="Viewer\Camera.h">
       <Filter>Viewer</Filter>
     </ClInclude>
@@ -146,6 +146,15 @@
       <Filter>Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="Fbx\Exporter.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ExportModel.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Fbx\Type.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="Fbx\Utility.h">
       <Filter>Fbx</Filter>
     </ClInclude>
   </ItemGroup>

@@ -39,4 +39,10 @@ public:
 
 	static void GetFiles(vector<string>* files, string path, string filter, bool bFindSubFolder);
 	static void GetFiles(vector<wstring>* files, wstring path, wstring filter, bool bFindSubFolder);
+
+	static void CreateFolder(string path);
+	static void CreateFolder(wstring path);
+
+	static void CreateFolders(string path);
+	static void CreateFolders(wstring path);
 };

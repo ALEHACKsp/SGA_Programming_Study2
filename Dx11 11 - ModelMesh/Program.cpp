@@ -3,7 +3,7 @@
 
 #include "./Viewer/Freedom.h"
 
-#include "./Executes/ExeGrid.h"
+#include "./Executes/ExportModel.h"
 
 Program::Program()
 {
@@ -21,7 +21,7 @@ Program::Program()
 	values->mainCamera = new Freedom();
 	values->mainCamera->Position(2.23f, 1.26, -3.93f);
 
-	executes.push_back(new ExeGrid(values));
+	executes.push_back(new ExportModel(values));
 
 	//position = D3DXVECTOR3(0, 0, 0);
 	//position = D3DXVECTOR3(2.23f, 1.26f, -3.93f);
