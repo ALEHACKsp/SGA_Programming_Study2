@@ -12,4 +12,42 @@ namespace Fbx
 
 		string DiffuseFile;
 	};
+
+	struct FbxBoneData
+	{
+		int Index; // 자신의 번호
+		string Name;
+
+		int Parent;
+
+		D3DXMATRIX LocalTransform; // local world라고 보면 됨
+		D3DXMATRIX GlobalTransform; // world
+	};
+
+	struct FbxVertex
+	{
+		int ControlPoint;
+		string MaterialName;
+
+		ModelVertexType Vertex;
+	};
+
+	struct FbxMeshPartData
+	{
+		string MaterialName;
+
+		vector<ModelVertexType> Vertices;
+		vector<UINT> Indices;
+	};
+
+	struct FbxMeshData
+	{
+		string Name;
+		int ParentBone;
+
+		FbxMesh* Mesh;
+
+		vector<FbxVertex *> Vertices;
+		vector<FbxMeshPartData *> MeshParts;
+	};
 }

@@ -75,3 +75,97 @@ string Fbx::Utility::GetTextrueFile(FbxProperty & prop)
 
 	return "";
 }
+
+string Fbx::Utility::GetMaterialName(FbxMesh * mesh, int polygonIndex, int cpIndex)
+{
+	// mesh가 소속되어있는 node
+	FbxNode* node = mesh->GetNode();
+	if (node == NULL) return "";
+
+	// fbx surface material의 자식
+	// layer 0 맨 아래껏만씀
+	// 게임에선 계층을 안씀 -> 0계층만 고정시켜씀
+	FbxLayerElementMaterial * material = mesh->GetLayer(0)->GetMaterials();
+
+	if (material == NULL) return "";
+
+	FbxLayerElement::EMappingMode mappingMode = material->GetMappingMode();
+	FbxLayerElement::EReferenceMode refMode = material->GetReferenceMode();
+
+	int mappingIndex = -1;
+	switch (mappingMode)
+	{
+	case FbxLayerElement::eAllSame: mappingIndex = 0; break;
+	case FbxLayerElement::eByPolygon: mappingIndex = polygonIndex; break;
+	case FbxLayerElement::eByControlPoint: mappingIndex = cpIndex; break;
+	case FbxLayerElement::eByPolygonVertex: mappingIndex = polygonIndex * 3; break;
+	default: assert(false); break;
+	}
+
+
+	FbxSurfaceMaterial* findMaterial = NULL;
+	if (refMode == FbxLayerElement::eDirect)
+	{
+		if (mappingIndex < node->GetMaterialCount())
+			findMaterial = node->GetMaterial(mappingIndex);
+	}
+	else if (refMode == FbxLayerElement::eIndexToDirect)
+	{
+		FbxLayerElementArrayTemplate<int>& indexArr = material->GetIndexArray();
+
+		if (mappingIndex < indexArr.GetCount())
+		{
+			int tempIndex = indexArr.GetAt(mappingIndex);
+			
+			if (tempIndex < node->GetMaterialCount())
+				findMaterial = node->GetMaterial(tempIndex);
+		} // if(mappingIndex)
+	} // if(refMode)
+
+	if (findMaterial == NULL)
+		return "";
+
+	return findMaterial->GetName();
+}
+
+D3DXVECTOR2 Fbx::Utility::GetUv(FbxMesh * mesh, int cpIndex, int uvIndex)
+{
+	D3DXVECTOR2 result = D3DXVECTOR2(0, 0);
+	
+	FbxLayerElementUV* uv = mesh->GetLayer(0)->GetUVs();
+	if (uv == NULL) return result;
+
+	FbxLayerElement::EMappingMode mappingMode = uv->GetMappingMode();
+	FbxLayerElement::EReferenceMode refMode = uv->GetReferenceMode();
+
+	switch (mappingMode)
+	{
+		case FbxLayerElement::eByControlPoint:
+		{
+			if (refMode == FbxLayerElement::eDirect)
+			{
+				result.x = (float)uv->GetDirectArray().GetAt(cpIndex).mData[0];
+				result.y = (float)uv->GetDirectArray().GetAt(cpIndex).mData[1];
+			}
+			else if (refMode = FbxLayerElement::eIndexToDirect)
+			{
+				int index = uv->GetIndexArray().GetAt(cpIndex);
+
+				result.x = (float)uv->GetDirectArray().GetAt(index).mData[0];
+				result.y = (float)uv->GetDirectArray().GetAt(index).mData[1];
+			}
+		}
+		break;
+
+		case FbxLayerElement::eByPolygonVertex:
+		{
+			result.x = (float)uv->GetDirectArray().GetAt(uvIndex).mData[0];
+			result.y = (float)uv->GetDirectArray().GetAt(uvIndex).mData[1];
+		}
+		break;
+	}
+	// uv y 가 아래에서 위로 올라가도록 fbx 되어있어서 뒤집은거
+	result.y = 1.0f - result.y;
+
+	return result;
+}

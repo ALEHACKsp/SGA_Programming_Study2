@@ -18,10 +18,16 @@ namespace Fbx
 
 		// fbx에서 재질 정보 정리해서 저장하는 함수
 		void ExportMaterial(wstring saveFolder, wstring fileName);
+		void ExportMesh(wstring saveFolder, wstring fileName);
 
 	private:
 		void ReadMaterial();
 		void WriteMaterial(wstring saveFolder, wstring fileName);
+
+		void ReadBoneData(FbxNode* node, int index, int parent);
+		void ReadMeshData(FbxNode* node, int parentBone);
+		void ReadSkinData();
+		void WriteMeshData(wstring saveFolder, wstring fileName);
 
 	private:
 		FbxManager* manager;
@@ -39,6 +45,9 @@ namespace Fbx
 
 	private:
 		vector<struct FbxMaterial *> materials;
+
+		vector<struct FbxBoneData *> boneDatas;
+		vector<struct FbxMeshData *> meshDatas;
 	};
 }
 

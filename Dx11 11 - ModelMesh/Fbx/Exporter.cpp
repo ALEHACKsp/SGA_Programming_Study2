@@ -3,6 +3,7 @@
 #include "Type.h"
 #include "Utility.h"
 #include "../Utilities/Xml.h"
+#include "../Utilities/BinaryFile.h"
 
 Fbx::Exporter::Exporter(wstring file)
 {
@@ -41,6 +42,14 @@ void Fbx::Exporter::ExportMaterial(wstring saveFolder, wstring fileName)
 {
 	ReadMaterial();
 	WriteMaterial(saveFolder, fileName);
+}
+
+void Fbx::Exporter::ExportMesh(wstring saveFolder, wstring fileName)
+{
+	ReadBoneData(scene->GetRootNode(), -1, -1);
+	ReadSkinData();
+
+	WriteMeshData(saveFolder, fileName);
 }
 
 void Fbx::Exporter::ReadMaterial()
@@ -112,6 +121,8 @@ void Fbx::Exporter::WriteMaterial(wstring saveFolder, wstring fileName)
 		CopyTextureFile(material->DiffuseFile, saveFolder);
 		element->SetText(material->DiffuseFile.c_str());
 		node->LinkEndChild(element);
+
+		SAFE_DELETE(material);
 	}
 
 	//Xml::XMLElement* temp1 = document->NewElement("Temp1");
@@ -124,6 +135,196 @@ void Fbx::Exporter::WriteMaterial(wstring saveFolder, wstring fileName)
 
 	string file = String::ToString(saveFolder + fileName);
 	document->SaveFile(file.c_str());
+}
+
+void Fbx::Exporter::ReadBoneData(FbxNode* node, int index, int parent)
+{
+	FbxNodeAttribute* attribute = node->GetNodeAttribute();
+
+	if (attribute != NULL) 
+	{
+		// TODO: 본 로딩 처리
+
+		// boneDatas.push_back(data); // 이런식으로 할 꺼
+
+		FbxNodeAttribute::EType nodeType = attribute->GetAttributeType();
+		
+		bool b = false;
+		b |= (nodeType == FbxNodeAttribute::eSkeleton);
+		b |= (nodeType == FbxNodeAttribute::eMesh);
+		b |= (nodeType == FbxNodeAttribute::eNull);
+		b |= (nodeType == FbxNodeAttribute::eMarker);
+
+		if (b == true)
+		{
+			FbxBoneData* bone = new FbxBoneData();
+			bone->Index = index;
+			bone->Parent = parent;
+			bone->Name = node->GetName();
+			bone->LocalTransform = Utility::ToMatrix(
+				node->EvaluateLocalTransform());
+			bone->GlobalTransform = Utility::ToMatrix(
+				node->EvaluateGlobalTransform());
+			boneDatas.push_back(bone);
+			
+			if (nodeType == FbxNodeAttribute::eMesh) 
+			{
+				// TODO: 메시 데이터 로딩
+				// scene에다 할 수있는데 오래걸리므로 필요한거만 convert
+				// 2번째 true 바꿔서 다시 넣어주는거 false 반환값
+				// 3번째 false 요즘 방식으로 하는건데 복잡해서 구형 방식으로 true
+				converter->Triangulate(attribute, true, true);
+
+				ReadMeshData(node, index);
+			}
+		} // if(b)
+	}
+
+	for (int i = 0; i < node->GetChildCount(); i++)
+		ReadBoneData(node->GetChild(i), boneDatas.size(), index);
+}
+
+void Fbx::Exporter::ReadMeshData(FbxNode * node, int parentBone)
+{
+	// node attribute가 eMesh가 아니면 null값 반환
+	FbxMesh* mesh = node->GetMesh();
+
+	vector<FbxVertex *> vertices;
+	for (int p = 0; p < mesh->GetPolygonCount(); p++)
+	{
+		// 이 삼각형의 꼭지점의 갯수가 나옴
+		// 3개가 아닐 수도 있음
+		int vertexInPolygon = mesh->GetPolygonSize(p);
+		assert(vertexInPolygon == 3);
+
+		// 2 1 0 순으로 할꺼
+		// 왼손좌표계라서 시계방향으로 가야되는데 
+		// fbx는 반시계로 되어있어서 2 1 0 순으로 하는거
+		for (int vi = vertexInPolygon - 1; vi >= 0; vi--)
+		{
+			FbxVertex* vertex = new FbxVertex();
+
+			// control point index
+			int cpIndex = mesh->GetPolygonVertex(p, vi);
+			vertex->ControlPoint = cpIndex;
+
+
+			D3DXVECTOR3 temp;
+
+			FbxVector4 position = mesh->GetControlPointAt(cpIndex);
+			temp = Utility::ToVector3(position);
+			// Negative - fbx 오른손 좌표계를 왼손좌표계로 돌려주는 함수
+			// 뒤집는 부분에 대해서는 나중에 설명해주실꺼
+			D3DXVec3TransformCoord(&vertex->Vertex.Position, &temp, &Utility::Negative());
+
+			FbxVector4 normal;
+			mesh->GetPolygonVertexNormal(p, vi, normal);
+			normal.Normalize();
+			temp = Utility::ToVector3(normal);
+			D3DXVec3TransformCoord(&vertex->Vertex.Normal, &temp, &Utility::Negative());
+
+
+			// 해당 위치에 있는 정점이 소속될 material의 이름을 가져오는 함수
+			vertex->MaterialName = Utility::GetMaterialName(mesh, p, cpIndex);
+
+			int uvIndex = mesh->GetTextureUVIndex(p, vi);
+			vertex->Vertex.Uv = Utility::GetUv(mesh, cpIndex, uvIndex);
+
+			vertices.push_back(vertex);
+		}
+	} // for(p)
+
+	FbxMeshData* meshData = new FbxMeshData();
+	meshData->Name = node->GetName();
+	meshData->ParentBone = parentBone;
+	meshData->Vertices = vertices;
+	meshData->Mesh = mesh;
+	meshDatas.push_back(meshData);
+
+}
+
+void Fbx::Exporter::ReadSkinData()
+{
+	for (FbxMeshData* meshData : meshDatas)
+	{
+		// mesh part 별로 분할을 해줘야함
+		for (int i = 0; i < scene->GetMaterialCount(); i++)
+		{
+			FbxSurfaceMaterial* material = scene->GetMaterial(i);
+			string materialName = material->GetName();
+
+			vector<FbxVertex *> gather;
+			for (FbxVertex* temp : meshData->Vertices)
+			{
+				if (temp->MaterialName == materialName)
+					gather.push_back(temp);
+			}
+			if (gather.size() < 1) continue;
+
+			FbxMeshPartData* meshPart = new FbxMeshPartData();
+			meshPart->MaterialName = materialName;
+
+			for (FbxVertex* temp : gather)
+			{
+				ModelVertexType vertex;
+				vertex = temp->Vertex;
+
+				meshPart->Vertices.push_back(vertex);
+				meshPart->Indices.push_back(meshPart->Indices.size());
+			}
+			meshData->MeshParts.push_back(meshPart);
+		}
+	}
+}
+
+void Fbx::Exporter::WriteMeshData(wstring saveFolder, wstring fileName)
+{
+	Path::CreateFolder(saveFolder);
+
+	BinaryWriter* w = new BinaryWriter();
+	// 저장할 파일 열기
+	w->Open(saveFolder + fileName);
+
+	// Bond Data 저장
+	w->UInt(boneDatas.size());
+	for (FbxBoneData* bone : boneDatas)
+	{
+		w->Int(bone->Index);
+		w->String(bone->Name);
+		w->Int(bone->Parent);
+
+		w->Matrix(bone->LocalTransform);
+		w->Matrix(bone->GlobalTransform);
+
+		SAFE_DELETE(bone);
+	}
+
+	// Mesh Data
+	w->UInt(meshDatas.size());
+	for (FbxMeshData* meshData : meshDatas)
+	{
+		w->String(meshData->Name);
+		w->Int(meshData->ParentBone);
+
+		w->UInt(meshData->MeshParts.size());
+		for (FbxMeshPartData* part : meshData->MeshParts)
+		{
+			w->String(part->MaterialName);
+
+			w->UInt(part->Vertices.size());
+			w->Byte(&part->Vertices[0], sizeof(ModelVertexType) * part->Vertices.size());
+
+			w->UInt(part->Indices.size());
+			w->Byte(&part->Indices[0], sizeof(UINT) * part->Indices.size());
+
+			SAFE_DELETE(part);
+		}
+
+		SAFE_DELETE(meshData);
+	}
+
+	w->Close();
+	SAFE_DELETE(w);
 }
 
 void Fbx::Exporter::WriteXmlColor(Xml::XMLDocument* document, Xml::XMLElement * element, D3DXCOLOR & color)
@@ -157,6 +358,8 @@ void Fbx::Exporter::CopyTextureFile(OUT string & textureFile, wstring & saveFold
 	if (Path::ExistFile(textureFile) == true)
 		// api 함수
 		// 마지막 인자는 성공여부 체크
+		// 1번째 인자 복사할 파일 경로, 2번째 인자 새로운 파일 경로, 
+		// false 덮어쓰기, true면 같은 파일 있으면 fail
 		CopyFile(file.c_str(), (saveFolder + fileName).c_str(), FALSE);
 
 	textureFile = String::ToString(fileName);

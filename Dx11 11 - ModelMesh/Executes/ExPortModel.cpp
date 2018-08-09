@@ -15,6 +15,7 @@ ExportModel::ExportModel(ExecuteValues * values)
 	// Tank
 	exporter = new Fbx::Exporter(Assets + L"Tank/Tank.fbx");
 	exporter->ExportMaterial(Models + L"/Tank/", L"Tank.material");
+	exporter->ExportMesh(Models + L"/Tank/", L"Tank.mesh");
 
 	SAFE_DELETE(exporter);
 }
