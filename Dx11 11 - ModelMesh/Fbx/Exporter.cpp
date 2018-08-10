@@ -70,6 +70,7 @@ void Fbx::Exporter::ReadMaterial()
 		{
 			FbxSurfaceLambert* lambert = (FbxSurfaceLambert *)fbxMaterial;
 
+			// 조명에는 투명도 안들어가서 alpha 값 강도로 씀
 			material->Diffuse = Utility::ToColor
 				(lambert->Diffuse, lambert->DiffuseFactor);
 		}
@@ -78,6 +79,7 @@ void Fbx::Exporter::ReadMaterial()
 		FbxProperty prop;
 
 		// 변수앞에 s는 문자열이란 뜻 e는 enum
+		// 텍스처 파일 fbx 안에 압축되어있으면 주소 받아오는거
 		prop = fbxMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
 		material->DiffuseFile = Utility::GetTextrueFile(prop);
 
@@ -98,13 +100,12 @@ void Fbx::Exporter::WriteMaterial(wstring saveFolder, wstring fileName)
 	root->SetAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 	root->SetAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
 	document->LinkEndChild(root);
-
 	// 버전 맞춰야되서 위에 부분 추가한거
 
 	for (FbxMaterial * material : materials)
 	{
 		Xml::XMLElement* node = document->NewElement("Material");
-		root->LinkEndChild(node);
+		root->LinkEndChild(node); // 뒤에 붙이려고 하는거
 
 		Xml::XMLElement * element = NULL;
 
@@ -180,6 +181,7 @@ void Fbx::Exporter::ReadBoneData(FbxNode* node, int index, int parent)
 		} // if(b)
 	}
 
+	// 트리구조라 재귀함수로 노드들 접근할꺼 
 	for (int i = 0; i < node->GetChildCount(); i++)
 		ReadBoneData(node->GetChild(i), boneDatas.size(), index);
 }
@@ -221,6 +223,8 @@ void Fbx::Exporter::ReadMeshData(FbxNode * node, int parentBone)
 			mesh->GetPolygonVertexNormal(p, vi, normal);
 			normal.Normalize();
 			temp = Utility::ToVector3(normal);
+			// TrasnformCoord가 아니라 TransformNormal로 해야되는데
+			// TrasnformCoord로 해도 이동변환이 없어서 노멀이랑 같아서 Coord로 한거
 			D3DXVec3TransformCoord(&vertex->Vertex.Normal, &temp, &Utility::Negative());
 
 
@@ -270,6 +274,7 @@ void Fbx::Exporter::ReadSkinData()
 				vertex = temp->Vertex;
 
 				meshPart->Vertices.push_back(vertex);
+				// 추후 index 최적화해서 넣을거 일단은 순서대로 넣는식으로 구현
 				meshPart->Indices.push_back(meshPart->Indices.size());
 			}
 			meshData->MeshParts.push_back(meshPart);

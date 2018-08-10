@@ -63,9 +63,6 @@
     <ClCompile Include="Fbx\Exporter.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
-    <ClCompile Include="Executes\ExPortModel.cpp">
-      <Filter>Executes</Filter>
-    </ClCompile>
     <ClCompile Include="Fbx\Utility.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
@@ -80,6 +77,18 @@
     </ClCompile>
     <ClCompile Include="Model\ModelMesh.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelReader.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ExportModel.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameRender.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameModel.cpp">
+      <Filter>Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +190,12 @@
     <ClInclude Include="Model\ModelMesh.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\GameRender.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameModel.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -206,6 +221,9 @@
     </Filter>
     <Filter Include="Model">
       <UniqueIdentifier>{58c67065-48bd-4ff3-a255-b5259ce359ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{01d600eb-d07c-4c1e-925a-802b79927e9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

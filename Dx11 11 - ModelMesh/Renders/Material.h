@@ -10,6 +10,9 @@ public:
 	Material(wstring shaderFile);
 	~Material();
 
+	void Name(wstring val) { name = val; }
+	wstring Name() { return name; }
+
 	Shader* GetShader() { return shader; }
 	void SetShader(string file);
 	void SetShader(wstring file);
@@ -28,6 +31,7 @@ public:
 	void PSSetBuffer();
 
 private:
+	wstring name;
 	Buffer* buffer;
 
 	bool bShaderDelete; // Shader에서 입력된거면 내부에서 안지우려고 쓰는거

@@ -9,6 +9,16 @@ cbuffer VS_World : register(b1)
     matrix World;
 }
 
+cbuffer VS_Bones : register(b2)
+{
+    matrix Bones[128];
+}
+
+cbuffer VS_BoneIndex : register(b3)
+{
+    int BoneIndex;
+}
+
 cbuffer PS_Light : register(b0) // 버텍스 쉐이더랑 별개이므로 다시 0번부터
 {
     float3 Direction;
