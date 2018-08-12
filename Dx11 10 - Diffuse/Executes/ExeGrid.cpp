@@ -12,12 +12,12 @@ ExeGrid::ExeGrid(ExecuteValues * values)
 	width = heightMap->GetWidth() - 1; // 점의 갯수 때문에 -1 한 거
 	height = heightMap->GetHeight() - 1; // 점의 갯수 때문에 -1 한 거
 
-	material = new Material(Shaders + L"008_Diffuse.hlsl");
-	material->SetDiffuseMap(Contents + L"Textures/Dirt.png");
+	material = new Material(Shaders + L"009_Diffuse.hlsl");
+	material->SetDiffuseMap(Textures + L"Dirt.png");
 
 	worldBuffer = new WorldBuffer();
 
-	texture[0] = new Texture(Contents + L"Textures/Wall.png");
+	texture[0] = new Texture(Textures + L"Wall.png");
 	texture[1] = new Texture(Contents + L"HeightMaps/AlphaMap.png");
 
 	// Create VertexData

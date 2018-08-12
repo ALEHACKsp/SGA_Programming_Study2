@@ -30,7 +30,9 @@ float4 PS(PixelInput input) : SV_TARGET
     float4 color = 0;
 
     color = DiffuseMap.Sample(DiffuseSampler, input.Uv);
-    DiffuseLight(color, input.Normal);
+
+    //float diffuse = DiffuseMap.Sample(DiffuseSampler, input.Uv);
+    //DiffuseLight(color, diffuse, input.Normal);
 
     return color;
     // 디버깅 하기 위해서 normal을 반환형인 색상값으로

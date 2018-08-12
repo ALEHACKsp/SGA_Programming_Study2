@@ -8,7 +8,7 @@ GameModel::GameModel(wstring matFolder, wstring matFile, wstring meshFolder, wst
 	model->ReadMaterial(matFolder, matFile);
 	model->ReadMesh(meshFolder, meshFile);
 
-	shader = new Shader(Shaders + L"009_Model.hlsl");
+	shader = new Shader(Shaders + L"010_Model.hlsl");
 	for (Material* material : model->Materials())
 		material->SetShader(shader);
 

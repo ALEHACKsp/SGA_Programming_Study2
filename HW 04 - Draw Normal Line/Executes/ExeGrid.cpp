@@ -20,8 +20,8 @@ ExeGrid::ExeGrid(ExecuteValues * values)
 
 	colorBuffer = new ColorBuffer;
 
-	texture[0] = new Texture(Contents + L"Textures/Dirt.png");
-	texture[1] = new Texture(Contents + L"Textures/Wall.png");
+	texture[0] = new Texture(Textures + L"/Dirt.png");
+	texture[1] = new Texture(Textures + L"/Wall.png");
 	texture[2] = new Texture(Contents + L"HeightMaps/AlphaMap.png");
 
 	// Create VertexData
@@ -86,8 +86,7 @@ ExeGrid::ExeGrid(ExecuteValues * values)
 			endPos[i] = startPos[i] + dir[i] * lineLength;
 		}
 
-		normalLine = new ExeLine(values, startPos, endPos, vertexCount, 
-			lineLength);
+		normalLine = new ExeLine(values, startPos, endPos, vertexCount);
 
 		SAFE_DELETE_ARRAY(startPos);
 		SAFE_DELETE_ARRAY(endPos);

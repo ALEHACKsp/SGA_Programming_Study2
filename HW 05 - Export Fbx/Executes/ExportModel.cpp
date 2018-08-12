@@ -18,10 +18,10 @@ ExportModel::ExportModel(ExecuteValues * values)
 
 	wstring path = L"Meshes/";
 	wstring meshes[] = {
+		L"Plane",
 		L"Capsule",
 		L"Cube",
 		L"Cylinder",
-		L"Plane",
 		L"Quad",
 		L"Sphere",
 		L"Teapot" };

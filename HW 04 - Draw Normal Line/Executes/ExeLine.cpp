@@ -3,7 +3,7 @@
 
 ExeLine::ExeLine(ExecuteValues* values,
 	D3DXVECTOR3 * startPos, D3DXVECTOR3 * endPos,
-	UINT lineCount, float length)
+	UINT lineCount)
 	:Execute(values),
 	vertexCount(lineCount * 2)
 {
