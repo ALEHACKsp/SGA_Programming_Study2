@@ -85,6 +85,7 @@ void Fbx::Exporter::ReadMaterial()
 
 		materials.push_back(material);
 	}
+	int a = 10;
 }
 
 void Fbx::Exporter::WriteMaterial(wstring saveFolder, wstring fileName)
