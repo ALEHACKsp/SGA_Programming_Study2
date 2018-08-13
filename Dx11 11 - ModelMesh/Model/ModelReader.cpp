@@ -47,8 +47,10 @@ void Model::ReadMaterial(wstring folder, wstring file)
 
 
 		node = node->NextSiblingElement();
-		wstring diffuseTexture = String::ToWString(node->GetText());
-		material->SetDiffuseMap(folder + diffuseTexture);
+		if (node->GetText() != "") {
+			wstring diffuseTexture = String::ToWString(node->GetText());
+			material->SetDiffuseMap(folder + diffuseTexture);
+		}
 
 		materials.push_back(material);
 		matNode = matNode->NextSiblingElement();

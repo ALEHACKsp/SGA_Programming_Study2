@@ -30,6 +30,11 @@ ExportModel::ExportModel(ExecuteValues * values)
 		Models + L"/Tank/", L"Tank.mesh"
 	);
 
+	//tank = new GameModel(
+	//	Models + L"/Meshes/Cube/", L"Cube.material",
+	//	Models + L"/Meshes/Cube/", L"Cube.mesh"
+	//);
+
 	int a = 10;
 }
 
