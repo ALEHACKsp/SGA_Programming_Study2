@@ -9,7 +9,7 @@ struct PixelInput
 
 PixelInput VS(VertexTextureNormal input)
 {
-    PixelInput output;
+     PixelInput output;
 
     matrix world = Bones[BoneIndex];
 
@@ -19,6 +19,7 @@ PixelInput VS(VertexTextureNormal input)
     output.Position = mul(output.Position, Projection);
 
     output.Normal = mul(input.Normal, (float3x3) world);
+    output.Normal = normalize(output.Normal);
 
     output.Uv = input.Uv;
 
@@ -29,8 +30,8 @@ float4 PS(PixelInput input) : SV_TARGET
 {
     float4 color = 0;
 
-    color = DiffuseMap.Sample(DiffuseSampler, input.Uv);
-    DiffuseLight(color, input.Normal);
+    float4 diffuse = DiffuseMap.Sample(DiffuseSampler, input.Uv);
+    DiffuseLighting(color, diffuse, input.Normal);
 
     return color;
     // 디버깅 하기 위해서 normal을 반환형인 색상값으로

@@ -7,7 +7,7 @@ public:
 	~Orbit();
 
 	void Update();
-#if CASE
+#if CASE // 1 일진씨 스타일 0 도영씨 스타일
 	Orbit(float moveSpeed = 20.0f, float rotationSpeed = 2.5f);
 
 	void View();

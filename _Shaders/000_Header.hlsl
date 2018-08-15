@@ -68,7 +68,7 @@ struct VertexColorTextureNormal
 };
 
 // 색상만을 쓸 때
-void DiffuseLight(inout float4 color, float3 normal)
+void DiffuseLighting(inout float4 color, float3 normal)
 {
     //float3 light = _direction * -1;
     // 빛의 강도
@@ -76,6 +76,16 @@ void DiffuseLight(inout float4 color, float3 normal)
     float intensity = saturate(dot(normal, -Direction));
 
     color = color + Diffuse * intensity;
+}
+
+void DiffuseLighting(inout float4 color, float4 diffuse, float3 normal)
+{
+    //float3 light = _direction * -1;
+    // 빛의 강도
+    // saturate 0 ~ 1까지 제한해주는 함수
+    float intensity = saturate(dot(normal, -Direction));
+
+    color = color + Diffuse * diffuse * intensity;
 }
 
 // inout은 c++ reference 같은거라고 보면 됨
