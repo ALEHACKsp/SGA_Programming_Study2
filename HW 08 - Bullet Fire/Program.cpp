@@ -7,8 +7,8 @@
 #include "./Executes/ExeHomework.h"
 
 Program::Program()
-	: startCamPos(-26.2f, 48.1f, -27.8f)
-	, startCamRot(0.90f, 0.74f)
+	: startCamPos(-28.0f, 36.9f, -15.3f)
+	, startCamRot(0.94f, 0.81f)
 {
 	States::Create();
 
@@ -31,6 +31,9 @@ Program::Program()
 
 	// -26.2f, 48.1f, -27.8f
 	// 0.90f, 0.74f
+
+	// -28.0f, 36.9f, -15.3f
+	// 0.94f, 0.81f
 }
 
 Program::~Program()

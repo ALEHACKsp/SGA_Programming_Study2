@@ -52,7 +52,7 @@ void GameBullet::PostRender()
 	ImGui::TextColored(ImVec4(color.r, color.g, color.b, color.a),
 		String::ToString(name).c_str());
 
-	__super::PostRender();	
+	//__super::PostRender();	
 }
 
 bool GameBullet::IsCollision(GameModel * model)

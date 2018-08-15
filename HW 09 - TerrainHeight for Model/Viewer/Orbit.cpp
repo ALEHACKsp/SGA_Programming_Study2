@@ -20,15 +20,23 @@ void Orbit::Update()
 
 		if (Mouse::Get()->Press(1))
 		{
-			if (Keyboard::Get()->Press('A'))
-				rotation.y += rotationSpeed * Time::Delta();
-			else if (Keyboard::Get()->Press('D'))
-				rotation.y -= rotationSpeed * Time::Delta();
+			// 마우스 이동값 가져오는거 얼마만큼 이동했는지의 차값
+			D3DXVECTOR3 val = Mouse::Get()->GetMoveValue();
 
-			if (Keyboard::Get()->Press('W'))
-				rotation.x += rotationSpeed * Time::Delta();
-			else if (Keyboard::Get()->Press('S'))
-				rotation.x -= rotationSpeed * Time::Delta();
+			// 마우스 위아래로 움직이면 x축 회전이라 y인거
+			rotation.x += val.y * rotationSpeed * Time::Delta();
+			// 좌우회전이 y축 회전
+			rotation.y += val.x * rotationSpeed * Time::Delta();
+
+			//if (Keyboard::Get()->Press('A'))
+			//	rotation.y += rotationSpeed * Time::Delta();
+			//else if (Keyboard::Get()->Press('D'))
+			//	rotation.y -= rotationSpeed * Time::Delta();
+
+			//if (Keyboard::Get()->Press('W'))
+			//	rotation.x += rotationSpeed * Time::Delta();
+			//else if (Keyboard::Get()->Press('S'))
+			//	rotation.x -= rotationSpeed * Time::Delta();
 
 			Rotation(rotation.x, rotation.y);
 		}

@@ -12,26 +12,26 @@ ExeHomework::ExeHomework(ExecuteValues * values)
 {
 	// Model Add
 	{
-		Models::AddMaterial(Materials + L"Meshes/Capsule.material");
-		Models::AddMesh(Models + L"Meshes/Capsule.mesh");
+		//Models::AddMaterial(Materials + L"Meshes/Capsule.material");
+		//Models::AddMesh(Models + L"Meshes/Capsule.mesh");
 
 		Models::AddMaterial(Materials + L"Meshes/Cube.material");
 		Models::AddMesh(Models + L"Meshes/Cube.mesh");
 
-		Models::AddMaterial(Materials + L"Meshes/Cylinder.material");
-		Models::AddMesh(Models + L"Meshes/Cylinder.mesh");
+		//Models::AddMaterial(Materials + L"Meshes/Cylinder.material");
+		//Models::AddMesh(Models + L"Meshes/Cylinder.mesh");
 
 		Models::AddMaterial(Materials + L"Meshes/Sphere.material");
 		Models::AddMesh(Models + L"Meshes/Sphere.mesh");
 
-		Models::AddMaterial(Materials + L"Meshes/Teapot.material");
-		Models::AddMesh(Models + L"Meshes/Teapot.mesh");
+		//Models::AddMaterial(Materials + L"Meshes/Teapot.material");
+		//Models::AddMesh(Models + L"Meshes/Teapot.mesh");
 
-		Models::AddMaterial(Materials + L"Meshes/Plane.material");
-		Models::AddMesh(Models + L"Meshes/Plane.mesh");
+		//Models::AddMaterial(Materials + L"Meshes/Plane.material");
+		//Models::AddMesh(Models + L"Meshes/Plane.mesh");
 
-		Models::AddMaterial(Materials + L"Meshes/Quad.material");
-		Models::AddMesh(Models + L"Meshes/Quad.mesh");
+		//Models::AddMaterial(Materials + L"Meshes/Quad.material");
+		//Models::AddMesh(Models + L"Meshes/Quad.mesh");
 
 		Models::AddMaterial(Models + L"Tank/Tank.material");
 		Models::AddMesh(Models + L"Tank/Tank.mesh");
@@ -110,6 +110,7 @@ void ExeHomework::Render()
 
 void ExeHomework::PostRender()
 {
+	/*
 	D3DXVECTOR3 min, max;
 	if (models.size() > 0) {
 		models[0]->GetModel()->MinMaxVertex(&min, &max);
@@ -117,8 +118,9 @@ void ExeHomework::PostRender()
 
 	wstring matFolder = Materials + L"Meshes/";
 	wstring meshFolder = Models + L"Meshes/";
-
+	*/
 	ImGui::Begin("Model", 0, ImGuiWindowFlags_MenuBar);
+	/*
 	if (ImGui::BeginMenuBar())
 	{
 		if (ImGui::BeginMenu("Create"))
@@ -191,10 +193,11 @@ void ExeHomework::PostRender()
 		}
 		ImGui::EndMenuBar();
 	}
-
+	*/
 	ImGui::TextColored(ImVec4(1, 1, 0, 1), "Model Info");
 	
 	for (UINT i = 0; i < models.size(); i++) {
+		if (i != 1) continue;
 		string name = String::ToString(models[i]->Name()) + " " + to_string(i);
 		ImGui::TextColored(ImVec4(0, 1, 0, 1), name.c_str());
 
