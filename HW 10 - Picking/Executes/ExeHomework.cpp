@@ -72,7 +72,7 @@ void ExeHomework::PostRender()
 	//	picked.x, picked.y, picked.z);
 
 	ImGui::Begin("Model");
-	for (int i=1; i<models.size(); i++)
+	for (UINT i=1; i<models.size(); i++)
 	{
 		GameModel * model = models[i];
 		vector<Material*> materials = model->GetModel()->Materials();
