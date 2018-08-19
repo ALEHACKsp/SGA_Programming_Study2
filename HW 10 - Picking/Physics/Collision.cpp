@@ -3,7 +3,7 @@
 
 #include "RectCollider.h"
 
-bool Collision::IsPeek(Camera * camera, Viewport * viewport, 
+bool Collision::IsPick(Camera * camera, Viewport * viewport, 
 	Perspective * perspective, D3DXVECTOR3 & p0, D3DXVECTOR3 & p1, D3DXVECTOR3 & p2
 	)
 {

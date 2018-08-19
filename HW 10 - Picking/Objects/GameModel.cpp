@@ -116,7 +116,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		bool temp;
 
 		// 앞
-		temp = Collision::IsPeek(camera, viewport, perspective,
+		temp = Collision::IsPick(camera, viewport, perspective,
 			p[0], p[1], p[2]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[0],p[1],p[2],p[0] };
@@ -124,7 +124,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		}
 		result |= temp;
 
-		temp = Collision::IsPeek(camera, viewport, perspective,
+		temp = Collision::IsPick(camera, viewport, perspective,
 			p[2], p[1], p[3]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[2],p[1],p[3],p[2] };
@@ -133,7 +133,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		result |= temp;
 
 		// 뒤
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[6], p[7], p[4]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[6],p[7],p[4],p[6] };
@@ -141,7 +141,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		}
 		result |= temp;
 
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[4], p[7], p[5]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[4],p[7],p[5],p[4] };
@@ -150,7 +150,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		result |= temp;
 
 		// 왼쪽
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[4], p[5], p[0]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[4],p[5],p[0],p[4] };
@@ -158,7 +158,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		}
 		result |= temp;
 
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[0], p[5], p[1]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[0],p[5],p[1],p[0] };
@@ -167,7 +167,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		result |= temp;
 
 		// 오른쪽
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[2], p[3], p[6]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[2],p[3],p[6],p[2] };
@@ -175,7 +175,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		}
 		result |= temp;
 
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[6], p[3], p[7]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[6],p[3],p[7],p[6] };
@@ -184,7 +184,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		result |= temp;
 
 		// 위
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[1], p[5], p[3]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[1],p[5],p[3],p[1] };
@@ -192,7 +192,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		}
 		result |= temp;
 
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[3], p[5], p[7]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[3],p[5],p[7],p[3] };
@@ -201,7 +201,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		result |= temp;
 
 		// 아래
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[0], p[4], p[6]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[0],p[4],p[6],p[0] };
@@ -209,7 +209,7 @@ bool GameModel::IsMouseCollision(Camera * camera, Viewport * viewport, Perspecti
 		}
 		result |= temp;
 
-		temp = Collision::IsPeek(camera, viewport, perspective, 
+		temp = Collision::IsPick(camera, viewport, perspective, 
 			p[6], p[0], p[2]);
 		if (temp) {
 			D3DXVECTOR3 lines[] = { p[6],p[0],p[2],p[6] };

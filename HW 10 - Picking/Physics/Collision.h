@@ -6,7 +6,7 @@ public:
 	Collision();
 	~Collision();
 
-	static bool IsPeek(
+	static bool IsPick(
 		class Camera* camera, class Viewport * viewport,
 		class Perspective * perspective,
 		D3DXVECTOR3& p0, D3DXVECTOR3& p1, D3DXVECTOR3& p2);
