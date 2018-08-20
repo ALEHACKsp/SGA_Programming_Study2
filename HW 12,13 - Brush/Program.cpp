@@ -22,7 +22,7 @@ Program::Program()
 
 	values->MainCamera = new Freedom();
 	values->MainCamera->RotationDegree(90, 0);
-	values->MainCamera->Position(100, 100, 100);
+	values->MainCamera->Position(60, 100, 38);
 	//values->MainCamera->Position(82.18f, 27.00f, -29.00f);
 
 	executes.push_back(new DrawLandScape(values));
