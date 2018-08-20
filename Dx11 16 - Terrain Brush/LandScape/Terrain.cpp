@@ -55,13 +55,26 @@ void Terrain::Update()
 		// 마우스 클릭 시 높이 조정
 		if (Mouse::Get()->Press(0)) 
 		{
-			AdjustY(position);
+			if (type != 0)
+				AdjustY(position);
 		}
 	}
 }
 
 void Terrain::Render()
 {
+	ImGui::Separator();
+	ImGui::Text("Brush");
+	ImGui::Separator();
+	ImGui::SliderInt("Type", &brushBuffer->Data.Type, 0, 2);
+	ImGui::SliderInt("Range", &brushBuffer->Data.Range, 1, 5);
+	ImGui::SliderFloat3("Color", (float*)&brushBuffer->Data.Color, 0, 1);
+	
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	brushBuffer->SetVSBuffer(10);
+
 	UINT stride = sizeof(VertexTextureNormal);
 	UINT offset = 0;
 
@@ -225,9 +238,9 @@ void Terrain::AdjustY(D3DXVECTOR3 & location)
 	// directx 12에 있는 구조체
 	D3D11_BOX box;
 	box.left = (UINT)location.x - size;
+	box.bottom = (UINT)location.z - size;
 	box.top = (UINT)location.z + size;
 	box.right = (UINT)location.x + size;
-	box.bottom = (UINT)location.z - size;
 
 	// 범위 체크
 	if (box.left < 0) box.left = 0;

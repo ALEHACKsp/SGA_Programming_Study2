@@ -21,18 +21,11 @@ Program::Program()
 	values->Viewport = new Viewport(desc.Width, desc.Height);
 
 	values->MainCamera = new Freedom();
-	values->MainCamera->RotationDegree(25, 0);
-	//values->MainCamera->Position(82.18f, 27.00f, -29.00f);
-	values->MainCamera->Position(0, 20, 0);
+	values->MainCamera->RotationDegree(24, 0);
+	values->MainCamera->Position(82.18f, 27.00f, -29.00f);
 
-	//executes.push_back(new ExportModel(values));
-	//executes.push_back(new ExportMesh(values));
 	executes.push_back(new DrawLandScape(values));
 
-	//position = D3DXVECTOR3(0, 0, 0);
-	//position = D3DXVECTOR3(2.23f, 1.26f, -3.93f);
-	// 이 방법도 가능함
-	//position = { 0, 0, 0 };
 }
 
 Program::~Program()
