@@ -1,0 +1,15 @@
+﻿  Terrain.cpp
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(80): warning C4800: 'int': 'true' 또는 'false'로 bool 값을 강제하고 있습니다(성능 경고).
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(295): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(296): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(297): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(298): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(329): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(343): warning C4018: '>': signed 또는 unsigned가 일치하지 않습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(436): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(437): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(438): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(439): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\hw 12,13 review - brush\landscape\terrain.cpp(546): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  D3DX11.vcxproj -> D:\SGA\HW 12,13 Review - Brush\Debug\D3DX11.exe
+  D3DX11.vcxproj -> D:\SGA\HW 12,13 Review - Brush\Debug\D3DX11.pdb (Full PDB)

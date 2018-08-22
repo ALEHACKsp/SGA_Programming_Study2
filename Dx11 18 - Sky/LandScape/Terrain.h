@@ -16,7 +16,6 @@ public:
 	
 	// 조정하려는 영역 location
 	void AdjustY(D3DXVECTOR3& location);
-
 private:
 	void CreateData();
 	void CreateNormalData();
@@ -51,7 +50,7 @@ private:
 	public:
 		BrushBuffer() : ShaderBuffer(&Data, sizeof(Data))
 		{
-			Data.Type = 1;
+			Data.Type = 0;
 			Data.Location = D3DXVECTOR3(0, 0, 0);
 			Data.Range = 2;
 			Data.Color = D3DXVECTOR3(0, 1, 0);
@@ -68,4 +67,7 @@ private:
 	};
 
 	BrushBuffer* brushBuffer;
+
+public:
+	BrushBuffer* GetBrushBuffer() { return brushBuffer; }
 };

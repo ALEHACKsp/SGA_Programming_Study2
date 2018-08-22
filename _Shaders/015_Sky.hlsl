@@ -19,7 +19,8 @@ PixelInput VS(VertexTextureNormal input)
     PixelInput output;
 
     // 사실 월드 변환된 이후에 position에 따라 해야되긴 함
-    output.Position = mul(input.Position, World);
+    matrix world = Bones[BoneIndex]; // bone은 이렇게 해야함
+    output.Position = mul(input.Position, world);
     output.Position = mul(output.Position, View);
     output.Position = mul(output.Position, Projection);
 

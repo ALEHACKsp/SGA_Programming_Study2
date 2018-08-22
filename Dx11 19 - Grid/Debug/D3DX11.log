@@ -1,0 +1,9 @@
+﻿  DrawLandScape.cpp
+  Terrain.cpp
+d:\sga\dx11 19 -\landscape\terrain.cpp(278): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\dx11 19 -\landscape\terrain.cpp(279): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\dx11 19 -\landscape\terrain.cpp(280): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\dx11 19 -\landscape\terrain.cpp(281): warning C4244: '=': 'float'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\sga\dx11 19 -\landscape\terrain.cpp(293): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  D3DX11.vcxproj -> D:\SGA\Dx11 19 -\Debug\D3DX11.exe
+  D3DX11.vcxproj -> D:\SGA\Dx11 19 -\Debug\D3DX11.pdb (Full PDB)

@@ -83,11 +83,14 @@ void DrawLandScape::Render()
 
 void DrawLandScape::PostRender()
 {
-	//D3DXVECTOR3 picked;
-	//terrain->Y(&picked);
+	if (terrain->GetBrushBuffer()->Data.Type > 0)
+	{
+		D3DXVECTOR3 picked;
+		terrain->Y(&picked);
 
-	//ImGui::LabelText("Picked", "%.2f, %.2f, %.2f", 
-	//	picked.x, picked.y, picked.z);
+		ImGui::LabelText("Picked", "%.2f, %.2f, %.2f",
+			picked.x, picked.y, picked.z);
+	}
 }
 
 void DrawLandScape::ResizeScreen()

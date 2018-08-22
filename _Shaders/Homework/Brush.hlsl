@@ -17,7 +17,7 @@ float3 BrushColor(float3 location)
         return float3(0, 0, 0);
 
     // 웬만하면 else if 안쓰는게 좋다고 하심 나중에 설명해주실꺼
-    if (Type == 1)
+    if (Type == 1 || Type == 4)
     {
         if ((location.x >= (Location.x - Range)) &&
             (location.x <= (Location.x + Range)) &&
@@ -59,10 +59,12 @@ struct PixelInput
     float2 Uv : UV0;
     float3 Normal : NORMAL0;
 
-    float3 BrushColor : COLOR0;
+    float4 ColorMap : COLOR0;
+
+    float3 BrushColor : COLOR1;
 };
 
-PixelInput VS(VertexTextureNormal input)
+PixelInput VS(VertexColorTextureNormal input)
 {
     PixelInput output;
 
@@ -72,6 +74,8 @@ PixelInput VS(VertexTextureNormal input)
     output.Position = mul(output.Position, Projection);
 
     output.Normal = mul(input.Normal, (float3x3) World);
+
+    output.ColorMap = input.Color;
 
     // oPosition 씀 
     output.BrushColor = BrushColor(input.Position.xyz);
@@ -87,16 +91,13 @@ SamplerState ColorSampler : register(s10);
 Texture2D ColorMap2 : register(t11);
 SamplerState ColorSampler2 : register(s11);
 
-Texture2D AlphaMap : register(t12);
-SamplerState AlphaSampler : register(s12);
-
 float4 PS(PixelInput input) : SV_TARGET
 {
     float4 color = 0;
 
     float4 colorMap = ColorMap.Sample(ColorSampler, input.Uv);
     float4 colorMap2 = ColorMap2.Sample(ColorSampler2, input.Uv);
-    float4 alphaMap = AlphaMap.Sample(AlphaSampler, input.Uv);
+    float4 alphaMap = input.ColorMap;
 
     float4 alpha = float4(alphaMap.r, alphaMap.r, alphaMap.r, alphaMap.r);
     float4 temp = lerp(colorMap, colorMap2, alpha);

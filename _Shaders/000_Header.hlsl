@@ -62,7 +62,7 @@ struct VertexTextureNormal
 struct VertexColorTextureNormal
 {
     float4 Position : POSITION0;
-    float4 Polor : COLOR0;
+    float4 Color : COLOR0;
     float2 Uv : TEXCOORD0;
     float3 Normal : NORMAL0;
 };
