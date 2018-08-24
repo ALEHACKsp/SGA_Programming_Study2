@@ -91,18 +91,25 @@ SamplerState ColorSampler : register(s10);
 Texture2D ColorMap2 : register(t11);
 SamplerState ColorSampler2 : register(s11);
 
+Texture2D ColorMap3 : register(t12);
+SamplerState ColorSampler3 : register(s12);
+
 float4 PS(PixelInput input) : SV_TARGET
 {
     float4 color = 0;
 
     float4 colorMap = ColorMap.Sample(ColorSampler, input.Uv);
     float4 colorMap2 = ColorMap2.Sample(ColorSampler2, input.Uv);
+    float4 colorMap3 = ColorMap3.Sample(ColorSampler3, input.Uv);
     float4 alphaMap = input.ColorMap;
 
     float4 alpha = float4(alphaMap.r, alphaMap.r, alphaMap.r, alphaMap.r);
     float4 temp = lerp(colorMap, colorMap2, alpha);
 
-    DiffuseLighting(color, temp, input.Normal);
+    float4 alpha2 = float4(alphaMap.g, alphaMap.g, alphaMap.g, alphaMap.g);
+    float4 temp2 = lerp(temp, colorMap3, alpha2);
+
+    DiffuseLighting(color, temp2, input.Normal);
 
     color = color + float4(input.BrushColor, 0);
 

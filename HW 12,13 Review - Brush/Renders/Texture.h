@@ -11,7 +11,9 @@ public:
 	static void SetBlankSamplerState(UINT slot);
 
 	static void SaveFile(wstring file, ID3D11Texture2D* src);
+	//static void SaveFile(wstring file, ID3D11Texture2D* src, DirectX::Image * img);
 	static D3D11_TEXTURE2D_DESC ReadPixels(ID3D11Texture2D* src, DXGI_FORMAT readFormat, vector<D3DXCOLOR>* pixels);
+	static void WritePixels(ID3D11Texture2D* src, DXGI_FORMAT writeFormat, vector<D3DXCOLOR>& pixels);
 
 public:
 	Texture(wstring file, D3DX11_IMAGE_LOAD_INFO* loadInfo = NULL);
@@ -44,6 +46,8 @@ private:
 	DirectX::TexMetadata metaData;
 	ID3D11ShaderResourceView* view;
 	ID3D11SamplerState* samplerState;
+
+	//DirectX::Image image;
 };
 
 struct TextureDesc

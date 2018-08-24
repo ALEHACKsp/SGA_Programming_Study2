@@ -17,10 +17,13 @@ public:
 	
 	// 조정하려는 영역 location
 	void AdjustY(D3DXVECTOR3& location);
-	void AdjustColorMap(D3DXVECTOR3& location, bool isColorDown = false);
+	void AdjustColorMap(D3DXVECTOR3& location);
 
 	void SaveColorMap(wstring fileName);
 	void LoadColorMap(wstring fileName);
+
+	void SaveHeightMap(wstring fileName);
+	void LoadHeightMap(wstring fileName);
 
 private:
 	void CreateData();
@@ -36,6 +39,7 @@ private:
 	Texture* heightTexture;
 	Texture* colorTexture;
 	Texture* colorTexture2;
+	Texture* colorTexture3;
 	Texture* alphaTexture;
 
 	UINT width, height;
@@ -52,10 +56,12 @@ private:
 
 	int fillMode;
 	int selectBrush;
-	int colorMode;
+	int selectTexture;
 	float capacity;
 
 	function<void(wstring)> func;
+	
+	vector<D3DXCOLOR> heights;
 private:
 	class BrushBuffer : public ShaderBuffer
 	{

@@ -5,11 +5,12 @@ Terrain::Terrain(ExecuteValues* values, Material * material)
 	: material(material)
 	, values(values)
 	, selectBrush(0), capacity(10.0f)
-	, fillMode(0), colorMode(0)
+	, fillMode(0), selectTexture(0)
 {
 	heightTexture = new Texture(Contents + L"HeightMaps/Homework/HeightMap256.png");
 	colorTexture = new Texture(Textures + L"Dirt.png");
 	colorTexture2 = new Texture(Textures + L"Wall.png");
+	colorTexture3 = new Texture(Textures + L"Dirt2.png");
 
 	alphaTexture = new Texture(Contents + L"HeightMaps/Homework/ColorMap256.png");
 
@@ -53,6 +54,7 @@ Terrain::~Terrain()
 
 	SAFE_DELETE(colorTexture);
 	SAFE_DELETE(colorTexture2);
+	SAFE_DELETE(colorTexture3);
 	SAFE_DELETE(alphaTexture)
 
 	SAFE_RELEASE(rasterizer[0]);
@@ -70,14 +72,14 @@ void Terrain::Update()
 
 		UINT type = brushBuffer->Data.Type;
 		// 마우스 클릭 시 높이 조정
-		if (Mouse::Get()->Press(0)) 
+		if (Mouse::Get()->Down(0)) 
 		{
 			if (type != 0) {
 				if(selectBrush == 0)
 					AdjustY(position);
 
 				if (type != 3 && selectBrush == 1) {
-					AdjustColorMap(position, colorMode);
+					AdjustColorMap(position);
 				}
 			}
 		}
@@ -94,8 +96,8 @@ void Terrain::Render()
 	colorTexture2->SetShaderResource(11);
 	colorTexture2->SetShaderSampler(11);
 
-	alphaTexture->SetShaderResource(12);
-	alphaTexture->SetShaderSampler(12);
+	colorTexture3->SetShaderResource(12);
+	colorTexture3->SetShaderSampler(12);
 
 	UINT stride = sizeof(VertexColorTextureNormal);
 	UINT offset = 0;
@@ -118,7 +120,7 @@ void Terrain::PostRender()
 	ImGui::SliderInt("FillMode", &fillMode, 0, 1);
 	
 	ImGui::SliderInt("SelectBrush", &selectBrush, 0, 1);
-	ImGui::SliderInt("ColorMode", &colorMode, 0, 1);
+	ImGui::SliderInt("SelectTexture", &selectTexture, 0, 1);
 
 	ImGui::Separator();
 	ImGui::Text("Brush");
@@ -138,6 +140,19 @@ void Terrain::PostRender()
 	ImGui::SameLine(120);
 	if (ImGui::Button("Load ColorMap")) {
 		func = bind(&Terrain::LoadColorMap, this, placeholders::_1);
+		Path::OpenFileDialog(L"", L"PNG Files(*.png)\0*.png\0",
+			Contents + L"HeightMaps/Homework", func);
+	}
+
+	if (ImGui::Button("Save HeightMap")) {
+		func = bind(&Terrain::SaveHeightMap, this, placeholders::_1);
+		Path::SaveFileDialog(L"", L"*.png",
+			Contents + L"HeightMaps/Homework", func);
+	}
+	// 다음꺼 같은 줄에 그리는거 인자는 시작 위치
+	ImGui::SameLine(120);
+	if (ImGui::Button("Load HeightMap")) {
+		func = bind(&Terrain::LoadHeightMap, this, placeholders::_1);
 		Path::OpenFileDialog(L"", L"PNG Files(*.png)\0*.png\0",
 			Contents + L"HeightMaps/Homework", func);
 	}
@@ -317,7 +332,7 @@ void Terrain::AdjustY(D3DXVECTOR3 & location)
 				if (dist > brushBuffer->Data.Range) continue;
 			}
 			
-			float temp = capacity * Time::Delta();
+			float temp = capacity;
 
 			// sinf
 			if (brushBuffer->Data.Type == 3)
@@ -426,7 +441,7 @@ void Terrain::AdjustY(D3DXVECTOR3 & location)
 	);
 }
 
-void Terrain::AdjustColorMap(D3DXVECTOR3 & location, bool isColorDown)
+void Terrain::AdjustColorMap(D3DXVECTOR3 & location)
 {
 	// 범위
 	float size = (float)brushBuffer->Data.Range;
@@ -458,11 +473,26 @@ void Terrain::AdjustColorMap(D3DXVECTOR3 & location, bool isColorDown)
 				if (dist < brushBuffer->Data.Range) continue;
 			}
 
-			vertices[index].Color.r += capacity * Time::Delta();
-			if (vertices[index].Color.r < 0)
-				vertices[index].Color.r = 0;
-			if (vertices[index].Color.r > 1.0f)
-				vertices[index].Color.r = 1.0f;
+			if (selectTexture == 0) {
+				vertices[index].Color.r += capacity * Time::Delta();
+				if (vertices[index].Color.r < 0)
+					vertices[index].Color.r = 0;
+				if (vertices[index].Color.r > 1.0f)
+					vertices[index].Color.r = 1.0f;
+
+				if (vertices[index].Color.g > 0 && capacity > 0)
+					vertices[index].Color.g -= capacity * Time::Delta();
+			}
+			else if (selectTexture == 1) {
+				vertices[index].Color.g += capacity * Time::Delta();
+				if (vertices[index].Color.g < 0)
+					vertices[index].Color.g = 0;
+				if (vertices[index].Color.g > 1.0f)
+					vertices[index].Color.g = 1.0f;
+
+				if (vertices[index].Color.r > 0 && capacity > 0)
+					vertices[index].Color.r -= capacity * Time::Delta();
+			}
 		}
 	}
 
@@ -555,10 +585,13 @@ void Terrain::LoadColorMap(wstring fileName)
 {
 	if (alphaTexture != NULL)
 		SAFE_DELETE(alphaTexture);
-
+	
 	alphaTexture = new Texture(fileName);
 	vector<D3DXCOLOR> color;
-	alphaTexture->ReadPixels(DXGI_FORMAT_R8G8B8A8_UNORM, &color);
+	DirectX::TexMetadata info;
+	alphaTexture->GetImageInfo(&info);
+	alphaTexture->ReadPixels(info.format, &color);
+	//alphaTexture->ReadPixels(DXGI_FORMAT_R8G8B8A8_UNORM, &color);
 
 	for (UINT z = 0; z <= height; z++)
 	{
@@ -573,9 +606,64 @@ void Terrain::LoadColorMap(wstring fileName)
 		sizeof(VertexColorTextureNormal) * vertexCount, 0);
 }
 
+void Terrain::SaveHeightMap(wstring fileName)
+{
+	for (UINT z = 0; z <= height; z++)
+	{
+		for (UINT x = 0; x <= width; x++)
+		{
+			UINT index = (width + 1) * z + x;
+
+			heights[index].r = vertices[index].Position.y * 10.0f / 255.0f;
+			heights[index].g = vertices[index].Position.y * 10.0f / 255.0f;
+			heights[index].b = vertices[index].Position.y * 10.0f / 255.0f;
+		}
+	}
+
+	DirectX::TexMetadata info;
+	heightTexture->GetImageInfo(&info);
+	heightTexture->WritePixels(info.format, heights);
+	//heightTexture->WritePixels(DXGI_FORMAT_R8G8B8A8_UINT, heights);
+	heightTexture->SaveFile(fileName);
+}
+
+void Terrain::LoadHeightMap(wstring fileName)
+{
+	if (heightTexture != NULL)
+		SAFE_DELETE(heightTexture);
+
+	heights.clear();
+
+	heightTexture = new Texture(fileName);
+	DirectX::TexMetadata info;
+	heightTexture->GetImageInfo(&info);
+	heightTexture->ReadPixels(info.format, &heights);
+	//heightTexture->ReadPixels(DXGI_FORMAT_R8G8B8A8_UNORM, &heights);
+
+	for (UINT z = 0; z <= height; z++)
+	{
+		for (UINT x = 0; x <= width; x++)
+		{
+			UINT index = (width + 1) * z + x;
+
+			vertices[index].Position.y = (float)(heights[index].r * 255.0f) / 10.0f;
+			int temp = 1;
+		}
+	}
+
+	// normal도 재계산해줘야함
+	CreateNormalData();
+
+	// NULL 이부분 계산해서 넣으면 수정된 구간만 변경할 수 있음
+	D3D::GetDC()->UpdateSubresource(
+		vertexBuffer, 0, NULL, &vertices[0],
+		sizeof(VertexColorTextureNormal) * vertexCount, 0
+	);
+}
+
 void Terrain::CreateData()
 {
-	vector<D3DXCOLOR> heights;
+	//vector<D3DXCOLOR> heights;
 	heightTexture->ReadPixels(DXGI_FORMAT_R8G8B8A8_UNORM, &heights);
 
 	vector<D3DXCOLOR> colors;
