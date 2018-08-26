@@ -40,7 +40,7 @@ public:
 
 	bool IsPickMesh(D3DXVECTOR3& start, D3DXVECTOR3& direction,
 		OUT float& u, OUT float& v, OUT float& distance,
-		OUT wstring& meshName);
+		OUT wstring& meshName, vector<D3DXMATRIX>& boneTransforms);
 
 	vector<wstring> GetMesheNames();
 private:

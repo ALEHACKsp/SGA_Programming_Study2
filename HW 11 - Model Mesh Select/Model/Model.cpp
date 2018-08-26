@@ -84,7 +84,7 @@ void Model::CopyGlobalBoneTo(vector<D3DXMATRIX>& transforms, D3DXMATRIX& w)
 		{
 			transforms[i] = bone->local * w;
 		}
-		bones[i]->global = transforms[i];
+		//bones[i]->global = transforms[i];
 	}
 }
 
@@ -152,16 +152,17 @@ bool Model::IsPick(D3DXVECTOR3& start, D3DXVECTOR3& direction,
 }
 
 bool Model::IsPickMesh(D3DXVECTOR3 & start, D3DXVECTOR3 & direction, OUT float & u, OUT float & v, OUT float & distance,
-	OUT wstring & meshName)
+	OUT wstring & meshName, vector<D3DXMATRIX>& boneTransforms)
 {
 	float tempDist;
 
 	bool result = false;
 
+	int index = 0;
 	for (ModelMesh* mesh : meshes)
 	{
 		ModelBone* bone = mesh->parentBone;
-		D3DXMATRIX w = bone->global;
+		D3DXMATRIX w = boneTransforms[index];
 
 		for (ModelMeshPart* meshPart : mesh->meshParts)
 		{
@@ -185,6 +186,7 @@ bool Model::IsPickMesh(D3DXVECTOR3 & start, D3DXVECTOR3 & direction, OUT float &
 				}
 			}
 		}
+		index++;
 	}
 
 	return result;

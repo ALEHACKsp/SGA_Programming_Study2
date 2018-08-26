@@ -10,7 +10,7 @@ ExeSphere::ExeSphere(ExecuteValues* values, D3DXVECTOR3* basePos,
 	float scale, float rotateSpeed,
 	bool isTransduction, float dist, D3DXCOLOR color)
 	: Execute(values)
-	, radius(5.0f), stackCount(20), sliceCount(20)
+	, radius(5.0f), stackCount(5), sliceCount(5)
 	, basePos(basePos), scale(scale), rotateSpeed(rotateSpeed)
 	, isTransduction(isTransduction), dist(dist)
 	, pos(*basePos), deltaRadian(0)

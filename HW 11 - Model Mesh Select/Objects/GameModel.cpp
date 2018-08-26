@@ -131,7 +131,7 @@ bool GameModel::IsPickModelMesh(Camera * camera, Viewport * viewport,
 	distance = FLT_MAX;
 
 	bool result = model->IsPickMesh(start, direction,
-		u, v, distance, meshName);
+		u, v, distance, meshName, boneTransforms);
 	
 	return result;
 }

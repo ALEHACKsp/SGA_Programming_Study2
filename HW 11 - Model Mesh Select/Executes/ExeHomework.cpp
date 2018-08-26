@@ -79,6 +79,7 @@ void ExeHomework::PostRender()
 				selectModelMesh))
 			{
 				selectModel = i;
+				break;
 			}
 			else
 				selectModel = -1;
