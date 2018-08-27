@@ -64,7 +64,7 @@ public:
 		*vec = up;
 	}
 
-#if CASE
+
 	void MatRotation(D3DXMATRIX* vec) {
 		*vec = matRotation;
 	}
@@ -75,11 +75,11 @@ public:
 	void SetMatRotation(D3DXMATRIX* vec) {
 		matRotation = *vec;
 	}
-#else
+
 	void MatRotation(D3DXMATRIX* vec) {
 		*vec = matRotation;
 	}
-#endif
+
 protected:
 	virtual void Move();
 	virtual void Rotation();

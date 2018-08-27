@@ -72,4 +72,4 @@ const wstring Textures = L"../_Textures/";
 #include "./Utilities/String.h"
 #include "./Utilities/Path.h"
 
-#define CASE 0 // 일진씨 스타일 1 도영씨 스타일 0
+#define CASE 1 // 일진씨 스타일 1 도영씨 스타일 0

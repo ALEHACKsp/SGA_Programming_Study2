@@ -40,7 +40,6 @@ protected:
 	D3DXVECTOR3 velocity;
 
 	vector<D3DXMATRIX> boneTransforms;
-	
 
 	vector<wstring> meshNames;
 
