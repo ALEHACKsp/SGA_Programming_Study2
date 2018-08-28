@@ -39,6 +39,9 @@ SamplerState DiffuseSampler : register(s0);
 Texture2D SpecularMap : register(t1);
 SamplerState SpecularSampler : register(s1);
 
+Texture2D NormalMap : register(t2);
+SamplerState NormalSampler : register(s2);
+
 struct VertexColor
 {
     float4 Position : POSITION0;
@@ -63,6 +66,14 @@ struct VertexTextureNormal
     float4 Position : POSITION0;
     float2 Uv : TEXCOORD0;
     float3 Normal : NORMAL0;
+};
+
+struct VertexTextureNormalTangent
+{
+    float4 Position : POSITION0;
+    float2 Uv : TEXCOORD0;
+    float3 Normal : NORMAL0;
+    float3 Tangent : TANGENT0;
 };
 
 struct VertexColorTextureNormal
@@ -97,6 +108,13 @@ float3 WorldNormal(float3 normal, matrix world)
     normal = normalize(mul(normal, (float3x3) world));
 
     return normal;
+}
+
+float3 WorldTangent(float3 tangent, matrix world)
+{
+    tangent = normalize(mul(tangent, (float3x3) world));
+
+    return tangent;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -140,4 +158,47 @@ void SpecularLighting(inout float4 color, float4 specularMap, float3 normal, flo
     float specular = pow(intensity, Shininess);
 
     color = color + Specular * specular * specularMap;
+}
+
+void NormalMapping(inout float4 color, float4 normalMap, float3 normal, float3 tangent)
+{
+    float3 N = normal; // Z축이랑 매핑됨
+    float3 T = normalize(tangent - dot(tangent, N) * N); // X 이 식이 그람슈미트 식
+    float3 B = cross(T, N); // Y
+
+    float3x3 TBN = float3x3(T, B, N);
+
+	// rgb 0~1 방향으로 만드는거
+    float3 coord = 2.0f * normalMap - 1.0f;
+    float3 bump = mul(coord, TBN); // max에선 normal mapping을 bump mapping이라 부름
+
+    float intensity = saturate(dot(bump, -Direction));
+    color = color * intensity;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct PointLight
+{
+    float3 Position;
+    float Range;
+    float3 Color;
+    float Intensity;
+};
+
+cbuffer PS_PointLights : register(b2)
+{
+    PointLight PointLights[32];
+
+    int PointLightCount;
+}
+
+void PointLighting(inout float4 color, PointLight light, float4 wPosition, float3 normal)
+{
+    float dist = distance(light.Position, wPosition.xyz);
+    float intensity = saturate((light.Range - dist) / light.Range);
+
+    intensity = pow(intensity, light.Intensity); // 면적의 강도
+
+    color = color + float4(light.Color, 0) * intensity;
 }

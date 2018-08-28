@@ -27,4 +27,6 @@ private:
 
 	int selectModel;
 	vector<class GameModel*> models;
+
+	function<void(wstring)> func;
 };

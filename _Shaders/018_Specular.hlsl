@@ -38,6 +38,7 @@ float4 PS(PixelInput input) : SV_TARGET
     DiffuseLighting(color, diffuse, input.Normal);
 
     float4 specular = SpecularMap.Sample(SpecularSampler, input.Uv);
+
     //SpecularLighting(color, input.Normal, input.ViewDir);
     SpecularLighting(color, specular, input.Normal, input.ViewDir);
     

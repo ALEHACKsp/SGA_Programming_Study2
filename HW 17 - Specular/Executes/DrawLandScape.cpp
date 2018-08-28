@@ -175,6 +175,23 @@ void DrawLandScape::PostRender()
 			if (i == selectModel) {
 				model->PostRender();
 
+				Texture* texture = model->GetModel()->MaterialByIndex(0)->GetDiffuseMap();
+
+				ImGui::Text("   DiffuseMap\t\t SpecularMap");
+				if (ImGui::ImageButton(texture->GetView(), ImVec2(100, 100)))
+				{
+					func = bind(&GameModel::SetDiffuseMap, model, placeholders::_1);
+					Path::OpenFileDialog(L"", L"PNG Files(*.png)\0*.png\0", Textures, func);
+				}
+
+				texture = model->GetModel()->MaterialByIndex(0)->GetSpecularMap();
+				ImGui::SameLine(150);
+				if (ImGui::ImageButton(texture->GetView(), ImVec2(100, 100)))
+				{
+					func = bind(&GameModel::SetSpecularMap, model, placeholders::_1);
+					Path::OpenFileDialog(L"", L"PNG Files(*.png)\0*.png\0", Textures, func);
+				}
+
 				// 0번 sphere는 공전 안하게 고정
 				if (i != 0)
 				{
