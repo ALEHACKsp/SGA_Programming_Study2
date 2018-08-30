@@ -202,3 +202,86 @@ void PointLighting(inout float4 color, PointLight light, float4 wPosition, float
 
     color = color + float4(light.Color, 0) * intensity;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct SpotLight
+{
+    float3 Position;
+    float InnerAngle;
+    float3 Color;
+    float OuterAngle;
+    float3 Direction;
+
+    float SpotLight_Padding;
+};
+
+cbuffer PS_SpotLights : register(b3)
+{
+    SpotLight SpotLights[32];
+
+    int SpotLightCount;
+}
+
+void SpotLighting(inout float4 color, SpotLight light, float4 wPosition, float3 normal)
+{
+    float3 lightDir = normalize(light.Position - wPosition.xyz);
+
+    float intensity = 0;
+    float lightAngle = dot(-light.Direction, lightDir);
+    if (lightAngle > 0.0f)
+		// lerp 랑 유사한거 0~1까지 비슷한 보간식인데 hermit 보간으로 하는거
+		// OuterAngle ~> InnerAngle 인 이유는 가운데로 갈수록 밝아져서
+        intensity = smoothstep(light.InnerAngle, light.OuterAngle, lightAngle);
+	
+    color = color + float4(light.Color, 0) * intensity;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct AreaLight
+{
+    float3 Position;
+    float Light_Padding;
+
+    float3 Color;
+    float Light_Padding2;
+
+    float3 HalfSize;
+    float Light_Padding3;
+};
+
+cbuffer PS_AreaLights : register(b4)
+{
+    AreaLight AreaLights[32];
+
+    int AreaLightCount;
+}
+
+void AreaLighting(inout float4 color, AreaLight light, float4 wPosition, float3 normal)
+{
+
+    float intensity = 0;
+    float dist = length(light.Position - wPosition.xyz);
+    float dist2 = length(light.Position - light.HalfSize);
+   
+    if (//(dist <= dist2) &&
+		(wPosition.x >= light.Position.x - light.HalfSize.x) &&
+		(wPosition.x <= light.Position.x + light.HalfSize.x) &&
+		(wPosition.z >= light.Position.z - light.HalfSize.z) &&
+		(wPosition.z <= light.Position.z + light.HalfSize.z))
+    {
+        intensity = smoothstep(light.Position.y - light.HalfSize.y, light.Position.y, wPosition.y);
+        //intensity = 1.0f - intensity;
+    }
+	//else
+ //   {
+ //       float3 dir = normalize(light.Position - wPosition.xyz);
+		
+ //       float angle = dot(dir, float3(0, 1, 0));
+ //       intensity = smoothstep(0, 1, angle);
+ //       //intensity = 1.0f - intensity;
+ //   }
+
+    color = color + float4(light.Color, 0) * intensity;
+}

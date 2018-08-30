@@ -163,6 +163,12 @@ float4 PS(PixelInput input) : SV_TARGET
     for (i = 0; i < PointLightCount; i++)
         PointLighting(color, PointLights[i], input.wPosition, input.Normal);
 
+    for (i = 0; i < SpotLightCount; i++)
+        SpotLighting(color, SpotLights[i], input.wPosition, input.Normal);
+
+    for (i = 0; i < AreaLightCount; i++)
+        AreaLighting(color, AreaLights[i], input.wPosition, input.Normal);
+
     return color;
     // 디버깅 하기 위해서 normal을 반환형인 색상값으로
     //return float4((input.Normal * 0.5f) + 0.5f, 1);

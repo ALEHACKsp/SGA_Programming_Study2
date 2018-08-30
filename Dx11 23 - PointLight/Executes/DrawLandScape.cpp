@@ -19,7 +19,7 @@ DrawLandScape::DrawLandScape(ExecuteValues * values)
 	// Create Terrain
 	{
 		wstring heightMap = Contents + L"HeightMaps/HeightMap256.png";
-		Material * material = new Material(Shaders + L"016_errainBrushLine.hlsl");
+		Material * material = new Material(Shaders + L"016_TerrainBrushLine.hlsl");
 
 		terrain = new Terrain(values, material);
 	}

@@ -85,4 +85,4 @@ const wstring Models = L"../_Models/";
 #include "./Model/ModelBone.h"
 #include "./Model/ModelMesh.h"
 
-typedef VertexTextureNormal ModelVertexType;
+typedef VertexTextureNormalTangent ModelVertexType;

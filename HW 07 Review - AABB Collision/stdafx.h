@@ -88,4 +88,4 @@ const wstring Materials = L"../_Materials/";
 
 #include "./Physics/Collision.h"
 
-typedef VertexTextureNormal ModelVertexType;
+typedef VertexTextureNormalTangent ModelVertexType;
