@@ -15,10 +15,10 @@ ExportModel::ExportModel(ExecuteValues * values)
 	//exporter->ExportMaterial(Models + L"/Meshes/Cube/", L"Cube.material");
 
 	// Tank
-	//exporter = new Fbx::Exporter(Assets + L"Tank/Tank.fbx");
-	//exporter->ExportMaterial(Models + L"/Tank/", L"Tank.material");
-	//exporter->ExportMesh(Models + L"/Tank/", L"Tank.mesh");
-	//SAFE_DELETE(exporter);
+	exporter = new Fbx::Exporter(Assets + L"Tank/Tank.fbx");
+	exporter->ExportMaterial(Models + L"/Tank/", L"Tank.material");
+	exporter->ExportMesh(Models + L"/Tank/", L"Tank.mesh");
+	SAFE_DELETE(exporter);
 
 	// GameModel 안에서 만드니 지워야됨
 	//Model* model = new Model();
