@@ -89,3 +89,63 @@ bool Frustum::ContainPoint(D3DXVECTOR3 & position)
 
 	return true;
 }
+
+bool Frustum::ContainCube(D3DXVECTOR3 & center, float radius)
+{
+	D3DXVECTOR3 check; 
+
+	for (int i = 0; i < 6; i++)
+	{
+		check.x = center.x - radius;
+		check.y = center.y - radius;
+		check.z = center.z - radius;
+		if (D3DXPlaneDotCoord(&planes[i], &check) >= 0.0f)
+			continue;
+
+		check.x = center.x + radius;
+		check.y = center.y - radius;
+		check.z = center.z - radius;
+		if (D3DXPlaneDotCoord(&planes[i], &check) >= 0.0f)
+			continue;
+
+		check.x = center.x - radius;
+		check.y = center.y + radius;
+		check.z = center.z - radius;
+		if (D3DXPlaneDotCoord(&planes[i], &check) >= 0.0f)
+			continue;
+
+		check.x = center.x + radius;
+		check.y = center.y + radius;
+		check.z = center.z - radius;
+		if (D3DXPlaneDotCoord(&planes[i], &check) >= 0.0f)
+			continue;
+
+		check.x = center.x - radius;
+		check.y = center.y - radius;
+		check.z = center.z + radius;
+		if (D3DXPlaneDotCoord(&planes[i], &check) >= 0.0f)
+			continue;
+
+		check.x = center.x + radius;
+		check.y = center.y - radius;
+		check.z = center.z + radius;
+		if (D3DXPlaneDotCoord(&planes[i], &check) >= 0.0f)
+			continue;
+
+		check.x = center.x - radius;
+		check.y = center.y + radius;
+		check.z = center.z + radius;
+		if (D3DXPlaneDotCoord(&planes[i], &check) >= 0.0f)
+			continue;
+
+		check.x = center.x + radius;
+		check.y = center.y + radius;
+		check.z = center.z + radius;
+		if (D3DXPlaneDotCoord(&planes[i], &check) >= 0.0f)
+			continue;
+
+		return false;
+	}
+
+	return true;
+}

@@ -10,6 +10,7 @@ public:
 	void Update();
 
 	bool ContainPoint(D3DXVECTOR3& position);
+	bool ContainCube(D3DXVECTOR3& center, float radius);
 
 private:
 	ExecuteValues* values;
