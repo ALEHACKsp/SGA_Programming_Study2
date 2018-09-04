@@ -2,33 +2,127 @@
 #include "QuadTree.h"
 #include "Terrain.h"
 
+#include "../Viewer/Frustum.h"
+
 const UINT QuadTree::DivideCount = 32 * 32; // 1024
 
-QuadTree::QuadTree(Terrain* terrain)
+QuadTree::QuadTree(ExecuteValues* values, Terrain* terrain)
+	: values(values), frustum(frustum), drawCount(0)
 {
+	material = new Material(Shaders + L"023_Terrain.hlsl");
+	material->SetDiffuseMap(Textures + L"Dirt.png");
+
+	worldBuffer = new WorldBuffer();
+	lineBuffer = new LineBuffer();
+
+	perspective = new Perspective(512, 768, Math::PI * 0.25f, 1, 1000);
+	frustum = new Frustum(values, 1000, values->MainCamera, perspective);
+
 	UINT vertexCount = terrain->VertexCount();
 	triangleCount = vertexCount / 3;
 
 	vertices = new VertexTextureNormal[vertexCount];
-	terrain->CoptyVertices((void *)vertices);
+	terrain->CopyVertices((void *)vertices);
 
 	float centerX = 0.0f, centerZ = 0.0f, width = 0.0f;
 	CalcMeshDimensions(vertexCount, centerX, centerZ, width);
 
 	parent = new NodeType();
+	CreateTreeNode(parent, centerX, centerZ, width);
 
+	SAFE_DELETE_ARRAY(vertices);
+
+	rasterizer[0] = new RasterizerState();
+	rasterizer[1] = new RasterizerState();
+	rasterizer[1]->FillMode(D3D11_FILL_WIREFRAME);
 }
 
 QuadTree::~QuadTree()
 {
+	SAFE_DELETE(rasterizer[0]);
+	SAFE_DELETE(rasterizer[1]);
+
+	SAFE_DELETE(perspective);
+	SAFE_DELETE(frustum);
+
+	DeleteNode(parent);
+
+	SAFE_DELETE(parent);
+
+	SAFE_DELETE(worldBuffer);
+	SAFE_DELETE(lineBuffer);
+	SAFE_DELETE(material);
 }
 
 void QuadTree::Update()
 {
+	frustum->Update();
 }
 
 void QuadTree::Render()
 {
+	drawCount = 0;
+	RenderNode(parent);
+
+	ImGui::Text("QuadTree Draw : %d", drawCount);
+}
+
+void QuadTree::RenderNode(NodeType * node)
+{
+	D3DXVECTOR3 center(node->X, 0, node->Z);
+	float d = node->Width / 2.0f;
+
+	if (frustum->ContainCube(center, d) == false)
+		return;
+
+	UINT count = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (node->Childs[i] != NULL)
+		{
+			count++;
+
+			RenderNode(node->Childs[i]);
+		}
+	}
+
+	// 자식이 있으면 부모는 그릴 필요없어서 pass 시킨거
+	if (count != 0)
+		return;
+
+	worldBuffer->SetVSBuffer(1);
+	material->PSSetBuffer();
+	lineBuffer->SetPSBuffer(10);
+
+	UINT stride = sizeof(VertexTextureNormal);
+	UINT offset = 0;
+
+	D3D::GetDC()->IASetVertexBuffers(0, 1, &node->VertexBuffer, &stride, &offset);
+	D3D::GetDC()->IASetIndexBuffer(node->IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	rasterizer[1]->RSSetState();
+
+	UINT indexCount = node->TriangleCount * 3;
+	D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
+	
+	rasterizer[0]->RSSetState();
+
+	drawCount += node->TriangleCount;
+}
+
+void QuadTree::DeleteNode(NodeType * node)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if(node->Childs[i] != NULL)
+			DeleteNode(node->Childs[i]);
+
+		SAFE_DELETE(node->Childs[i]);
+	}
+
+	SAFE_RELEASE(node->VertexBuffer);
+	SAFE_RELEASE(node->IndexBuffer);
 }
 
 void QuadTree::CalcMeshDimensions(UINT vertexCount, float & centerX, float & centerZ, float & meshWidth)
@@ -70,17 +164,17 @@ void QuadTree::CalcMeshDimensions(UINT vertexCount, float & centerX, float & cen
 
 void QuadTree::CreateTreeNode(NodeType * node, float positionX, float positionZ, float width)
 {
-	node->x = positionX;
-	node->z = positionZ;
-	node->width = width;
+	node->X = positionX;
+	node->Z = positionZ;
+	node->Width = width;
 
-	node->triangleCount = 0;
+	node->TriangleCount = 0;
 
-	node->vertexBuffer = NULL;
-	node->indexBuffer = NULL;
+	node->VertexBuffer = NULL;
+	node->IndexBuffer = NULL;
 
 	for (UINT i = 0; i < 4; i++)
-		node->childs[i] = NULL;
+		node->Childs[i] = NULL;
 
 	UINT triangles = ContainTriangleCount(positionX, positionZ, width);
 
@@ -100,9 +194,9 @@ void QuadTree::CreateTreeNode(NodeType * node, float positionX, float positionZ,
 				ContainTriangleCount((positionX + offsetX), (positionZ + offsetZ), (width / 2.0f));
 			if (count > 0)
 			{
-				node->childs[i] = new NodeType();
+				node->Childs[i] = new NodeType();
 
-				CreateTreeNode(node->childs[i], (positionX + offsetX), (positionZ + offsetZ), (width / 2.0f));
+				CreateTreeNode(node->Childs[i], (positionX + offsetX), (positionZ + offsetZ), (width / 2.0f));
 			}
 		}
 
@@ -110,7 +204,7 @@ void QuadTree::CreateTreeNode(NodeType * node, float positionX, float positionZ,
 	}
 
 	// Case 3 : 남은 갯수가 있을 때
-	node->triangleCount = triangles;
+	node->TriangleCount = triangles;
 
 	UINT vertexCount = triangles * 3;
 	VertexTextureNormal* vertices = new VertexTextureNormal[vertexCount];
@@ -144,6 +238,38 @@ void QuadTree::CreateTreeNode(NodeType * node, float positionX, float positionZ,
 			index++;
 		}
 	}
+
+	//CreateVertexBuffer
+	{
+		D3D11_BUFFER_DESC desc = { 0 };
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.ByteWidth = sizeof(VertexTextureNormal) * vertexCount;
+		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+		D3D11_SUBRESOURCE_DATA data = { 0 };
+		// &vertices 이건 객체의 주소 0번째거를 넣어야함
+		data.pSysMem = &vertices[0];
+
+		HRESULT hr = D3D::GetDevice()->CreateBuffer(&desc, &data, &node->VertexBuffer);
+		assert(SUCCEEDED(hr));
+	}
+
+	//CreateIndexBuffer
+	{
+		D3D11_BUFFER_DESC desc = { 0 };
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.ByteWidth = sizeof(UINT) * vertexCount;
+		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+		D3D11_SUBRESOURCE_DATA data = { 0 };
+		data.pSysMem = &indices[0];
+
+		HRESULT hr = D3D::GetDevice()->CreateBuffer(&desc, &data, &node->IndexBuffer);
+		assert(SUCCEEDED(hr));
+	}
+
+	SAFE_DELETE_ARRAY(vertices);
+	SAFE_DELETE_ARRAY(indices);
 }
 
 UINT QuadTree::ContainTriangleCount(float positionX, float positionZ, float width)

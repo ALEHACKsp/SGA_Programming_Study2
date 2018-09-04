@@ -349,7 +349,7 @@ void Terrain::CreateData()
 
 				indices[index + 3] = (width + 1) * z + x + 1; //2
 				indices[index + 4] = (width + 1) * (z + 1) + x; //1
-				indices[index + 5] = (width + 1) * (z + 1) + x + 1; //1
+				indices[index + 5] = (width + 1) * (z + 1) + x + 1; //3
 
 				index += 6;
 			}

@@ -6,7 +6,6 @@
 #include "./Executes/ExportModel.h"
 #include "./Executes/ExportMesh.h"
 #include "./Executes/DrawLandScape.h"
-#include "./Executes/TestFrustum.h"
 
 Program::Program()
 {
@@ -20,14 +19,14 @@ Program::Program()
 	values->Viewport = new Viewport(desc.Width, desc.Height);
 
 	values->MainCamera = new Freedom();
-	//values->MainCamera->RotationDegree(24, 0);
-	//values->MainCamera->Position(82.18f, 27.00f, -29.00f);
-	values->MainCamera->Position(0, 10, -15);
+	values->MainCamera->RotationDegree(24, 0);
+	values->MainCamera->Position(82.18f, 27.00f, -29.00f);
+	//values->MainCamera->Position(0, 10, -15);
 
 	//executes.push_back(new ExportModel(values));
 	//executes.push_back(new ExportMesh(values));
-	//executes.push_back(new DrawLandScape(values));
-	executes.push_back(new TestFrustum(values));
+
+	executes.push_back(new DrawLandScape(values));
 }
 
 Program::~Program()
