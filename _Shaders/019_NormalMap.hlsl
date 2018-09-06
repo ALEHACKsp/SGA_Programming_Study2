@@ -47,7 +47,8 @@ float4 PS(PixelInput input) : SV_TARGET
     if (VisibleNormal == 1)
     {
         float4 normal = NormalMap.Sample(NormalSampler, input.Uv);
-        NormalMapping(color, normal, input.Normal, input.Tangent);
+        if (length(normal) > 0)
+            NormalMapping(color, normal, input.Normal, input.Tangent);
     }
 
     //SpecularLighting(color, input.Normal, input.ViewDir);
