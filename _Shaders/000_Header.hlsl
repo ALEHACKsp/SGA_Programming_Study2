@@ -30,7 +30,10 @@ cbuffer PS_Material : register(b1)
 {
     float4 Diffuse; // 알파값이 없어서 Diffuse alpha의 Shininess 쓰기도함
     float4 Specular;
+    float4 Detail;
+
     float Shininess; // specular power라고 쓰기도 함
+    float Brightness;
 }
 
 Texture2D DiffuseMap : register(t0);
@@ -41,6 +44,9 @@ SamplerState SpecularSampler : register(s1);
 
 Texture2D NormalMap : register(t2);
 SamplerState NormalSampler : register(s2);
+
+Texture2D DetailMap : register(t3);
+SamplerState DetailSampler : register(s3);
 
 struct VertexColor
 {

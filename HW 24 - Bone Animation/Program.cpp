@@ -1,0 +1,129 @@
+#include "stdafx.h"
+#include "Program.h"
+
+#include "./Viewer/Freedom.h"
+
+#include "./Executes/ExportModel.h"
+#include "./Executes/ExportMesh.h"
+#include "./Executes/DrawLandScape.h"
+#include "./Executes/TestRenderTarget.h"
+#include "./Executes/TestBoneAnimation.h"
+
+Program::Program()
+{
+	D3DDesc desc;
+	D3D::GetDesc(&desc);
+
+	values = new ExecuteValues();
+	values->ViewProjection = new ViewProjectionBuffer();
+	values->GlobalLight = new LightBuffer();
+	values->Perspective = new Perspective(desc.Width, desc.Height);
+	values->Viewport = new Viewport(desc.Width, desc.Height);
+
+	values->MainCamera = new Freedom();
+	values->MainCamera->RotationDegree(65.64f, -43.88f);
+	//values->MainCamera->Position(82.18f, 27.00f, -29.00f);
+	values->MainCamera->Position(4.72f, 14.06f, -4.63f);
+
+	// 4.72f, 14.06f, -4.63f
+	// 65.64f, -43.88f
+
+	values->GlobalLight->Data.Direction = D3DXVECTOR3(-1, -1, 1);
+
+	//executes.push_back(new ExportModel(values));
+	//executes.push_back(new ExportMesh(values));
+
+	//executes.push_back(new DrawLandScape(values));
+	//executes.push_back(new TestRenderTarget(values));
+	executes.push_back(new TestBoneAnimation(values));
+	
+
+}
+
+Program::~Program()
+{
+	for (Execute* exe : executes)
+		SAFE_DELETE(exe);
+
+	SAFE_DELETE(values->GlobalLight);
+	SAFE_DELETE(values->ViewProjection);
+	SAFE_DELETE(values->Perspective);
+	SAFE_DELETE(values->Viewport);
+	SAFE_DELETE(values);
+}
+
+void Program::Update()
+{
+	values->MainCamera->Update();
+
+	for (Execute* exe : executes)
+		exe->Update();
+}
+
+void Program::PreRender()
+{
+	D3DXMATRIX view, projection;
+	values->MainCamera->Matrix(&view);
+	values->Perspective->GetMatrix(&projection);
+
+	values->ViewProjection->SetView(view);
+	values->ViewProjection->SetProjection(projection);
+	values->ViewProjection->SetVSBuffer(0);
+
+	for (Execute* exe : executes)
+		exe->PreRender();
+
+}
+
+void Program::Render()
+{
+	D3DXMATRIX view, projection;
+	values->MainCamera->Matrix(&view);
+	values->Perspective->GetMatrix(&projection);
+
+	values->ViewProjection->SetView(view);
+	values->ViewProjection->SetProjection(projection);
+	values->ViewProjection->SetVSBuffer(0);
+
+	values->GlobalLight->SetPSBuffer(0);
+	values->Viewport->RSSetViewport();
+
+	for (Execute* exe : executes)
+		exe->Render();
+}
+
+void Program::PostRender()
+{
+	ImGui::Text("FPS : %f", Time::Get()->FPS());
+	// ±¸ºÐÀÚ »ý±è
+	ImGui::Separator();
+	ImGui::SliderFloat3("Direction", 
+	(float *)&values->GlobalLight->Data.Direction, -1, 1);
+	ImGui::Separator();
+	
+	D3DXVECTOR3 vec;
+	values->MainCamera->Position(&vec);
+	ImGui::LabelText("CamearPos", "%.2f, %.2f, %.2f", 
+		vec.x, vec.y, vec.z);
+
+	D3DXVECTOR2 rot;
+	values->MainCamera->RotationDegree(&rot);
+	ImGui::LabelText("CameraRot", "%.2f, %.2f", rot.x, rot.y);
+
+	ImGui::Separator();
+
+	for (Execute* exe : executes)
+		exe->PostRender();
+}
+
+void Program::ResizeScreen()
+{
+	D3DDesc desc;
+	D3D::GetDesc(&desc);
+
+	values->Perspective->Set(desc.Width, desc.Height);
+	values->Viewport->Set(desc.Width, desc.Height);
+
+	for (Execute* exe : executes)
+		exe->ResizeScreen();
+}
