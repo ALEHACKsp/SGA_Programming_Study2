@@ -90,7 +90,33 @@ struct VertexColorTextureNormal
     float3 Normal : NORMAL0;
 };
 
+struct VertexTextureNormalTangentBlend
+{
+    float4 Position : POSITION0;
+    float2 Uv : TEXCOORD0;
+    float3 Normal : NORMAL0;
+    float3 Tangent : TANGENT0;
+    float4 BlendIndices : BLENDINDICES0;
+    float4 BlendWeights : BLENDWEIGHTS0;
+};
+
 ///////////////////////////////////////////////////////////////////////////////
+
+matrix BoneWorld()
+{
+    return Bones[BoneIndex];
+}
+
+matrix SkinWorld(float4 blendIndices, float4 blendWeights)
+{
+    float4x4 transform = 0;
+    transform += mul(blendWeights.x, Bones[(uint) blendIndices.x]);
+    transform += mul(blendWeights.y, Bones[(uint) blendIndices.y]);
+    transform += mul(blendWeights.z, Bones[(uint) blendIndices.z]);
+    transform += mul(blendWeights.w, Bones[(uint) blendIndices.w]);
+
+    return transform;
+}
 
 float3 CameraPosition()
 {
