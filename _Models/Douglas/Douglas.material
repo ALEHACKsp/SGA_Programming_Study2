@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Material>
+        <Name>Shoesmat</Name>
+        <Diffuse>
+            <R>1</R>
+            <G>1</G>
+            <B>1</B>
+            <A>1</A>
+        </Diffuse>
+        <DiffuseFile>Douglas_Shoes_Diffuse.png</DiffuseFile>
+    </Material>
+    <Material>
+        <Name>Topmat</Name>
+        <Diffuse>
+            <R>1</R>
+            <G>1</G>
+            <B>1</B>
+            <A>1</A>
+        </Diffuse>
+        <DiffuseFile>Douglas_Top_Diffuse.png</DiffuseFile>
+    </Material>
+    <Material>
+        <Name>Bottommat</Name>
+        <Diffuse>
+            <R>1</R>
+            <G>1</G>
+            <B>1</B>
+            <A>1</A>
+        </Diffuse>
+        <DiffuseFile>Douglas_Bottom_Diffuse.png</DiffuseFile>
+    </Material>
+    <Material>
+        <Name>Bodymat</Name>
+        <Diffuse>
+            <R>1</R>
+            <G>1</G>
+            <B>1</B>
+            <A>1</A>
+        </Diffuse>
+        <DiffuseFile>Douglas_Body_Diffuse.png</DiffuseFile>
+    </Material>
+</Materials>

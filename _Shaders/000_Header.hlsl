@@ -13,6 +13,7 @@ cbuffer VS_World : register(b1)
 cbuffer VS_Bones : register(b2)
 {
     matrix Bones[128];
+    matrix BoneScale;
 }
 
 cbuffer VS_BoneIndex : register(b3)
@@ -104,6 +105,7 @@ struct VertexTextureNormalTangentBlend
 
 matrix BoneWorld()
 {
+    //return mul(Bones[BoneIndex], BoneScale);
     return Bones[BoneIndex];
 }
 
@@ -114,7 +116,8 @@ matrix SkinWorld(float4 blendIndices, float4 blendWeights)
     transform += mul(blendWeights.y, Bones[(uint) blendIndices.y]);
     transform += mul(blendWeights.z, Bones[(uint) blendIndices.z]);
     transform += mul(blendWeights.w, Bones[(uint) blendIndices.w]);
-
+    
+	//transform = mul(transform, BoneScale);
     return transform;
 }
 

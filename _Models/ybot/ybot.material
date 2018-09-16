@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Material>
+        <Name>Alpha_Body_MAT</Name>
+        <Diffuse>
+            <R>0.096570008</R>
+            <G>0.4216198</G>
+            <B>0.52200001</B>
+            <A>0.80000001</A>
+        </Diffuse>
+        <DiffuseFile></DiffuseFile>
+    </Material>
+    <Material>
+        <Name>Alpha_Joints_MAT</Name>
+        <Diffuse>
+            <R>0.15355153</R>
+            <G>0.21289387</G>
+            <B>0.22221714</B>
+            <A>0.80000001</A>
+        </Diffuse>
+        <DiffuseFile></DiffuseFile>
+    </Material>
+</Materials>

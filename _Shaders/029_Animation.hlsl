@@ -18,6 +18,7 @@ PixelInput VS(VertexTextureNormalTangentBlend input)
 
     // 사실 월드 변환된 이후에 position에 따라 해야되긴 함
     output.Position = mul(input.Position, world);
+    //output.Position = mul(output.Position, BoneScale);
 
     output.ViewDir = WorldViewDirection(output.Position);
 
@@ -26,8 +27,8 @@ PixelInput VS(VertexTextureNormalTangentBlend input)
 
 	output.Uv = input.Uv;
 
-    //output.Normal = mul(input.Normal, (float3x3) world);
-    //output.Normal = normalize(output.Normal);
+    output.Normal = mul(input.Normal, (float3x3) world);
+    output.Normal = normalize(output.Normal);
 
     output.Normal = WorldNormal(input.Normal, world);
     output.Tangent = WorldTangent(input.Tangent, world);
@@ -40,13 +41,17 @@ float4 PS(PixelInput input) : SV_TARGET
     float4 color = 0;
 
     float4 diffuse = DiffuseMap.Sample(DiffuseSampler, input.Uv);
-    DiffuseLighting(color, diffuse, input.Normal);
+    //DiffuseLighting(color, diffuse, input.Normal);
+    if (length(diffuse) > 0)
+        DiffuseLighting(color, diffuse, input.Normal);
+    else
+        DiffuseLighting(color, input.Normal);
 
-    float4 normal = NormalMap.Sample(NormalSampler, input.Uv);
-    NormalMapping(color, normal, input.Normal, input.Tangent);
+    //float4 normal = NormalMap.Sample(NormalSampler, input.Uv);
+    //NormalMapping(color, normal, input.Normal, input.Tangent);
 
-    float4 specular = SpecularMap.Sample(SpecularSampler, input.Uv);
-    SpecularLighting(color, specular, input.Normal, input.ViewDir);
+    //float4 specular = SpecularMap.Sample(SpecularSampler, input.Uv);
+    //SpecularLighting(color, specular, input.Normal, input.ViewDir);
 
     return color;
     // 디버깅 하기 위해서 normal을 반환형인 색상값으로

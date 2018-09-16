@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Material>
+        <Name>Beta_Joints_MAT</Name>
+        <Diffuse>
+            <R>0.33333334</R>
+            <G>0.12452888</G>
+            <B>0.10101473</B>
+            <A>0.80000001</A>
+        </Diffuse>
+        <DiffuseFile></DiffuseFile>
+    </Material>
+    <Material>
+        <Name>asdf1:Beta_HighLimbsGeoSG2</Name>
+        <Diffuse>
+            <R>0.83700001</R>
+            <G>0.30230802</G>
+            <B>0.26365501</B>
+            <A>0.80000001</A>
+        </Diffuse>
+        <DiffuseFile></DiffuseFile>
+    </Material>
+</Materials>
