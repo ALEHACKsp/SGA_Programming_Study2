@@ -9,6 +9,7 @@
 
 #include "./Executes/TestAnimation.h"
 #include "./Executes/TestImGui.h"
+#include "./Executes/TestImGuiDragnDrop.h"
 
 Program::Program()
 {
@@ -34,7 +35,8 @@ Program::Program()
 	//executes.push_back(new ExportAnim(values));
 
 	//executes.push_back(new TestAnimation(values));
-	executes.push_back(new TestImGui(values));
+	//executes.push_back(new TestImGui(values));
+	executes.push_back(new TestImGuiDragnDrop(values));
 }
 
 Program::~Program()

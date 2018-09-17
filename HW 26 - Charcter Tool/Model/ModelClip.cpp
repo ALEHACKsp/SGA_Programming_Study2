@@ -150,6 +150,7 @@ void ModelClip::Save(wstring file, Model* model)
 		wstring name = bone->Name();
 
 		unordered_map<wstring, ModelKeyframe*>::iterator it;
+
 		if ((it = keyframeMap.find(name)) == keyframeMap.end())
 			continue;
 

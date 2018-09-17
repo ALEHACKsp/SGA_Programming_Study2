@@ -207,8 +207,6 @@ void ExeHomework::PostRender()
 				}
 			}
 
-
-
 			//D3DXVECTOR3 scale, translation;
 			//D3DXQUATERNION rotation;
 			//D3DXMatrixDecompose(&scale, &rotation, &translation, &matWorld);
