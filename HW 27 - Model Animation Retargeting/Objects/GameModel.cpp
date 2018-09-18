@@ -191,13 +191,13 @@ void GameModel::BoneTree3(int index, int depth)
 		selectBone = bone->Index();
 	}
 
-	//if (ImGui::BeginDragDropSource())
-	//{
-	//	string temp = String::ToString(bone->Name());
-	//	ImGui::SetDragDropPayload("BoneName", &temp, sizeof(string));
-	//	ImGui::Text("BoneName %s", temp.c_str());
-	//	ImGui::EndDragDropSource();
-	//}
+	if (ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload("BoneName", (void *)bone, sizeof(ModelBone));
+		string temp = String::ToString(bone->Name());
+		ImGui::Text("BoneName %s", temp.c_str());
+		ImGui::EndDragDropSource();
+	}
 
 	if (selectBone == index) {
 		ImGui::GetWindowDrawList()->AddRectFilled(

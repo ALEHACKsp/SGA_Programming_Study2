@@ -201,9 +201,31 @@ void ModelClip::PostRender(wstring boneName)
 		wstring name = modelKeyframe->boneName;
 
 		if (ImGui::Selectable(String::ToString(name).c_str(), false, 0, ImVec2(250, 20))) {
-			if (boneName != L"") {
+			//if (boneName != L"") {
 
-				keyframeMap[boneName] = modelKeyframe;
+			//	keyframeMap[boneName] = modelKeyframe;
+
+			//	for (iter = keyframeMap.begin(); iter != keyframeMap.end(); iter++) {
+			//		if (iter->first == keyList[i]) {
+			//			keyframeMap.erase(iter);
+			//			break;
+			//		}
+			//	}
+
+			//	keyList[i] = boneName;
+			//	keyframeMap[keyList[i]]->boneName = keyList[i];
+			//}
+		}
+
+		ImGui::SameLine(270);
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("BoneName"))
+			{
+				IM_ASSERT(payload->DataSize == sizeof(ModelBone));
+				ModelBone* data = (ModelBone*)payload->Data;
+
+				keyframeMap[data->Name()] = modelKeyframe;
 
 				for (iter = keyframeMap.begin(); iter != keyframeMap.end(); iter++) {
 					if (iter->first == keyList[i]) {
@@ -212,33 +234,11 @@ void ModelClip::PostRender(wstring boneName)
 					}
 				}
 
-				keyList[i] = boneName;
+				keyList[i] = data->Name();
 				keyframeMap[keyList[i]]->boneName = keyList[i];
 			}
+			ImGui::EndDragDropTarget();
 		}
-
-		ImGui::SameLine(270);
-		//if (ImGui::BeginDragDropTarget())
-		//{
-		//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("BoneName"))
-		//	{
-		//		IM_ASSERT(payload->DataSize == sizeof(string));
-		//		string* data = (string*)payload->Data;
-
-		//		keyframeMap[String::ToWString(*data)] = modelKeyframe;
-
-		//		for (iter = keyframeMap.begin(); iter != keyframeMap.end(); iter++) {
-		//			if (iter->first == keyList[i]) {
-		//				keyframeMap.erase(iter);
-		//				break;
-		//			}
-		//		}
-
-		//		keyList[i] = String::ToWString(*data);
-		//		keyframeMap[keyList[i]]->boneName = keyList[i];
-		//	}
-		//	ImGui::EndDragDropTarget();
-		//}
 		
 		if (ImGui::ColorButton(("##keymapframe" + to_string(i)).c_str(),
 			ImVec4(255, 0, 0, 128), ImGuiColorEditFlags_NoTooltip))
