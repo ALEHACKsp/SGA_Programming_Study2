@@ -177,6 +177,7 @@
     <ClCompile Include="Renders\Lines\DebugDrawCone.cpp" />
     <ClCompile Include="Renders\Lines\DebugDrawCone2.cpp" />
     <ClCompile Include="Renders\Lines\DebugDrawCube.cpp" />
+    <ClCompile Include="Renders\Lines\DebugDrawCapsule.cpp" />
     <ClCompile Include="Renders\Lines\DebugDrawLine.cpp" />
     <ClCompile Include="Renders\Lines\DebugDrawSphere.cpp" />
     <ClCompile Include="Renders\Lines\DebugDrawSphere2.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="Renders\Lines\DebugDrawCone.h" />
     <ClInclude Include="Renders\Lines\DebugDrawCone2.h" />
     <ClInclude Include="Renders\Lines\DebugDrawCube.h" />
+    <ClInclude Include="Renders\Lines\DebugDrawCapsule.h" />
     <ClInclude Include="Renders\Lines\DebugDrawLine.h" />
     <ClInclude Include="Renders\Lines\DebugDrawSphere.h" />
     <ClInclude Include="Renders\Lines\DebugDrawSphere2.h" />

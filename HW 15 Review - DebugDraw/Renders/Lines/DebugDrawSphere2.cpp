@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "DebugDrawSphere2.h"
 
-DebugDrawSphere2::DebugDrawSphere2(
-	D3DXVECTOR3& center, float& radius, int sliceCount)
+DebugDrawSphere2::DebugDrawSphere2(float& radius, int sliceCount)
 {
 	name = "Sphere2";
-	this->center = center;
+
 	this->range = radius;
 	this->sliceCount = sliceCount;
 	lines = NULL;
@@ -30,9 +29,8 @@ void DebugDrawSphere2::PostRender()
 	__super::PostRender();
 }
 
-void DebugDrawSphere2::SetPosition(D3DXVECTOR3& center, float& range)
+void DebugDrawSphere2::Set(float& range)
 {
-	this->center = center;
 	this->range = range;
 	D3DXCOLOR color = vertices[0].Color;
 
@@ -55,7 +53,7 @@ void DebugDrawSphere2::CreateVertex()
 	if (lines != NULL)
 		SAFE_DELETE_ARRAY(lines);
 
-	float phiStep = 2.0f * D3DX_PI / sliceCount;
+	float phiStep = 2.0f * D3DX_PI / (float)sliceCount;
 	
 	// Create Vertex
 	{
@@ -66,22 +64,19 @@ void DebugDrawSphere2::CreateVertex()
 		// x = 0
 		for (UINT i = 0; i < sliceCount; i++) {
 			float phi = i * phiStep;
-			vertices[index] = center +
-				D3DXVECTOR3(0, (range * cosf(phi)), (range * sinf(phi)));
+			vertices[index] = D3DXVECTOR3(0, (range * cosf(phi)), (range * sinf(phi)));
 			index++;
 		}
 		// y = 0
 		for (UINT i = 0; i < sliceCount; i++) {
 			float phi = i * phiStep;
-			vertices[index] = center + 
-				D3DXVECTOR3((range * cosf(phi)), 0, (range * sinf(phi)));
+			vertices[index] = D3DXVECTOR3((range * cosf(phi)), 0, (range * sinf(phi)));
 			index++;
 		}
 		// z = 0
 		for (UINT i = 0; i < sliceCount; i++) {
 			float phi = i * phiStep;
-			vertices[index] = center +
-				D3DXVECTOR3((range * cosf(phi)), (range * sinf(phi)), 0);
+			vertices[index] = D3DXVECTOR3((range * cosf(phi)), (range * sinf(phi)), 0);
 			index++;
 		}
 
@@ -102,6 +97,8 @@ void DebugDrawSphere2::CreateVertex()
 			lines[index++] = vertices[i];
 			lines[index++] = i == sliceCount * 3 - 1 ? vertices[sliceCount * 2] : vertices[i + 1];
 		}
+
+		SAFE_DELETE_ARRAY(vertices);
 	}
 
 	this->vertexCount = lineCount * 2;

@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "DebugDrawCube.h"
 
-DebugDrawCube::DebugDrawCube(D3DXVECTOR3 & center, D3DXVECTOR3 & halfSize)
+DebugDrawCube::DebugDrawCube(D3DXVECTOR3 & halfSize)
 {
 	name = "Cube";
 
-	this->center = center;
 	this->halfSize = halfSize;
 
 	D3DXVECTOR3 lines[24];
@@ -28,7 +27,6 @@ void DebugDrawCube::PostRender()
 {
 	__super::PostRender();
 
-	float cp[] = { center.x, center.y,center.z };
 	float s[] = { halfSize.x,halfSize.y,halfSize.z };
 
 	D3DXCOLOR color = vertices[0].Color;
@@ -36,14 +34,12 @@ void DebugDrawCube::PostRender()
 	if (ImGui::ColorEdit4("Color", c))
 		SetColor(D3DXCOLOR(c));
 
-	if (ImGui::DragFloat3("Center Pos", cp) ||
-		ImGui::DragFloat3("HalfSize", s))
-		SetPosition(D3DXVECTOR3(cp), D3DXVECTOR3(s));
+	if (ImGui::DragFloat3("HalfSize", s))
+		Set(D3DXVECTOR3(s));
 }
 
-void DebugDrawCube::SetPosition(D3DXVECTOR3& center, D3DXVECTOR3& halfSize)
+void DebugDrawCube::Set(D3DXVECTOR3& halfSize)
 {
-	this->center = center;
 	this->halfSize = halfSize;
 
 	D3DXVECTOR3 lines[24];
@@ -57,9 +53,8 @@ void DebugDrawCube::SetPosition(D3DXVECTOR3& center, D3DXVECTOR3& halfSize)
 	UpdateBuffer();
 }
 
-void DebugDrawCube::Set(D3DXVECTOR3 & center, D3DXVECTOR3 & halfSize, D3DXCOLOR & color)
+void DebugDrawCube::Set(D3DXVECTOR3 & halfSize, D3DXCOLOR & color)
 {
-	this->center = center;
 	this->halfSize = halfSize;
 
 	D3DXVECTOR3 lines[24];
@@ -76,8 +71,8 @@ void DebugDrawCube::Set(D3DXVECTOR3 & center, D3DXVECTOR3 & halfSize, D3DXCOLOR 
 
 void DebugDrawCube::CreateVertex(D3DXVECTOR3 * lines)
 {
-	min = center - halfSize;
-	max = center + halfSize;
+	min = -halfSize;
+	max = halfSize;
 
 	D3DXVECTOR3 pos[8];
 

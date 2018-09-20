@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "DebugDrawCone2.h"
 
-DebugDrawCone2::DebugDrawCone2(
-	D3DXVECTOR3& center, float& radius, float& height, int sliceCount)
+DebugDrawCone2::DebugDrawCone2(float& radius, float& height, int sliceCount)
 {
-	name = "Cone";
-	this->center = center;
+	name = "Cone2";
+
 	this->radius = radius;
 	this->height = height;
 	this->sliceCount = sliceCount;
@@ -31,9 +30,8 @@ void DebugDrawCone2::PostRender()
 	__super::PostRender();
 }
 
-void DebugDrawCone2::SetPosition(D3DXVECTOR3& center, float& radius, float& height)
+void DebugDrawCone2::Set(float& radius, float& height)
 {
-	this->center = center;
 	this->radius = radius;
 	this->height = height;
 	D3DXCOLOR color = vertices[0].Color;
@@ -52,9 +50,8 @@ void DebugDrawCone2::SetPosition(D3DXVECTOR3& center, float& radius, float& heig
 	UpdateBuffer();
 }
 
-void DebugDrawCone2::Set(D3DXVECTOR3 & center, float & radius, float & height, D3DXCOLOR & color)
+void DebugDrawCone2::Set(float & radius, float & height, D3DXCOLOR & color)
 {
-	this->center = center;
 	this->radius = radius;
 	this->height = height;
 	
@@ -87,18 +84,18 @@ void DebugDrawCone2::CreateVertex()
 		UINT index = 0;
 		for (int i = 0; i < sliceCount; i++) {
 			float phi = i * phiStep;
-			vertices[index] = center + D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
+			vertices[index] = D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
 			index++;
 		}
-		vertices[index++] = center + D3DXVECTOR3(0, height, 0);
+		vertices[index++] = D3DXVECTOR3(0, height, 0);
 		float phi = 2.0f * D3DX_PI / 4;
-		vertices[index++] = center + D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
+		vertices[index++] = D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
 		phi += 2.0f * D3DX_PI / 4;
-		vertices[index++] = center + D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
+		vertices[index++] = D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
 		phi += 2.0f * D3DX_PI / 4;
-		vertices[index++] = center + D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
+		vertices[index++] = D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
 		phi += 2.0f * D3DX_PI / 4;
-		vertices[index++] = center + D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
+		vertices[index++] = D3DXVECTOR3(radius * cosf(phi), 0, radius * sinf(phi));
 
 
 		lineCount = sliceCount + 4;
@@ -118,6 +115,8 @@ void DebugDrawCone2::CreateVertex()
 		lines[index++] = vertices[sliceCount + 3];
 		lines[index++] = vertices[sliceCount];
 		lines[index++] = vertices[sliceCount + 4];
+
+		SAFE_DELETE_ARRAY(vertices);
 	}
 
 	this->vertexCount = lineCount * 2;

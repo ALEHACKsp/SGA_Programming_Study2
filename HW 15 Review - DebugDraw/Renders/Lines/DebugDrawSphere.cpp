@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "DebugDrawSphere.h"
 
-DebugDrawSphere::DebugDrawSphere(D3DXVECTOR3& center, float& radius,
-	int stackCount, int sliceCount)
+DebugDrawSphere::DebugDrawSphere(float& radius, int stackCount, int sliceCount)
 {
 	name = "Sphere";
 
-	this->center = center;
 	this->radius = radius;
 	this->stackCount = stackCount;
 	this->sliceCount = sliceCount;
@@ -31,23 +29,20 @@ void DebugDrawSphere::PostRender()
 {
 	__super::PostRender();
 
-	float cp[] = { center.x, center.y,center.z };
-
 	D3DXCOLOR color = vertices[0].Color;
 	float c[] = { color.r,color.g,color.b,color.a };
 	if (ImGui::ColorEdit4("Color", c))
 		SetColor(D3DXCOLOR(c));
 
-	if (ImGui::DragFloat3("Center Pos", cp) ||
-		ImGui::DragFloat("Radius", &radius) ||
+	if (ImGui::DragFloat("Radius", &radius) ||
 		ImGui::InputInt("StackCount", &stackCount) ||
 		ImGui::InputInt("SliceCount", &sliceCount))
-		SetPosition(D3DXVECTOR3(cp));
+		Set(radius);
 }
 
-void DebugDrawSphere::SetPosition(D3DXVECTOR3& center)
+void DebugDrawSphere::Set(float& radius)
 {
-	this->center = center;
+	this->radius = radius;
 	D3DXCOLOR color = vertices[0].Color;
 
 	CreateVertex();
@@ -64,9 +59,8 @@ void DebugDrawSphere::SetPosition(D3DXVECTOR3& center)
 	UpdateBuffer();
 }
 
-void DebugDrawSphere::Set(D3DXVECTOR3 & center, float & radius, D3DXCOLOR & color)
+void DebugDrawSphere::Set(float & radius, D3DXCOLOR & color)
 {
-	this->center = center;
 	this->radius = radius;
 
 	CreateVertex();
@@ -100,8 +94,7 @@ void DebugDrawSphere::CreateVertex()
 		for (UINT i = 0; i <= stackCount; i++) {
 			// 위와 밑의 꼭지점 처리
 			if (i == 0 || i == stackCount) {
-				vertices[index] = center + 
-					D3DXVECTOR3(0, i == 0 ? radius : -radius, 0);
+				vertices[index] = D3DXVECTOR3(0, i == 0 ? radius : -radius, 0);
 
 				index++;
 			}
@@ -109,7 +102,7 @@ void DebugDrawSphere::CreateVertex()
 				float phi = i * phiStep;
 				for (UINT j = 0; j <= sliceCount; j++) {
 					float theta = j * thetaStep;
-					vertices[index] = center + D3DXVECTOR3(
+					vertices[index] = D3DXVECTOR3(
 						(radius * sinf(phi) * cosf(theta)),
 						(radius * cosf(phi)),
 						(radius * sinf(phi) * sinf(theta)));
@@ -156,6 +149,8 @@ void DebugDrawSphere::CreateVertex()
 			lines[index++] = vertices[southPoleIndex];
 			lines[index++] = vertices[baseIndex + i];
 		}
+
+		SAFE_DELETE_ARRAY(vertices);
 	}
 
 	this->vertexCount = lineCount * 2;

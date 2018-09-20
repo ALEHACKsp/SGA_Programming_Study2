@@ -147,6 +147,9 @@
     <ClCompile Include="Renders\Lines\DebugDrawCone2.cpp">
       <Filter>Renders\Lines</Filter>
     </ClCompile>
+    <ClCompile Include="Renders\Lines\DebugDrawCapsule.cpp">
+      <Filter>Renders\Lines</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -308,6 +311,9 @@
       <Filter>Renders\Lines</Filter>
     </ClInclude>
     <ClInclude Include="Renders\Lines\DebugDrawCone2.h">
+      <Filter>Renders\Lines</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\Lines\DebugDrawCapsule.h">
       <Filter>Renders\Lines</Filter>
     </ClInclude>
   </ItemGroup>

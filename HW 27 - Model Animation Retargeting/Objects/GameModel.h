@@ -43,6 +43,7 @@ public :
 	void TreeRender(bool isSelect = false);
 	void BoneTree2(int parentIndex, int depth);
 	void BoneTree3(int index, int depth);
+	void BoneTree4(int index, int depth);
 	void BoneRender();
 
 	D3DXVECTOR3 BonePosition(int boneIndex);

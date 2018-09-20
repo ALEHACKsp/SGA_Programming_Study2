@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "DebugDrawCone.h"
 
-DebugDrawCone::DebugDrawCone(
-	D3DXVECTOR3& center, float& height, float angle, int sliceCount)
+DebugDrawCone::DebugDrawCone(float& height, float angle, int sliceCount)
 {
 	name = "Cone";
-	this->center = center;
+
 	this->angle = angle;
 	this->height = height;
 	this->sliceCount = sliceCount;
@@ -36,16 +35,14 @@ void DebugDrawCone::PostRender()
 
 	if (ImGui::ColorEdit4("Color", (float*)vertices[0].Color))
 		SetColor(vertices[0].Color);
-	if (ImGui::DragFloat3("Center Pos", (float*)&center)
-		|| ImGui::DragFloat("Height", &height)
+	if (ImGui::DragFloat("Height", &height)
 		|| ImGui::DragFloat("Degree", &degree)) {
-		SetPosition(center, height, Math::ToRadian(degree));
+		Set(height, Math::ToRadian(degree));
 	}
 }
 
-void DebugDrawCone::SetPosition(D3DXVECTOR3& center, float& height, float angle)
+void DebugDrawCone::Set(float& height, float angle)
 {
-	this->center = center;
 	this->angle = angle;
 	this->height = height;
 
@@ -67,9 +64,8 @@ void DebugDrawCone::SetPosition(D3DXVECTOR3& center, float& height, float angle)
 	UpdateBuffer();
 }
 
-void DebugDrawCone::Set(D3DXVECTOR3 & center, float & height, float & angle, D3DXCOLOR & color)
+void DebugDrawCone::Set(float & height, float & angle, D3DXCOLOR & color)
 {
-	this->center = center;
 	this->angle = angle;
 	this->height = height;
 	
@@ -101,15 +97,15 @@ void DebugDrawCone::CreateVertex()
 		int vertexCount = sliceCount * 2 + 1;
 		D3DXVECTOR3* vertices = new D3DXVECTOR3[vertexCount];
 
-		vertices[0] = center;
+		vertices[0] = D3DXVECTOR3(0, 0, 0);
 
 		UINT index = 1;
 		for (int i = 0; i < sliceCount; i++) {
 			float phi = i * phiStep;
 			vertices[index++] = D3DXVECTOR3(
-				center.x + radius * cosf(phi),
-				center.y - height,
-				center.z + radius * sinf(phi)
+				radius * cosf(phi),
+				0 - height,
+				radius * sinf(phi)
 			);
 		}
 
@@ -126,6 +122,7 @@ void DebugDrawCone::CreateVertex()
 			lines[index++] = i == sliceCount ? vertices[1] : vertices[i + 1];
 		}
 
+		SAFE_DELETE_ARRAY(vertices);
 	}
 
 	this->vertexCount = lineCount * 2;

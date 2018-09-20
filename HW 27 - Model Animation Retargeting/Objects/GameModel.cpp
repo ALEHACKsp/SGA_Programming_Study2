@@ -208,11 +208,42 @@ void GameModel::BoneTree3(int index, int depth)
 		BoneTree3(bone->child(i)->Index(), depth + 1);
 }
 
+void GameModel::BoneTree4(int index, int depth)
+{
+	ModelBone* bone = model->BoneByIndex(index);
+
+	string name = String::ToString(bone->Name());
+	if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if(ImGui::IsItemClicked(1))
+			selectBone = bone->Index();
+
+		if (ImGui::BeginDragDropSource())
+		{
+			ImGui::SetDragDropPayload("BoneName", (void *)bone, sizeof(ModelBone));
+			string temp = String::ToString(bone->Name());
+			ImGui::Text("BoneName %s", temp.c_str());
+			ImGui::EndDragDropSource();
+		}
+
+		if (selectBone == index) {
+			ImGui::GetWindowDrawList()->AddRectFilled(
+				ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(0, 0, 255, 128));
+		}
+
+		for (int i = 0; i < bone->ChildCount(); i++)
+			BoneTree4(bone->child(i)->Index(), depth + 1);
+
+		ImGui::TreePop();
+	}
+}
+
 void GameModel::BoneRender()
 {
 	ImGui::TextColored(ImVec4(255,255,0,255), (Name() + " Hierarchy").c_str());
 	//BoneTree2(-1, 0);
 	BoneTree3(0, 0);
+	//BoneTree4(0, 0);
 
 	//for (int i = 0; i < model->BoneCount(); i++) {
 	//	ModelBone* bone = model->BoneByIndex(i);

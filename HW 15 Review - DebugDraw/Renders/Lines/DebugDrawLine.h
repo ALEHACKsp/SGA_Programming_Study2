@@ -11,12 +11,12 @@ public:
 	void Render();
 	void PostRender();
 	
-	void GetPosition(D3DXVECTOR3* start, D3DXVECTOR3* end)
+	void Get(D3DXVECTOR3* start, D3DXVECTOR3* end)
 	{
 		start = &this->start;
 		end = &this->end;
 	}
-	void SetPosition(D3DXVECTOR3& start, D3DXVECTOR3& end);
+	void Set(D3DXVECTOR3& start, D3DXVECTOR3& end);
 		
 private:
 	D3DXVECTOR3 start;

@@ -40,7 +40,7 @@ void DebugDrawLine::PostRender()
 
 	if (ImGui::DragFloat3("Start Pos", s) ||
 		ImGui::DragFloat3("End Pos", e))
-		SetPosition(D3DXVECTOR3(s), D3DXVECTOR3(e));
+		Set(D3DXVECTOR3(s), D3DXVECTOR3(e));
 
 	ImGui::Checkbox("X Axis", &selectAxis[0]);
 	ImGui::SameLine(90);
@@ -66,11 +66,11 @@ void DebugDrawLine::PostRender()
 		else
 			end.z = start.z;
 
-		SetPosition(start, end);
+		Set(start, end);
 	}
 }
 
-void DebugDrawLine::SetPosition(D3DXVECTOR3 & start, D3DXVECTOR3 & end)
+void DebugDrawLine::Set(D3DXVECTOR3 & start, D3DXVECTOR3 & end)
 {
 	this->start = start;
 	this->end = end;
