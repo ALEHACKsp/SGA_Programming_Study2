@@ -100,7 +100,8 @@ void DebugDrawCapsule::CreateVertex()
 			// 위와 밑의 꼭지점 처리
 			if (i == 0 || i == stackCount) {
 				vertices[index] = D3DXVECTOR3(0, i == 0 ? 
-					radius + 0.5f * height : height * -0.5f - radius, 0);
+					radius + 0.5f * height : height * -0.5f
+					- radius, 0);
 
 				index++;
 			}

@@ -418,10 +418,10 @@ void ExCharacterTool::ExportMesh()
 
 void ExCharacterTool::ExportAnimation(wstring file)
 {
-	exporter->ExportAnimation(Models + L"Animations/", this->file + L".anim", 0);
+	exporter->ExportAnimation(Models + this->file + L"/", this->file + L".anim", 0);
 
 	if (isExportRead) {
-		ReadAnimation(Models + L"Animations/" + file + L".anim");
+		ReadAnimation(Models + this->file + L"/" + file + L".anim");
 	}
 }
 

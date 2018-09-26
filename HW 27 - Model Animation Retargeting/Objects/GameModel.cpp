@@ -17,7 +17,7 @@ GameModel::GameModel(wstring matFolder, wstring matFile, wstring meshFolder, wst
 	float radius = 1.0f;
 	debug = new DebugDrawSphere2(center, radius);
 
-	showBoneDebug = true;
+	showBoneDebug = false;
 	depthMode[0] = new DepthStencilState();
 	depthMode[1] = new DepthStencilState();
 	depthMode[1]->DepthEnable(false);

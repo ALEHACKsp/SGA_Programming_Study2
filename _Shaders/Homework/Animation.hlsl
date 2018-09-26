@@ -1,5 +1,11 @@
 #include "../000_Header.hlsl"
 
+cbuffer PS_Normal : register(b10)
+{
+    int VisibleNormal;
+    int VisibleSpecular;
+}
+
 struct PixelInput
 {
     float4 Position : SV_POSITION; // SV만 정해진 예약어 나머진 편한대로 쓰면 됨
@@ -42,11 +48,20 @@ float4 PS(PixelInput input) : SV_TARGET
     float4 diffuse = DiffuseMap.Sample(DiffuseSampler, input.Uv);
     DiffuseLighting(color, diffuse, input.Normal);
 
-    float4 normal = NormalMap.Sample(NormalSampler, input.Uv);
-    NormalMapping(color, normal, input.Normal, input.Tangent);
+    if (VisibleNormal == 1)
+    {
+        float4 normal = NormalMap.Sample(NormalSampler, input.Uv);
+        if (length(normal) > 0)
+            NormalMapping(color, normal, input.Normal, input.Tangent);
+    }
 
-    float4 specular = SpecularMap.Sample(SpecularSampler, input.Uv);
-    SpecularLighting(color, specular, input.Normal, input.ViewDir);
+    if (VisibleSpecular == 1)
+    {
+        float4 specular = SpecularMap.Sample(SpecularSampler, input.Uv);
+        if (length(specular) > 0)
+            SpecularLighting(color, specular, input.Normal, input.ViewDir);
+    }
+
 
     return color;
     // 디버깅 하기 위해서 normal을 반환형인 색상값으로

@@ -31,10 +31,10 @@ cbuffer PS_Material : register(b1)
 {
     float4 Diffuse; // 알파값이 없어서 Diffuse alpha의 Shininess 쓰기도함
     float4 Specular;
-    float4 Detail;
+    //float4 Detail;
 
     float Shininess; // specular power라고 쓰기도 함
-    float Brightness;
+    //float Brightness;
 }
 
 Texture2D DiffuseMap : register(t0);
