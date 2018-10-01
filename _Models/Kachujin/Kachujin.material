@@ -9,5 +9,7 @@
             <A>0.80000001</A>
         </Diffuse>
         <DiffuseFile>Kachujin_diffuse.png</DiffuseFile>
+        <SpecularFile>Kachujin_specular.png</SpecularFile>
+        <NormalFile>Kachujin_normal.png</NormalFile>
     </Material>
 </Materials>
