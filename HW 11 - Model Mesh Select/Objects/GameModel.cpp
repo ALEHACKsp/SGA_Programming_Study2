@@ -121,7 +121,7 @@ bool GameModel::IsPickModelMesh(Camera * camera, Viewport * viewport,
 	//{
 	//	D3DXMATRIX invWorld;
 	//	D3DXMatrixInverse(&invWorld, NULL, &Transformed());
-
+	//
 	//	D3DXVec3TransformCoord(&start, &start, &invWorld);
 	//	D3DXVec3TransformNormal(&direction, &direction, &invWorld);
 	//	D3DXVec3Normalize(&direction, &direction);

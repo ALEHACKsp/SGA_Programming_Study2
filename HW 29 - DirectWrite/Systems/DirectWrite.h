@@ -81,7 +81,7 @@ struct FontTextDesc
 		b &= Font == val.Font;
 		b &= FontSize == val.FontSize;
 		b &= Weight == val.Weight;
-		b &= Style = val.Style;
+		b &= Style == val.Style;
 		b &= Stretch == val.Stretch;
 
 		return b;

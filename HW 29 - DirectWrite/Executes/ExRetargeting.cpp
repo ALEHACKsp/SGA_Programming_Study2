@@ -332,7 +332,7 @@ void ExRetargeting::Render2D()
 			//	D3DXVECTOR4 worldToScreen(0, 0, 0, 1);
 			//	D3DXVec4Transform(&worldToScreen, &worldToScreen, &WVP);
 			//
-			//	// NDC 공간으로 변환
+			//	// NDC 공간으로 변환 투영변환까지 끝난 정규화된 좌표 viewport 전
 			//	float wScreenX = worldToScreen.x / worldToScreen.w;
 			//	float wScreenY = worldToScreen.y / worldToScreen.w;
 			//	float wScreenZ = worldToScreen.z / worldToScreen.w;

@@ -29,6 +29,7 @@ cbuffer PS_Light : register(b0) // 버텍스 쉐이더랑 별개이므로 다시 0번부터
 // material 재질 의미
 cbuffer PS_Material : register(b1)
 {
+    float4 Ambient;
     float4 Diffuse; // 알파값이 없어서 Diffuse alpha의 Shininess 쓰기도함
     float4 Specular;
     //float4 Detail;

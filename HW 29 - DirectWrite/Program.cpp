@@ -28,7 +28,7 @@ Program::Program()
 	values->GlobalLight->Data.Direction = D3DXVECTOR3(-1, -1, 1);
 
 	//executes.push_back(new ExportModel(values));
-	//executes.push_back(new ExportMesh(values));
+	executes.push_back(new ExportMesh(values));
 	//executes.push_back(new ExportAnim(values));
 
 	executes.push_back(new ExRetargeting(values));

@@ -24,7 +24,7 @@ Program::Program()
 	//values->MainCamera->Position(0, 10, -15);
 
 	//executes.push_back(new ExportModel(values));
-	//executes.push_back(new ExportMesh(values));
+	executes.push_back(new ExportMesh(values));
 
 	executes.push_back(new DrawLandScape(values));
 }
