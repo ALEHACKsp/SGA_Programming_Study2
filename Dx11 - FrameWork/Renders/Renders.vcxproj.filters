@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Renders">
+      <UniqueIdentifier>{82b39acc-883c-4864-b0ad-fe57e6c65fda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renders\State">
+      <UniqueIdentifier>{09181a47-afa6-418d-892a-420fb4077cf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renders\Buffer">
+      <UniqueIdentifier>{753eeecb-3ecd-4cda-9cc5-05ebec13458e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Material.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Render2D.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexLayouts.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendState.h">
+      <Filter>Renders\State</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthStencilState.h">
+      <Filter>Renders\State</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterizerState.h">
+      <Filter>Renders\State</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerState.h">
+      <Filter>Renders\State</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalBuffers.h">
+      <Filter>Renders\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderBuffer.h">
+      <Filter>Renders\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Material.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Render2D.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="BlendState.cpp">
+      <Filter>Renders\State</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthStencilState.cpp">
+      <Filter>Renders\State</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterizerState.cpp">
+      <Filter>Renders\State</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerState.cpp">
+      <Filter>Renders\State</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalBuffers.cpp">
+      <Filter>Renders\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderBuffer.cpp">
+      <Filter>Renders\Buffer</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

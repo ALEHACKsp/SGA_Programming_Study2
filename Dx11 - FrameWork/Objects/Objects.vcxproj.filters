@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Billboard.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModel.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRender.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTank.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCube.h">
+      <Filter>Objects\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshPlane.h">
+      <Filter>Objects\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshSphere.h">
+      <Filter>Objects\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Objects\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Objects\Light</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{61dd9ea2-7de3-4bd1-aaac-e4ee8de84d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Mesh">
+      <UniqueIdentifier>{dd9cd8d2-1240-440d-8376-6b28953ab1ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Light">
+      <UniqueIdentifier>{54c339a9-9e7a-4173-8414-a02b2ab56a3d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Billboard.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameModel.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRender.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTank.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshCube.cpp">
+      <Filter>Objects\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshPlane.cpp">
+      <Filter>Objects\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshSphere.cpp">
+      <Filter>Objects\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Objects\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Objects\Light</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

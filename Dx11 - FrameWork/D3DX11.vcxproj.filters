@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Program.cpp" />
+    <ClCompile Include="Executes\TestLandScape.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Executes\ExportMesh.cpp">
+      <Filter>Executes\Export</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ExportModel.cpp">
+      <Filter>Executes\Export</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Program.h" />
+    <ClInclude Include="Executes\TestLandScape.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h" />
+    <ClInclude Include="Executes\Execute.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ExportMesh.h">
+      <Filter>Executes\Export</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ExportModel.h">
+      <Filter>Executes\Export</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Executes">
+      <UniqueIdentifier>{26ff6377-4e91-4e47-9272-04a8efbd7794}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executes\Export">
+      <UniqueIdentifier>{0eb8cf21-5a59-4546-87c7-d14044e4988b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

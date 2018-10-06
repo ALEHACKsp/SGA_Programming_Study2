@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="QuadTree.h">
+      <Filter>LandScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Sky.h">
+      <Filter>LandScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>LandScape</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainRender.h">
+      <Filter>LandScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>LandScape</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="LandScape">
+      <UniqueIdentifier>{57557c72-ae52-45ea-a979-464cc5215adf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>LandScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Sky.cpp">
+      <Filter>LandScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>LandScape</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainRender.cpp">
+      <Filter>LandScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>LandScape</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

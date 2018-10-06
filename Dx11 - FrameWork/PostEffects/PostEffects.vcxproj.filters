@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="PostEffects">
+      <UniqueIdentifier>{e377abcf-29bf-4bd7-a879-34a16a70ff11}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Blur.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussianBlur.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="Grayscale.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Blur.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianBlur.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="Grayscale.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffects.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+</Project>

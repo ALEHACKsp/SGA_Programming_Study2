@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Fbx.h" />
+    <ClInclude Include="Exporter.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Fbx">
+      <UniqueIdentifier>{2841e45f-2674-4e83-a4b0-de7272e5574d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Exporter.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

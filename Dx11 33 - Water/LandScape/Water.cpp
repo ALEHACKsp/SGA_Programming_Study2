@@ -3,7 +3,7 @@
 
 Water::Water(ExecuteValues * values, UINT width, UINT height, float thick, Texture * heightMap)
 	:values(values), width(width), height(height), thick(thick)
-	, heightMap(heightMap), bWireframe(true)
+	, heightMap(heightMap), bWireframe(false)
 {
 	material = new Material(Shaders + L"030_Water.hlsl");
 	material->SetAmbient(D3DXCOLOR(0.25f, 0.20f, 1.0f, 1.0f));
@@ -94,7 +94,9 @@ Water::Water(ExecuteValues * values, UINT width, UINT height, float thick, Textu
 	}
 
 	{
-
+		blendState[0] = new BlendState();
+		blendState[1] = new BlendState();
+		blendState[1]->BlendEnable(true);
 	}
 
 	worldBuffer = new WorldBuffer();
@@ -118,6 +120,9 @@ Water::~Water()
 
 	SAFE_DELETE(rasterizerState[0]);
 	SAFE_DELETE(rasterizerState[1]);
+
+	SAFE_DELETE(blendState[0]);
+	SAFE_DELETE(blendState[1]);
 }
 
 void Water::Update()
@@ -148,12 +153,12 @@ void Water::Render()
 	worldBuffer->SetVSBuffer(1);
 	material->PSSetBuffer();
 
-
 	if (bWireframe == true)
 		rasterizerState[1]->RSSetState();
-
+	blendState[1]->OMSetBlendState();
+	
 	D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
-
+	
+	blendState[0]->OMSetBlendState();
 	rasterizerState[0]->RSSetState();
-
 }

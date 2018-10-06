@@ -30,7 +30,7 @@ RenderTarget::RenderTarget(ExecuteValues * values, UINT width, UINT height)
 		textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // 총 128비트 사용하는거
 		textureDesc.SampleDesc.Count = 1; // sampling 확대 축소 할 때 간격 맞춰주고 하는거
 		textureDesc.SampleDesc.Quality = 0;
-		textureDesc.Usage - D3D11_USAGE_DEFAULT;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
 		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE
 			| D3D11_BIND_RENDER_TARGET; // 이게 shader resource view로 할당하겠다는거 
 		// render target 용도로도 쓰겠다는거
