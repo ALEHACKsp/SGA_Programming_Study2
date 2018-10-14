@@ -456,7 +456,7 @@ void Fbx::Exporter::ReadSkinData()
 
 void Fbx::Exporter::WriteMeshData(wstring saveFolder, wstring fileName)
 {
-	Path::CreateFolder(saveFolder);
+	Path::CreateFolders(saveFolder);
 
 	BinaryWriter* w = new BinaryWriter();
 	// 저장할 파일 열기

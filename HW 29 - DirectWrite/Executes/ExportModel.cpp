@@ -8,11 +8,11 @@ ExportModel::ExportModel(ExecuteValues * values)
 {
 	Fbx::Exporter* exporter = NULL;
 
-	// Cube
+	//// Cube
 	//exporter = new Fbx::Exporter(Assets + L"Meshes/Cube.fbx");
 	//exporter->ExportMaterial(Models + L"/Meshes/Cube/", L"Cube.material");
 
-	// Tank
+	//// Tank
 	//exporter = new Fbx::Exporter(Assets + L"Tank/Tank.fbx");
 	//exporter->ExportMaterial(Models + L"/Tank/", L"Tank.material");
 	//exporter->ExportMesh(Models + L"/Tank/", L"Tank.mesh");

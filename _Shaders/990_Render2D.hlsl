@@ -23,6 +23,8 @@ PixelInput VS(VertexTexture input)
 	// 이렇게하면 비율로 들어감
 	// NDC 공간 - dx9에서 FVF_RHWXYZ 쓴거랑 같음
     //output.Position = input.Position;
+	// ouput.Position.x / output.Position.w 
+	// ouput.Position.y / output.Position.w // 나누면 NDC 공간 됨 -1 ~ 1,
 
     output.Uv = input.Uv;
 

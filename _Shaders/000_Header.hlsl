@@ -13,7 +13,8 @@ cbuffer VS_World : register(b1)
 cbuffer VS_Bones : register(b2)
 {
     matrix Bones[128];
-    matrix BoneScale;
+    
+    int UseBlend;
 }
 
 cbuffer VS_BoneIndex : register(b3)
@@ -24,6 +25,10 @@ cbuffer VS_BoneIndex : register(b3)
 cbuffer PS_Light : register(b0) // 버텍스 쉐이더랑 별개이므로 다시 0번부터
 {
     float3 Direction;
+    float PS_Light_Padding;
+    
+	float3 Position;
+    float PS_Light_Padding2;
 }
 
 // material 재질 의미

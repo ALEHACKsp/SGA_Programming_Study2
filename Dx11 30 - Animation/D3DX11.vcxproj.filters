@@ -63,21 +63,6 @@
     <ClCompile Include="Fbx\Utility.cpp">
       <Filter>Fbx</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Model.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelBone.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelMeshPart.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelMesh.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelReader.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Executes\ExportModel.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
@@ -132,12 +117,6 @@
     <ClCompile Include="Executes\TestAnimation.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ModelKeyframe.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelClip.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Objects\MeshCube.cpp">
       <Filter>Objects\Meshes</Filter>
     </ClCompile>
@@ -161,6 +140,27 @@
     </ClCompile>
     <ClCompile Include="Objects\GameModel.cpp">
       <Filter>Objects\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelBone.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelClip.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelKeyframe.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelMesh.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelMeshPart.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelReader.cpp">
+      <Filter>Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -247,18 +247,6 @@
     <ClInclude Include="Fbx\Utility.h">
       <Filter>Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Model.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelBone.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelMeshPart.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelMesh.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\GameRender.h">
       <Filter>Objects</Filter>
     </ClInclude>
@@ -310,12 +298,6 @@
     <ClInclude Include="Executes\TestAnimation.h">
       <Filter>Executes</Filter>
     </ClInclude>
-    <ClInclude Include="Model\ModelKeyframe.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelClip.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Objects\MeshCube.h">
       <Filter>Objects\Meshes</Filter>
     </ClInclude>
@@ -339,6 +321,24 @@
     </ClInclude>
     <ClInclude Include="Objects\GameModel.h">
       <Filter>Objects\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelBone.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelClip.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelKeyframe.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelMesh.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelMeshPart.h">
+      <Filter>Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

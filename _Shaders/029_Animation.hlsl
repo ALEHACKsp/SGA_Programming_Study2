@@ -27,9 +27,6 @@ PixelInput VS(VertexTextureNormalTangentBlend input)
 
 	output.Uv = input.Uv;
 
-    output.Normal = mul(input.Normal, (float3x3) world);
-    output.Normal = normalize(output.Normal);
-
     output.Normal = WorldNormal(input.Normal, world);
     output.Tangent = WorldTangent(input.Tangent, world);
 
