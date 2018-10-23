@@ -96,7 +96,7 @@ void Program::PostRender()
 	
 	D3DXVECTOR3 vec;
 	values->MainCamera->Position(&vec);
-	ImGui::LabelText("CamearPos", "%.2f, %.2f, %.2f", 
+	ImGui::LabelText("CameraPos", "%.2f, %.2f, %.2f", 
 		vec.x, vec.y, vec.z);
 
 	D3DXVECTOR2 rot;

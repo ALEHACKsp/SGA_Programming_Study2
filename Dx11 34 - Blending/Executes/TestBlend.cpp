@@ -16,7 +16,7 @@ TestBlend::TestBlend(ExecuteValues * values)
 
 	quad2 = new MeshQuad();
 	quad2->SetShader(shader);
-	quad2->SetDiffuseMap(Textures + L"Test.png");
+	quad2->SetDiffuseMap(Textures + L"Tree.png");
 
 	quad2->Scale(10, 10, 1);
 	quad2->Position(0, 0, -0.001f);

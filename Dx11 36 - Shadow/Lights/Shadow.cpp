@@ -37,6 +37,10 @@ Shadow::Shadow(ExecuteValues * values)
 	samplerState[1]->Filter(D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR);
 
 	buffer = new Buffer();
+	buffer->Data.Size = D3DXVECTOR2(2048, 2048);
+
+	buffer->Data.Selected = 2;
+	values->GlobalLight->Data.Position = D3DXVECTOR3(0, 5, 5);
 }
 
 Shadow::~Shadow()
@@ -99,8 +103,8 @@ void Shadow::PreRender()
 
 void Shadow::Render()
 {
-	ImGui::SliderInt("Shadow Selected", &buffer->Data.Selected, 0, 1);
-	ImGui::DragFloat("Shadow Bias", &buffer->Data.Bias, 0.0001f, 0.0001f, 0.1f);
+	ImGui::SliderInt("Shadow Selected", &buffer->Data.Selected, 0, 2);
+	ImGui::DragFloat("Shadow Bias", &buffer->Data.Bias, 0.0001f, 0.0001f, 0.1f, "%.4f");
 	ImGui::SliderFloat3("Light Position", 
 		(float*)&values->GlobalLight->Data.Position, -100, 100);
 

@@ -53,7 +53,7 @@ TestShadow::TestShadow(ExecuteValues * values)
 		board->Position(-20, 5, 10);
 		board->RotationDegree(-90, 0, 0);
 
-		cctv = new MeshPlane();
+		cctv = new MeshPlane();ksd
 		texture2 = new Texture();
 		cctv->SetShader(sunShader);
 		cctv->SetDiffuseMap(texture2);

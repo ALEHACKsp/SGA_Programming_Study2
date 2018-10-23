@@ -223,7 +223,7 @@ void D3D::CreateSwapChainAndDevice()
 	HRESULT hr = D3D11CreateDeviceAndSwapChain
 	(
 		NULL
-		, D3D_DRIVER_TYPE_HARDWARE
+		, D3D_DRIVER_TYPE_HARDWARE // 이게 HAL reference 해볼 수 있는데 프레임 엄청 떨어짐
 		, NULL
 		, creationFlags
 		, featureLevels

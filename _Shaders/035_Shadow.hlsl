@@ -81,6 +81,8 @@ PixelInputShadow VS_Shadow(VertexTextureNormalTangentBlend input)
 
 cbuffer PS_Shadow : register(b10)
 {
+    float2 MapSize;
+
     float Bias;
     int Selected;
 }
@@ -105,17 +107,56 @@ float4 PS_Shadow(PixelInputShadow input) : SV_TARGET
     input.vPosition.y = -input.vPosition.y * 0.5f + 0.5f;
     input.vPosition.z -= Bias; // 미세한 값 준거 zFighting 문제 때문에
 
-
     float depth = 0;
+    float factor = 0;
 
 	[Branch]
 	if(Selected == 0)
-		depth = DepthMap.Sample(DiffuseSampler, input.vPosition.xy).r;
+    {
+        depth = DepthMap.Sample(DiffuseSampler, input.vPosition.xy).r;
+		// 깊이가 작거나 같다는 얘기는 가까운 면이라는 얘기 -> 그 영역은 true
+        factor = (float) input.vPosition.z <= depth;
+        //factor = depth;
+    }
     else if (Selected == 1)
+    {
         depth = DepthMap.SampleCmpLevelZero(DepthSampler, input.vPosition.xy, input.vPosition.z);
+				// 깊이가 작거나 같다는 얘기는 가까운 면이라는 얘기 -> 그 영역은 true
+        factor = depth;
+        //factor = (float) input.vPosition.z <= depth;
+    }
+	else if (Selected == 2)
+    {
+        float sum = 0;
+        float avg = 0;
 
-	// 깊이가 작거나 같다는 얘기는 가까운 면이라는 얘기 -> 그 영역은 true
-    float factor = (float) input.vPosition.z <= depth;
+		// 수치는 나중에 버퍼로 넘기면 됨
+        //for (float y = -1.5f; y <= 1.5f; y += 1.0f)
+        //{
+        //    for (float x = -1.5f; x <= 1.5f; x += 1.0f)
+        //    {
+        //        float2 offset = float2(x * 1.0f / MapSize.x, y * 1.0f / MapSize.y);
+		//		
+        //        sum += DepthMap.SampleCmpLevelZero(DepthSampler, input.vPosition.xy + offset, input.vPosition.z).r;
+		//		  avg++;
+        //    }
+        //}
+
+		// 이정도만 해도 됨 성능에 따라 하는 걸로
+        for (float y = -0.5f; y <= 0.5f; y += 1.0f)
+        {
+            for (float x = -0.5f; x <= 0.5f; x += 1.0f)
+            {
+                float2 offset = float2(x * 1.0f / MapSize.x, y * 1.0f / MapSize.y);
+				
+                sum += DepthMap.SampleCmpLevelZero(DepthSampler, input.vPosition.xy + offset, input.vPosition.z).r;
+                avg++;
+            }
+        }
+
+        //factor = sum / 16.0f; // 4x4 라 16으로 나눈거
+        factor = sum / avg; // avg로 나누면 됨
+    }
 
     color.rgb *= factor;
 

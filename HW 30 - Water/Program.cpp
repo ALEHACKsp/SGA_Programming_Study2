@@ -100,7 +100,7 @@ void Program::PostRender()
 	rect.top += space;
 	D3DXVECTOR3 vec;
 	values->MainCamera->Position(&vec);
-	str = String::Format(L"CamearPos %.2f, %.2f, %.2f", vec.x, vec.y, vec.z);
+	str = String::Format(L"CameraPos %.2f, %.2f, %.2f", vec.x, vec.y, vec.z);
 	DirectWrite::RenderText(str, rect, 12);
 
 	rect.top += space;
