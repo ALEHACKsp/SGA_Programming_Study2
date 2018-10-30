@@ -13,11 +13,14 @@ TestAmbient::TestAmbient(ExecuteValues * values)
 
 	ambientBuffer = new AmbientBuffer();
 	specularBuffer = new SpecularBuffer();
+	pointLightBuffer = new PointLightBuffer();
+	spotLightBuffer = new SpotLightBuffer();
+	capsuleLightBuffer = new CapsuleLightBuffer();
 
 	plane = new MeshPlane();
 	plane->Scale(10, 1, 10);
 	plane->SetShader(shader);
-	plane->SetDiffuse(1, 0, 0);
+	plane->SetDiffuse(1, 1, 1);
 
 	cube = new MeshCube();
 	cube->Position(-10, 1.5f, 0);
@@ -51,6 +54,9 @@ TestAmbient::~TestAmbient()
 
 	SAFE_DELETE(ambientBuffer);
 	SAFE_DELETE(specularBuffer);
+	SAFE_DELETE(pointLightBuffer);
+	SAFE_DELETE(spotLightBuffer);
+	SAFE_DELETE(capsuleLightBuffer);
 
 	SAFE_DELETE(plane);
 	SAFE_DELETE(cube);
@@ -77,14 +83,45 @@ void TestAmbient::PreRender()
 
 void TestAmbient::Render()
 {
-	ImGui::SliderFloat3("AmbientFloor", (float*)&ambientBuffer->Data.Floor, 0, 1);
-	ImGui::SliderFloat3("AmbientCeil", (float*)&ambientBuffer->Data.Ceil, 0, 1);
+	//ImGui::Separator();
+	//ImGui::SliderFloat3("AmbientFloor", (float*)&ambientBuffer->Data.Floor, 0, 1);
+	//ImGui::SliderFloat3("AmbientCeil", (float*)&ambientBuffer->Data.Ceil, 0, 1);
 
-	ImGui::SliderFloat("Specular Exp", &specularBuffer->Data.Exp, 1, 100);
-	ImGui::SliderFloat("Specular Intensity", &specularBuffer->Data.Intensity, 0, 10);
+	//ImGui::Separator();
+	//ImGui::ColorEdit3("DirectionColor", (float*)&ambientBuffer->Data.Color);
+
+	//ImGui::Separator();
+	//ImGui::SliderFloat("Specular Exp", &specularBuffer->Data.Exp, 1, 100);
+	//ImGui::SliderFloat("Specular Intensity", &specularBuffer->Data.Intensity, 0, 10);
+
+	//ImGui::Separator();
+	//ImGui::SliderFloat3("PointLight Position", (float*)&pointLightBuffer->Data.Position, -50, 50);
+	//ImGui::SliderFloat("PointLight Range", &pointLightBuffer->Data.Range, 1, 100);
+	//ImGui::ColorEdit3("PointLight Color", (float*)&pointLightBuffer->Data.Color);
+
+	//ImGui::Separator();
+	//ImGui::SliderFloat3("SpotLight Position", (float*)&spotLightBuffer->Data.Position, -50, 50);
+	//ImGui::SliderFloat("SpotLight Range", &spotLightBuffer->Data.Range, 1, 100);
+	//ImGui::ColorEdit4("SpotLight Color", (float*)&spotLightBuffer->Data.Color);
+	//ImGui::SliderFloat3("SpotLight Direction", (float*)&spotLightBuffer->Data.Direction, -1, 1);
+
+	//ImGui::SliderFloat("SpotLight Inner", &spotLightBuffer->Data.Inner, 0, 90);
+	//ImGui::SliderFloat("SpotLight Outer", &spotLightBuffer->Data.Outer, 0, 90);
+
+	ImGui::Separator();
+	ImGui::SliderFloat3("CapsuleLight Position", (float*)&capsuleLightBuffer->Data.Position, -50, 50);
+	ImGui::SliderFloat3("CapsuleLight Direction", (float*)&capsuleLightBuffer->Data.Direction, -1, 1);
+	ImGui::SliderFloat("CapsuleLight Range", &capsuleLightBuffer->Data.Range, 1, 100);
+	ImGui::SliderFloat("CapsuleLight Length", &capsuleLightBuffer->Data.Length, 0, 100);
+	ImGui::ColorEdit4("CapsuleLight Color", (float*)&capsuleLightBuffer->Data.Color);
+
+	ImGui::Separator();
 
 	ambientBuffer->SetPSBuffer(10);
 	specularBuffer->SetPSBuffer(11);
+	pointLightBuffer->SetPSBuffer(12);
+	spotLightBuffer->SetPSBuffer(13);
+	capsuleLightBuffer->SetPSBuffer(9);
 
 	plane->Render();
 	cube->Render();

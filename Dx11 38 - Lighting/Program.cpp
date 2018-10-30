@@ -15,16 +15,16 @@ Program::Program()
 	values = new ExecuteValues();
 	values->ViewProjection = new ViewProjectionBuffer();
 	values->GlobalLight = new LightBuffer();
-	values->Perspective = new Perspective(desc.Width, desc.Height, D3DX_PI * 0.25f, 0.1f, 10000.0f);
+	values->Perspective = new Perspective(desc.Width, desc.Height);
 	values->Viewport = new Viewport(desc.Width, desc.Height);
 
 	values->MainCamera = new Freedom();
-	values->MainCamera->RotationDegree(5.5, -90);
-	values->MainCamera->Position(0, 5, -15);
+	//values->MainCamera->RotationDegree(5.5, -90);
+	values->MainCamera->Position(0, 5, -25);
 
 	values->GlobalLight->Data.Direction = D3DXVECTOR3(-1, -1, 1);
 
-	executes.push_back(new Export(values));
+	//executes.push_back(new Export(values));
 
 	executes.push_back(new TestAmbient(values));
 }

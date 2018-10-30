@@ -51,7 +51,7 @@ WPARAM Window::Run()
 			program->PreRender();
 
 			D3D::Get()->SetRenderTarget();
-			D3D::Get()->Clear();
+			D3D::Get()->Clear(D3DXCOLOR(0, 0, 0, 1));
 			{
 				program->Render();
 				ImGui::Render();

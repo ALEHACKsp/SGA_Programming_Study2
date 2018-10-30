@@ -1,0 +1,246 @@
+#include "stdafx.h"
+#include "Player.h"
+
+#include "../Physics/CapsuleCollider.h"
+
+#include "Trail.h"
+
+Player::Player(wstring matFolder, wstring matFile, wstring meshFolder, wstring meshFile
+	, Direction dir)
+	: GameAnimModel(matFolder, matFile, meshFolder, meshFile)
+{
+	this->dir = dir;
+	this->isRotate = false;
+
+	moveSpeed = 15.0f;
+	isAttack = false;
+
+	// Collider
+	{
+		collider->Height(90);
+		collider->Radius(45);
+	}
+
+	// AttackCollider
+	{
+		attackCollider = new CapsuleCollider(2.0f, 1.0f, CapsuleCollider::Axis::Axis_Z);
+
+		attackBone = model->BoneByName(L"Sword_joint")->Index();
+		attackCollider->Position(-12.6f, -2.75f, -48.9f);
+		attackCollider->Rotation(-0.07f, 0.26f, 0);
+		attackCollider->Height(60.0f);
+		attackCollider->Radius(6.0f);
+	}
+
+	life = 3;
+
+	// heap corruption으로 인한 null로 구분해 테스트
+	trail = NULL;
+	trail = new Trail(128);
+	
+	if (trail != NULL) {
+		trail->SetBoneName(L"Sword_Center");
+		trail->SetGameModel(this);
+	}
+}
+
+Player::~Player()
+{
+	SAFE_DELETE(trail);
+}
+
+void Player::Update()
+{
+	if (clips.size() < 1) {
+		__super::Update();
+		return;
+	}
+
+	__super::Update();
+	
+	if(trail != NULL)
+		trail->Update();
+
+	// State Machine
+	{
+		if (isAttack == false) {
+			// Walking Start
+			if (Keyboard::Get()->Down('A'))
+			{
+				if (dir == Direction::RIGHT) {
+					dir = Direction::LEFT;
+					isRotate = true;
+					deltaTime = 0;
+				}
+				else
+					state = State::Walking;
+			}
+			if (Keyboard::Get()->Down('D'))
+			{
+				if (dir == Direction::LEFT) {
+					dir = Direction::RIGHT;
+					isRotate = true;
+					deltaTime = 0;
+				}
+				else
+					state = State::Walking;
+			}
+		}
+
+		if (state != State::Dying && Mouse::Get()->Down(1)) {
+			isAttack = true;
+			state = State::Attack;
+		}
+
+		switch (state)
+		{
+			case GameAnimModel::State::Idle:
+				Idle();
+				break;
+			case GameAnimModel::State::Walking:
+				Walking();
+				break;
+			case GameAnimModel::State::Attack:
+				Attack();
+				break;
+			case GameAnimModel::State::Hitted:
+				Hitted();
+				break;
+			case GameAnimModel::State::Dying:
+				break;
+		}
+	}
+}
+
+void Player::Render()
+{
+	__super::Render();
+
+	if(trail != NULL)
+		trail->Render();
+}
+
+void Player::PostRender()
+{
+	__super::PostRender();
+
+	if(trail != NULL)
+		trail->PostRender();
+}
+
+void Player::Idle()
+{
+	__super::Idle();
+
+	if (isRotate) {
+		if (dir == Direction::RIGHT) {
+			//RotationDegree(0, 180, 0);
+
+			D3DXVECTOR3 rotation = Rotation();
+			if (deltaTime <= 1.0f) {
+				deltaTime += Time::Delta();
+				D3DXVec3Lerp(&rotation, 
+					&D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, D3DX_PI, 0), deltaTime);
+				Rotation(rotation);
+			}
+			else {
+				rotation.y = D3DX_PI;
+				Rotation(rotation);
+				isRotate = false;
+
+				if (Keyboard::Get()->Press('D')) {
+					state = State::Walking;
+					Walking();
+				}
+			}
+		}
+		else if (dir == Direction::LEFT) {
+			//RotationDegree(0, 0, 0);
+
+			D3DXVECTOR3 rotation = Rotation();
+			if (deltaTime <= 1.0f) {
+				deltaTime += Time::Delta();
+				D3DXVec3Lerp(&rotation,
+					&D3DXVECTOR3(0, D3DX_PI, 0), &D3DXVECTOR3(0, 0, 0), deltaTime);
+				Rotation(rotation);
+			}
+			else {
+				rotation.y = 0;
+				Rotation(rotation);
+				isRotate = false;
+
+				if (Keyboard::Get()->Press('A')) {
+					state = State::Walking;
+					Walking();
+				}
+			}
+		}
+	}
+}
+
+void Player::Walking()
+{
+	__super::Walking();
+
+	if (Keyboard::Get()->Press('A'))
+	{
+		Position(Position() + D3DXVECTOR3(0, 0, -moveSpeed * Time::Delta()));
+	}
+	else if (Keyboard::Get()->Press('D'))
+	{
+		Position(Position() + D3DXVECTOR3(0, 0, moveSpeed * Time::Delta()));
+	}
+
+	if (Keyboard::Get()->Up('A') ||
+		Keyboard::Get()->Up('D'))
+	{
+		Idle();
+		state = State::Idle;
+	}
+}
+
+void Player::Attack()
+{
+	__super::Attack();
+
+	for (int i = 0; i < otherModels.size(); i++) {
+		if (Collision::IsOverlapCapsuleCapsule(
+			&GetAttackColldierBone(), this->GetAttackCollider(),
+			&otherModels[i]->GetColldierBone(), otherModels[i]->GetCollider())) {
+			otherModels[i]->SetState(State::Hitted);
+		}
+	}
+
+	if (this->IsPlay() == false) {
+		Idle();
+		state = State::Idle;
+		isAttack = false;
+	}
+}
+
+void Player::Hitted()
+{
+	__super::Hitted();
+
+	if (this->IsPlay() == false) {
+		life--;
+
+		if (life > 0) {
+			Idle();
+			state = State::Idle;
+		}
+		else {
+			Dying();
+			state = State::Dying;
+		}
+	}
+}
+
+void Player::Dying()
+{
+	__super::Dying();
+
+	if (this->IsPlay() == false) {
+		//isRender = false;
+	}
+}
