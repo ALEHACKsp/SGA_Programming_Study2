@@ -18,8 +18,8 @@ struct VertexInput
 {
     float4 position : POSITION0;
     
-    float4x4 instanceWorld : WORLD0;
-	//float4 instanceColor : COLOR0;
+    float4x4 instanceWorld : INSTANCEWORLD0;
+    float4 instanceColor : INSTANCECOLOR0;
     //float4 instancePosition : INSTANCE0;
 };
 
@@ -39,8 +39,8 @@ PixelInput VS(VertexInput input)
     output.position = mul(output.position, _view);
     output.position = mul(output.position, _projection);
 
-    //output.color = input.instanceColor;
-    output.color = float4(1, 1, 1, 1);
+    output.color = input.instanceColor;
+    //output.color = float4(1, 1, 1, 1);
 
     return output;
 }

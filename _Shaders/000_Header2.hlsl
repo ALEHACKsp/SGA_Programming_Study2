@@ -39,10 +39,9 @@ cbuffer PS_Material : register(b1)
     float4 Specular;
 
     float Shininess; // specular power라고 쓰기도 함
-    float SpecularExp; // specular power라고 쓰기도 함
 }
 
-cbuffer PS_Lighting : register(b2)
+struct LightingData
 {
 	// 세로열이 조명 하나
     float4 LightPositionX;
@@ -63,6 +62,13 @@ cbuffer PS_Lighting : register(b2)
     float4 LightColorR;
     float4 LightColorG;
     float4 LightColorB;
+};
+
+cbuffer PS_Lighting : register(b2)
+{
+    LightingData LightingDatas[6];
+
+    int LightingCount;
 }
 
 Texture2D DiffuseMap : register(t0);
@@ -186,7 +192,7 @@ struct Material
 {
     float3 Normal;
     float4 DiffuseColor;
-    float SpecularExp;
+    float4 SpecularColor;
     float Shininess;
 };
 
@@ -199,8 +205,8 @@ Material CreateMaterial(float3 normal, float2 uv)
     material.DiffuseColor.rgb *= material.DiffuseColor.rgb; // 선형색 공간으로 바꾸는거
 
 	// 블링 퐁 모델 
+    material.SpecularColor = Specular;
     material.Shininess = Shininess;
-    material.SpecularExp = SpecularExp;
 
     return material;
 }
@@ -215,24 +221,22 @@ float4 dot4x1(float4 x, float4 y, float4 z, float3 b)
     return x * b.xxxx + y * b.yyyy + z * b.zzzz;
 }
 
-float3 Lighting(float3 wPosition, float3 cPosition, Material material)
-{
+float3 Lighting(LightingData data, float3 wPosition, float3 cPosition, Material material){
     float3 eye = normalize(cPosition - wPosition);
 
-	// 
-    float4 capsuleStartX = wPosition.xxxx - LightPositionX;
-    float4 capsuleStartY = wPosition.yyyy - LightPositionY;
-    float4 capsuleStartZ = wPosition.zzzz - LightPositionZ;
+    float4 capsuleStartX = wPosition.xxxx - data.LightPositionX;
+    float4 capsuleStartY = wPosition.yyyy - data.LightPositionY;
+    float4 capsuleStartZ = wPosition.zzzz - data.LightPositionZ;
 
     float4 distanceOnLine = dot4x4(
 	capsuleStartX, capsuleStartY, capsuleStartZ, 
-	LightDirectionX, LightDirectionY, LightDirectionZ);
-    float4 SafeCapsuleLength = max(CapsuleLength, 1e-6f); // 분모 0으로 안하게 하기 위해서 10-6, 0.000001
-    distanceOnLine = saturate(distanceOnLine / SafeCapsuleLength) * CapsuleLength;
+	data.LightDirectionX, data.LightDirectionY, data.LightDirectionZ);
+    float4 SafeCapsuleLength = max(data.CapsuleLength, 1e-6f); // 분모 0으로 안하게 하기 위해서 10-6, 0.000001
+    distanceOnLine = saturate(distanceOnLine / SafeCapsuleLength) * data.CapsuleLength;
 
-    float4 pointOnLineX = LightPositionX + LightDirectionX * distanceOnLine;
-    float4 pointOnLineY = LightPositionY + LightDirectionY * distanceOnLine;
-    float4 pointOnLineZ = LightPositionZ + LightDirectionZ * distanceOnLine;
+    float4 pointOnLineX = data.LightPositionX + data.LightDirectionX * distanceOnLine;
+    float4 pointOnLineY = data.LightPositionY + data.LightDirectionY * distanceOnLine;
+    float4 pointOnLineZ = data.LightPositionZ + data.LightDirectionZ * distanceOnLine;
     float4 toLightX = pointOnLineX - wPosition.xxxx;
     float4 toLightY = pointOnLineY - wPosition.yyyy;
     float4 toLightZ = pointOnLineZ - wPosition.zzzz;
@@ -245,6 +249,49 @@ float3 Lighting(float3 wPosition, float3 cPosition, Material material)
     toLightX /= distanceToLight;
 
     float4 NdotL = saturate(dot4x1(toLightX, toLightY, toLightZ, material.Normal));
-    float3 color = float3(dot(LightColorR, NdotL), dot(LightColorG, NdotL), dot(LightColorB, NdotL));
+ //   float3 color = float3(
+	//dot(data.LightColorR, NdotL),
+	//dot(data.LightColorG, NdotL),
+	//dot(data.LightColorB, NdotL));
 
+	// Blinn Specular
+    eye = normalize(eye);
+    float4 halfWayX = eye.xxxx + toLightX;
+    float4 halfWayY = eye.yyyy + toLightY;
+    float4 halfWayZ = eye.zzzz + toLightZ;
+
+    float4 halfWaySize = sqrt(dot4x4(halfWayX, halfWayY, halfWayZ, halfWayX, halfWayY, halfWayZ));
+    float4 NdotH = saturate(
+	dot4x1(
+		halfWayX / halfWaySize, halfWayY / halfWaySize, halfWayZ / halfWaySize, material.Normal));
+    float4 specular = pow(NdotH, material.Shininess.xxxx) * material.SpecularColor.a;
+
+ //   color += float3(
+	//dot(data.LightColorR, specular),
+	//dot(data.LightColorG, specular),
+	//dot(data.LightColorB, specular));
+
+    float4 conAngle = dot4x4(
+	data.LightDirectionX, data.LightDirectionY, data.LightDirectionZ,
+	toLightX, toLightY, toLightZ
+	);
+
+    float conAttenuation = saturate((conAngle - data.SpotOuter) * data.SpotInner);
+    conAttenuation *= conAttenuation;
+
+	// Attenuation
+    float4 distanceToLightNormal = 1.0f - saturate(distanceToLight * data.LightRange);
+    float4 attenuation = distanceToLightNormal * distanceToLightNormal;
+    attenuation *= conAttenuation;
+
+	// 최종색
+    float4 pixelIntensity = (NdotL + specular) * attenuation;
+    float3 color = float3(
+	dot(data.LightColorR, pixelIntensity),
+	dot(data.LightColorG, pixelIntensity),
+	dot(data.LightColorB, pixelIntensity));
+    color *= material.DiffuseColor;
+
+    //return specular.rgb;
+    return color;
 }

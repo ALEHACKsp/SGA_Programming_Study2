@@ -99,6 +99,8 @@ void Shader::CreateInputLayout()
 	D3D11_SHADER_DESC shaderDesc;
 	reflection->GetDesc(&shaderDesc);
 
+	string oldTemp;
+	UINT shaderCnt = 1;
 	std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc;
 	for (UINT i = 0; i< shaderDesc.InputParameters; i++)
 	{
@@ -160,21 +162,22 @@ void Shader::CreateInputLayout()
 			elementDesc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
 			elementDesc.InstanceDataStepRate = 1;
 		}
-		if (bInstance && temp == "COLOR")
-		{
-			elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-			elementDesc.SemanticIndex = 0;
-			elementDesc.InputSlot = 2;
-			elementDesc.AlignedByteOffset = 0;
-			elementDesc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
-			elementDesc.InstanceDataStepRate = 1;
-		}
-		if (bInstance && temp == "WORLD")
+		if (bInstance && temp.find("INSTANCE") != string::npos && temp.find("COLOR") != string::npos)
 		{
 			elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 			//elementDesc.SemanticIndex = 0;
+			elementDesc.InputSlot = 2;
+			//elementDesc.AlignedByteOffset = 0;
+			elementDesc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+			elementDesc.InstanceDataStepRate = 1;
+		}
+		if (bInstance && temp.find("INSTANCE") != string::npos && temp.find("WORLD") != string::npos)
+		{
+			oldTemp = temp;
+			//elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			//elementDesc.SemanticIndex = 0;
 			elementDesc.InputSlot = 1;
-			elementDesc.AlignedByteOffset = 0;
+			//elementDesc.AlignedByteOffset = elementDesc.SemanticIndex == 0 ? 0 : D3D11_APPEND_ALIGNED_ELEMENT;
 			elementDesc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
 			elementDesc.InstanceDataStepRate = 1;
 		}

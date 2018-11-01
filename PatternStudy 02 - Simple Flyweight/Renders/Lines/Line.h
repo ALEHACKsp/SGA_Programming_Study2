@@ -3,10 +3,10 @@
 class Line
 {
 public:
-	//struct InstanceColorType
-	//{
-	//	D3DXCOLOR Color = D3DXCOLOR(1,1,1,1);
-	//};
+	struct InstanceColorType
+	{
+		D3DXCOLOR Color = D3DXCOLOR(1,1,1,1);
+	};
 	//struct InstancePositionType
 	//{
 	//	D3DXVECTOR4 Position = D3DXVECTOR4(0,0,0,1);
@@ -66,7 +66,7 @@ public:
 
 	void CreateInstance();
 	//void SetPositions(vector<D3DXVECTOR4>& positions);
-	//void SetColors(vector<D3DXCOLOR>& colors);
+	void SetColors(vector<D3DXCOLOR>& colors);
 	void SetWorlds(vector<D3DXMATRIX>& worlds);
 
 private:
@@ -101,15 +101,15 @@ protected:
 
 	bool bInstance;
 	//vector<D3DXVECTOR4> positions;
-	//vector<D3DXCOLOR> colors;
+	vector<D3DXCOLOR> colors;
 	vector<D3DXMATRIX> worlds;
 	Shader* instanceShader;
 
-	//ID3D11Buffer* instanceBuffer[2];
-	ID3D11Buffer* instanceBuffer;
+	ID3D11Buffer* instanceBuffer[2];
+	//ID3D11Buffer* instanceBuffer;
 	UINT instanceCount;
 	//InstancePositionType * positionInstances;
-	//InstanceColorType * colorInstances;
+	InstanceColorType * colorInstances;
 	InstanceWorldType* worldInstances;
 private:
 	// 컬러버퍼 라이트로 쓸꺼

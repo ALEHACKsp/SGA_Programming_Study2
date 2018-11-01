@@ -16,7 +16,7 @@ public:
 private:
 	vector<class Line*> debugs;
 	//vector<D3DXVECTOR4> positions;
-	//vector<D3DXCOLOR> colors;
+	vector<D3DXCOLOR> colors;
 	vector<D3DXMATRIX> worlds;
 	class Line* instance;
 

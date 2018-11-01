@@ -79,8 +79,7 @@ private:
 			Data.Diffuse = D3DXCOLOR(1, 1, 1, 1);
 			Data.Specular = D3DXCOLOR(1, 1, 1, 1);
 
-			Data.Shininess = 0; // ∫∏≈Î 20¡§µµ ¡‹
-			Data.Exp = 0;
+			Data.Shininess = 1; // ∫∏≈Î 20¡§µµ ¡‹
 		};
 
 		struct Struct
@@ -90,9 +89,8 @@ private:
 			D3DXCOLOR Specular;
 
 			float Shininess;
-			float Exp;
 
-			float Padding[2];
+			float Padding[3];
 		} Data;
 	};
 };

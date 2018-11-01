@@ -80,7 +80,7 @@ void ModelMeshPart::Render()
 
 		D3D::GetDC()->DrawIndexedInstanced(indices.size(), instanceCount, 0, 0, 0);
 	}
-z}
+}
 
 void ModelMeshPart::Clone(void ** clone)
 {

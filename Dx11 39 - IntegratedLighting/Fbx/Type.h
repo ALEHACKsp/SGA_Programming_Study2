@@ -8,10 +8,13 @@ namespace Fbx
 	{
 		string Name; // 저장하는건 다 string으로 할꺼 wstring binary 처리하기 귀찮음
 
+		string DiffuseFile;
 		D3DXCOLOR Diffuse;
 
-		string DiffuseFile;
 		string SpecularFile;
+		D3DXCOLOR Specular;
+		float SpecularExp;
+
 		string NormalFile;
 	};
 

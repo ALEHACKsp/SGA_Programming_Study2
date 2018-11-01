@@ -6,6 +6,7 @@ Line::Line()
 	, position(0, 0, 0), scale(1, 1, 1), rotation(0, 0, 0)
 	, direction(0, 0, 1), up(0, 1, 0), right(1, 0, 0)
 	//, positionInstances(NULL), colorInstances(NULL)
+	, colorInstances(NULL)
 	, worldInstances(NULL)
 {
 	D3DXMatrixIdentity(&world);
@@ -30,11 +31,11 @@ Line::~Line()
 	
 	SAFE_DELETE(instanceShader);
 	if (bInstance) {
-		//SAFE_RELEASE(instanceBuffer[0]);
-		//SAFE_RELEASE(instanceBuffer[1]);
+		SAFE_RELEASE(instanceBuffer[0]);
+		SAFE_RELEASE(instanceBuffer[1]);
 		//SAFE_DELETE_ARRAY(positionInstances);
-		//SAFE_DELETE_ARRAY(colorInstances);
-		SAFE_RELEASE(instanceBuffer);
+		SAFE_DELETE_ARRAY(colorInstances);
+		//SAFE_RELEASE(instanceBuffer);
 		SAFE_DELETE_ARRAY(worldInstances);
 	}
 }
@@ -105,24 +106,24 @@ void Line::Render()
 		D3D::GetDC()->Draw(vertexCount, 0);
 	}
 	else {
-		UINT strides[2];
-		UINT offsets[2];
-		ID3D11Buffer* buffers[2];
+		UINT strides[3];
+		UINT offsets[3];
+		ID3D11Buffer* buffers[3];
 
 		strides[0] = sizeof(VertexType);
 		strides[1] = sizeof(InstanceWorldType);
 		//strides[1] = sizeof(InstancePositionType);
-		//strides[2] = sizeof(InstanceColorType);
+		strides[2] = sizeof(InstanceColorType);
 		offsets[0] = 0;
 		offsets[1] = 0;
-		//offsets[2] = 0;
+		offsets[2] = 0;
 		buffers[0] = vertexBuffer;
-		buffers[1] = instanceBuffer;
-		//buffers[1] = instanceBuffer[0];
-		//buffers[2] = instanceBuffer[1];
+		//buffers[1] = instanceBuffer;
+		buffers[1] = instanceBuffer[0];
+		buffers[2] = instanceBuffer[1];
 
-		//D3D::GetDC()->IASetVertexBuffers(0, 3, buffers, strides, offsets);
-		D3D::GetDC()->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+		D3D::GetDC()->IASetVertexBuffers(0, 3, buffers, strides, offsets);
+		//D3D::GetDC()->IASetVertexBuffers(0, 2, buffers, strides, offsets);
 		D3D::GetDC()->IASetPrimitiveTopology(topology);
 
 		colorBuffer->SetPSBuffer(1); // 레지스터 번호
@@ -323,16 +324,16 @@ void Line::CreateInstance()
 {
 	//if (positionInstances != NULL) 
 	//	SAFE_DELETE_ARRAY(positionInstances);
-	//if (colorInstances != NULL)
-	//	SAFE_DELETE_ARRAY(colorInstances);
+	if (colorInstances != NULL)
+		SAFE_DELETE_ARRAY(colorInstances);
 
 	//positionInstances = new InstancePositionType[instanceCount];
-	//colorInstances = new InstanceColorType[instanceCount];
+	colorInstances = new InstanceColorType[instanceCount];
 
-	//for (int i = 0; i < instanceCount; i++) {
-	//	positionInstances[i].Position = positions[i];
-	//	colorInstances[i].Color = colors[i];
-	//}
+	for (int i = 0; i < instanceCount; i++) {
+		//positionInstances[i].Position = positions[i];
+		colorInstances[i].Color = colors[i];
+	}
 
 	//// CreateInstanceBuffer
 	//{
@@ -354,25 +355,25 @@ void Line::CreateInstance()
 	//	assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
 	//}
 
-	//// CreateInstanceBuffer
-	//{
-	//	D3D11_BUFFER_DESC desc = { 0 };
-	//	desc.Usage = D3D11_USAGE_DEFAULT; // 어떻게 저장될지에 대한 정보
-	//	desc.ByteWidth = sizeof(InstanceColorType) * instanceCount; // 정점 버퍼에 들어갈 데이터의 크기
-	//	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//	desc.CPUAccessFlags = 0;
-	//	desc.MiscFlags = 0;
-	//	desc.StructureByteStride = 0;
+	// CreateInstanceBuffer
+	{
+		D3D11_BUFFER_DESC desc = { 0 };
+		desc.Usage = D3D11_USAGE_DEFAULT; // 어떻게 저장될지에 대한 정보
+		desc.ByteWidth = sizeof(InstanceColorType) * instanceCount; // 정점 버퍼에 들어갈 데이터의 크기
+		desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+		desc.StructureByteStride = 0;
 
-	//	D3D11_SUBRESOURCE_DATA  data = { 0 }; // 얘를 통해서 값이 들어감 lock 대신
-	//	data.pSysMem = colorInstances; // 쓸 데이터의 주소
-	//	data.SysMemPitch = 0;
-	//	data.SysMemSlicePitch = 0;
+		D3D11_SUBRESOURCE_DATA  data = { 0 }; // 얘를 통해서 값이 들어감 lock 대신
+		data.pSysMem = colorInstances; // 쓸 데이터의 주소
+		data.SysMemPitch = 0;
+		data.SysMemSlicePitch = 0;
 
-	//	HRESULT hr = D3D::GetDevice()->CreateBuffer(
-	//		&desc, &data, &instanceBuffer[1]);
-	//	assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
-	//}
+		HRESULT hr = D3D::GetDevice()->CreateBuffer(
+			&desc, &data, &instanceBuffer[1]);
+		assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
+	}
 
 	if (worldInstances != NULL)
 		SAFE_DELETE_ARRAY(worldInstances);
@@ -400,7 +401,7 @@ void Line::CreateInstance()
 		data.SysMemSlicePitch = 0;
 
 		HRESULT hr = D3D::GetDevice()->CreateBuffer(
-			&desc, &data, &instanceBuffer);
+			&desc, &data, &instanceBuffer[0]);
 		assert(SUCCEEDED(hr)); // 성공되면 hr 0보다 큰 값 넘어옴
 	}
 }
@@ -418,12 +419,12 @@ void Line::SetWorlds(vector<D3DXMATRIX>& worlds)
 //	instanceCount = positions.size();
 //}
 //
-//void Line::SetColors(vector<D3DXCOLOR>& colors)
-//{
-//	bInstance = true;
-//	this->colors = colors;
-//	instanceCount = colors.size();
-//}
+void Line::SetColors(vector<D3DXCOLOR>& colors)
+{
+	bInstance = true;
+	this->colors = colors;
+	instanceCount = colors.size();
+}
 
 void Line::UpdateWorld()
 {

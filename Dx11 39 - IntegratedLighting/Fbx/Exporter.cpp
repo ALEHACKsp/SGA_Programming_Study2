@@ -106,6 +106,15 @@ void Fbx::Exporter::ReadMaterial()
 			(lambert->Diffuse, lambert->DiffuseFactor);
 		}
 
+		if (fbxMaterial->GetClassId().Is(FbxSurfacePhong::ClassId) == true)
+		{
+			FbxSurfacePhong* phong = (FbxSurfacePhong *)fbxMaterial;
+
+			// 조명에는 투명도 안들어가서 alpha 값 강도로 씀
+			material->Specular = Utility::ToColor(phong->Specular, phong->SpecularFactor);
+			material->SpecularExp = phong->Shininess;
+		}
+
 		// 텍스처 꺼내오기
 		FbxProperty prop;
 
@@ -151,9 +160,16 @@ void Fbx::Exporter::WriteMaterial(wstring saveFolder, wstring fileName)
 		node->LinkEndChild(element);
 
 		element = document->NewElement("Diffuse");
+		WriteXmlColor(document, element, material->Diffuse);
 		node->LinkEndChild(element);
 
-		WriteXmlColor(document, element, material->Diffuse);
+		//element = document->NewElement("Specular");
+		//WriteXmlColor(document, element, material->Specular);
+		//node->LinkEndChild(element);
+
+		//element = document->NewElement("SpecularExp");
+		//element->SetText(material->SpecularExp);
+		//node->LinkEndChild(element);
 
 		element = document->NewElement("DiffuseFile");
 		CopyTextureFile(material->DiffuseFile, saveFolder);
