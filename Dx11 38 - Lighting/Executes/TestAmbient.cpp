@@ -99,21 +99,21 @@ void TestAmbient::Render()
 	//ImGui::SliderFloat("PointLight Range", &pointLightBuffer->Data.Range, 1, 100);
 	//ImGui::ColorEdit3("PointLight Color", (float*)&pointLightBuffer->Data.Color);
 
-	//ImGui::Separator();
-	//ImGui::SliderFloat3("SpotLight Position", (float*)&spotLightBuffer->Data.Position, -50, 50);
-	//ImGui::SliderFloat("SpotLight Range", &spotLightBuffer->Data.Range, 1, 100);
-	//ImGui::ColorEdit4("SpotLight Color", (float*)&spotLightBuffer->Data.Color);
-	//ImGui::SliderFloat3("SpotLight Direction", (float*)&spotLightBuffer->Data.Direction, -1, 1);
-
-	//ImGui::SliderFloat("SpotLight Inner", &spotLightBuffer->Data.Inner, 0, 90);
-	//ImGui::SliderFloat("SpotLight Outer", &spotLightBuffer->Data.Outer, 0, 90);
-
 	ImGui::Separator();
-	ImGui::SliderFloat3("CapsuleLight Position", (float*)&capsuleLightBuffer->Data.Position, -50, 50);
-	ImGui::SliderFloat3("CapsuleLight Direction", (float*)&capsuleLightBuffer->Data.Direction, -1, 1);
-	ImGui::SliderFloat("CapsuleLight Range", &capsuleLightBuffer->Data.Range, 1, 100);
-	ImGui::SliderFloat("CapsuleLight Length", &capsuleLightBuffer->Data.Length, 0, 100);
-	ImGui::ColorEdit4("CapsuleLight Color", (float*)&capsuleLightBuffer->Data.Color);
+	ImGui::SliderFloat3("SpotLight Position", (float*)&spotLightBuffer->Data.Position, -50, 50);
+	ImGui::SliderFloat("SpotLight Range", &spotLightBuffer->Data.Range, 1, 100);
+	ImGui::ColorEdit4("SpotLight Color", (float*)&spotLightBuffer->Data.Color);
+	ImGui::SliderFloat3("SpotLight Direction", (float*)&spotLightBuffer->Data.Direction, -1, 1);
+
+	ImGui::SliderFloat("SpotLight Inner", &spotLightBuffer->Data.Inner, 0, 90);
+	ImGui::SliderFloat("SpotLight Outer", &spotLightBuffer->Data.Outer, 0, 90);
+
+	//ImGui::Separator();
+	//ImGui::SliderFloat3("CapsuleLight Position", (float*)&capsuleLightBuffer->Data.Position, -50, 50);
+	//ImGui::SliderFloat3("CapsuleLight Direction", (float*)&capsuleLightBuffer->Data.Direction, -1, 1);
+	//ImGui::SliderFloat("CapsuleLight Range", &capsuleLightBuffer->Data.Range, 1, 100);
+	//ImGui::SliderFloat("CapsuleLight Length", &capsuleLightBuffer->Data.Length, 0, 100);
+	//ImGui::ColorEdit4("CapsuleLight Color", (float*)&capsuleLightBuffer->Data.Color);
 
 	ImGui::Separator();
 

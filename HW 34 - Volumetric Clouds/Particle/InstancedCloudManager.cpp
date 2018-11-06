@@ -27,6 +27,7 @@ InstancedCloudManager::InstancedCloudManager(ExecuteValues* values)
 	rasterizerState[1] = new RasterizerState();
 	rasterizerState[1]->CullMode(D3D11_CULL_NONE);
 
+	deltaTime = 0;
 }
 
 InstancedCloudManager::~InstancedCloudManager()
@@ -107,7 +108,12 @@ void InstancedCloudManager::Rotate(D3DXVECTOR3 axis, float angle)
 
 void InstancedCloudManager::Update()
 {
-	SortClouds();
+	//deltaTime += Time::Delta();
+
+	//if (deltaTime > 0.5f) {
+	//	deltaTime = 0;
+	//	SortClouds();
+	//}
 	// clouds Update
 	clouds->Update();
 }

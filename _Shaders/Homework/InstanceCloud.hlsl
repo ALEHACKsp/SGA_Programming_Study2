@@ -3,11 +3,12 @@
 cbuffer PS_Color : register(b2) // 버텍스 쉐이더랑 별개이므로 다시 0번부터
 {
     float4 LightColor; 
+    float timeOfDay;
 }
 
 static float3 worldUp = float3(0, 1, 0);
 
-static float timeOfDay = 12;
+//static float timeOfDay = 12;
 
 static float MistingDistance = 50;
 

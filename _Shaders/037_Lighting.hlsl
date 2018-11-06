@@ -169,8 +169,9 @@ float3 CalcSpot(float3 wPosition, float3 cPosition, Material material)
 
     float distanceToLightNormal = 1.0f - saturate(distanceToLight * 1 / SpotLightRange);
     float attention = distanceToLightNormal * distanceToLightNormal; // 선형 공간
-    color *= CapsuleLightColor * attention * coneAttention;
+    color *= material.DiffuseColor * attention * coneAttention;
 
+    //return float3(1, 1, 1);
     //return float3(coneAttention, coneAttention, coneAttention);
     return color;
 }
@@ -230,31 +231,32 @@ Material CreateMaterial(float3 normal, float2 uv)
     return material;
 }
 
-// CapsuleLight
-float4 PS(PixelInput input) : SV_TARGET
-{
-    Material material = CreateMaterial(input.Normal, input.Uv);
-
-    float4 color = 1;
-
-    color.rgb *= CalcCapsule(input.wPosition.xyz, input.cPosition, material);
-    color.a = 1.0f;
-
-    return color;
-}
-
-//// SpotLight
+//// CapsuleLight
 //float4 PS(PixelInput input) : SV_TARGET
 //{
 //    Material material = CreateMaterial(input.Normal, input.Uv);
 
 //    float4 color = 1;
 
-//    color.rgb *= CalcSpot(input.wPosition.xyz, input.cPosition, material);
+//    color.rgb *= CalcCapsule(input.wPosition.xyz, input.cPosition, material);
 //    color.a = 1.0f;
 
 //    return color;
 //}
+
+// SpotLight
+float4 PS(PixelInput input) : SV_TARGET
+{
+    Material material = CreateMaterial(input.Normal, input.Uv);
+
+    float4 color = 1;
+
+    color.rgb *= CalcSpot(input.wPosition.xyz, input.cPosition, material);
+    color.a = 1.0f;
+	
+    //return float4(1, 1, 1, 1);
+    return color;
+}
 
 //// PointLight
 //float4 PS(PixelInput input) : SV_TARGET

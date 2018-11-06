@@ -30,6 +30,7 @@ private:
 
 	vector<class ParticleInstance*> whisps;
 
+	float deltaTime;
 	float rnd;
 
 	BlendState* blendState[2];

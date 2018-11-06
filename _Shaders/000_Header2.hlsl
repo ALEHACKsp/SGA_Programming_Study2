@@ -83,6 +83,17 @@ SamplerState NormalSampler : register(s2);
 Texture2D DetailMap : register(t3);
 SamplerState DetailSampler : register(s3);
 
+struct Vertex
+{
+    float4 Position : POSITION0;
+};
+
+struct VertexSize
+{
+    float4 Position : POSITION0;
+    float2 Size : SIZE0;
+};
+
 struct VertexColor
 {
     float4 Position : POSITION0;
@@ -222,8 +233,6 @@ float4 dot4x1(float4 x, float4 y, float4 z, float3 b)
 }
 
 float3 Lighting(LightingData data, float3 wPosition, float3 cPosition, Material material){
-    float3 eye = normalize(cPosition - wPosition);
-
     float4 capsuleStartX = wPosition.xxxx - data.LightPositionX;
     float4 capsuleStartY = wPosition.yyyy - data.LightPositionY;
     float4 capsuleStartZ = wPosition.zzzz - data.LightPositionZ;
@@ -231,8 +240,8 @@ float3 Lighting(LightingData data, float3 wPosition, float3 cPosition, Material 
     float4 distanceOnLine = dot4x4(
 	capsuleStartX, capsuleStartY, capsuleStartZ, 
 	data.LightDirectionX, data.LightDirectionY, data.LightDirectionZ);
-    float4 SafeCapsuleLength = max(data.CapsuleLength, 1e-6f); // 분모 0으로 안하게 하기 위해서 10-6, 0.000001
-    distanceOnLine = saturate(distanceOnLine / SafeCapsuleLength) * data.CapsuleLength;
+    float4 SafeCapsuleLength = max(data.CapsuleLength, 1.e-6f); // 분모 0으로 안하게 하기 위해서 10-6, 0.000001
+    distanceOnLine = data.CapsuleLength * saturate(distanceOnLine / SafeCapsuleLength);
 
     float4 pointOnLineX = data.LightPositionX + data.LightDirectionX * distanceOnLine;
     float4 pointOnLineY = data.LightPositionY + data.LightDirectionY * distanceOnLine;
@@ -244,9 +253,9 @@ float3 Lighting(LightingData data, float3 wPosition, float3 cPosition, Material 
     float4 distanceToLight = sqrt(distanceToLightSqrt);
 
 	// Phong Diffuse
+    toLightX /= distanceToLight;
     toLightY /= distanceToLight;
     toLightZ /= distanceToLight;
-    toLightX /= distanceToLight;
 
     float4 NdotL = saturate(dot4x1(toLightX, toLightY, toLightZ, material.Normal));
  //   float3 color = float3(
@@ -255,6 +264,7 @@ float3 Lighting(LightingData data, float3 wPosition, float3 cPosition, Material 
 	//dot(data.LightColorB, NdotL));
 
 	// Blinn Specular
+    float3 eye = cPosition - wPosition;
     eye = normalize(eye);
     float4 halfWayX = eye.xxxx + toLightX;
     float4 halfWayY = eye.yyyy + toLightY;
@@ -262,8 +272,7 @@ float3 Lighting(LightingData data, float3 wPosition, float3 cPosition, Material 
 
     float4 halfWaySize = sqrt(dot4x4(halfWayX, halfWayY, halfWayZ, halfWayX, halfWayY, halfWayZ));
     float4 NdotH = saturate(
-	dot4x1(
-		halfWayX / halfWaySize, halfWayY / halfWaySize, halfWayZ / halfWaySize, material.Normal));
+	dot4x1(halfWayX / halfWaySize, halfWayY / halfWaySize, halfWayZ / halfWaySize, material.Normal));
     float4 specular = pow(NdotH, material.Shininess.xxxx) * material.SpecularColor.a;
 
  //   color += float3(
@@ -276,7 +285,7 @@ float3 Lighting(LightingData data, float3 wPosition, float3 cPosition, Material 
 	toLightX, toLightY, toLightZ
 	);
 
-    float conAttenuation = saturate((conAngle - data.SpotOuter) * data.SpotInner);
+    float4 conAttenuation = saturate((conAngle - data.SpotOuter) * data.SpotInner);
     conAttenuation *= conAttenuation;
 
 	// Attenuation

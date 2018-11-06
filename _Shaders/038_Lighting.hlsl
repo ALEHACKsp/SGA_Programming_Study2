@@ -35,7 +35,13 @@ float4 PS(PixelInput input) : SV_TARGET
     float4 color = float4(Diffuse.rgb * Diffuse.rgb, Diffuse.a); // 여기서 a 감도
  
     Material material = CreateMaterial(input.Normal, input.Uv);
-    color.rgb = Lighting(LightingDatas[0], input.wPosition.xyz, input.cPosition, material);
+    //for (int i = 0; i < LightingCount; i++)
+    if (LightingCount > 0)
+        color.rgb = Lighting(LightingDatas[0], input.wPosition.xyz, input.cPosition, material);
+    for (int i = 1; i < LightingCount; i++)
+        color.rgb += Lighting(LightingDatas[i], input.wPosition.xyz, input.cPosition, material);
+    //color.rgb += Lighting(LightingDatas[1], input.wPosition.xyz, input.cPosition, material);
+    //color.rgb += Lighting(LightingDatas[2], input.wPosition.xyz, input.cPosition, material);
     color.a = 1.0f;
 
     return color;

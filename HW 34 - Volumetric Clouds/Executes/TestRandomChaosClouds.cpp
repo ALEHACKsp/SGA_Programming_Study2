@@ -63,6 +63,8 @@ TestRandomChaosClouds::TestRandomChaosClouds(ExecuteValues * values)
 			cloudManager[i]->AddCloud(2000, D3DXVECTOR3(0, 60, 0), 60, cloudDim1, cloudDim1, 0.75f, whispRange);
 			whispRange = { 0,1,2,3,4,12,13,14,15 };
 			cloudManager[i]->AddCloud(2000, D3DXVECTOR3(0, 90, 0), 60, cloudDim1, cloudDim1, 1.0f, whispRange);
+
+			cloudManager[i]->SortClouds();
 		}
 		break;
 
@@ -95,6 +97,8 @@ TestRandomChaosClouds::TestRandomChaosClouds(ExecuteValues * values)
 				vector<int> whispRange = { 0,1,2,3,4,5,6,7,8,9 };
 				cloudManager[i]->AddCloud(25, D3DXVECTOR3(x, y, z), 300, flatBase, flatBase * 5, d, whispRange);
 			}
+
+			cloudManager[i]->SortClouds();
 		}
 		break;
 
@@ -134,7 +138,7 @@ void TestRandomChaosClouds::Update()
 {
 	// camera move - 이미 구현
 
-	//cloudManager->Rotate(D3DXVECTOR3(0, 1, 0), 0.00005f);
+	cloudManager[select]->Rotate(D3DXVECTOR3(0, 1, 0), 0.00005f);
 
 	cloudManager[select]->Update();
 }
@@ -146,9 +150,10 @@ void TestRandomChaosClouds::PreRender()
 
 void TestRandomChaosClouds::Render()
 {
+	ImGui::Begin("Sky Type");
+
 	cloudManager[select]->Render();
 
-	ImGui::Begin("Sky Type");
 	ImGui::RadioButton("Cloud Splatter", &select, (int)SkyType::CloudSplatter);
 	ImGui::RadioButton("Cloud Field", &select, (int)SkyType::CloudField);
 	ImGui::RadioButton("Cloud Sky", &select, (int)SkyType::CloudsSky);

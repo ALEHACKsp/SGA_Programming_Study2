@@ -64,12 +64,15 @@ private:
 		InstancerBuffer() : ShaderBuffer(&Data, sizeof(Data))
 		{
 			Data.Color = D3DXCOLOR(1, 1, 1, 1);
+			Data.Day = 12.0f;
 		}
 	
-	private:
 		struct Struct
 		{
 			D3DXCOLOR Color;
+
+			float Day;
+			float Padding[3];
 		} Data;
 	};
 

@@ -137,6 +137,9 @@ void ParticleInstancer::Update()
 
 void ParticleInstancer::Render()
 {
+	ImGui::ColorEdit4("##Cloud Color", (float*)&instancerBuffer->Data.Color);
+	ImGui::DragFloat("Day", &instancerBuffer->Data.Day);
+
 	D3DXMATRIX S, R, T;
 	D3DXMatrixScaling(&S, scale.x, scale.y, scale.z);
 	D3DXMatrixRotationQuaternion(&R, &rotation);
@@ -238,7 +241,7 @@ void ParticleInstancer::Rotate(D3DXVECTOR3 axis, float angle)
 {
 	axis = Math::Transform(axis, rotation);
 	D3DXQUATERNION quaternion;
-	D3DXQuaternionToAxisAngle(&quaternion, &axis, &angle);
+	D3DXQuaternionRotationAxis(&quaternion, &axis, angle);
 	quaternion *= rotation;
 	D3DXQuaternionNormalize(&rotation, &quaternion);
 }
