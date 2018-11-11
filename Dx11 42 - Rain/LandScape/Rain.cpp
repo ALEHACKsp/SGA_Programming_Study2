@@ -6,7 +6,7 @@ Rain::Rain(ExecuteValues * values, D3DXVECTOR3 & size, UINT count)
 {
 	rainMap = new Texture(Textures + L"Rain.png");
 
-	shader = new Shader(Shaders + L"048_Rain.hlsl");
+	shader = new Shader(Shaders + L"041_Rain.hlsl");
 	worldBuffer = new WorldBuffer();
 
 	vertexCount = particleCount * 4;
@@ -24,9 +24,9 @@ Rain::Rain(ExecuteValues * values, D3DXVECTOR3 & size, UINT count)
 			S.y = Math::Random(4.0f, 8.0f);
 
 			D3DXVECTOR3 P;
-			P.x = Math::Random(-size.x, size.x);
-			P.y = Math::Random(-size.y, size.y);
-			P.z = Math::Random(-size.z, size.z);
+			P.x = Math::Random(-size.x * 0.5f, size.x * 0.5f);
+			P.y = Math::Random(-size.y * 0.5f, size.y * 0.5f);
+			P.z = Math::Random(-size.z * 0.5f, size.z * 0.5f);
 
 			vertices[i + 0] = VertexRain(P, D3DXVECTOR2(0, 1), S);
 			vertices[i + 1] = VertexRain(P, D3DXVECTOR2(0, 0), S);
