@@ -79,6 +79,7 @@ const wstring Materials = L"../_Materials/";
 #include "./Renders/ShaderBuffer.h"
 #include "./Renders/GlobalBuffers.h"
 #include "./Renders/Texture.h"
+#include "./Renders/TextureArray.h"
 #include "./Renders/Material.h"
 #include "./Renders/RenderTarget.h"
 #include "./Renders/Render2D.h"

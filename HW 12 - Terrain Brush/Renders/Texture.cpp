@@ -28,6 +28,14 @@ D3D11_TEXTURE2D_DESC Texture::ReadPixels(DXGI_FORMAT readFormat, vector<D3DXCOLO
 	return ReadPixels(srcTexture, readFormat, pixels);
 }
 
+void Texture::WritePixels(DXGI_FORMAT writeFormat, vector<D3DXCOLOR>& pixels)
+{
+	ID3D11Texture2D* srcTexture;
+	view->GetResource((ID3D11Resource **)&srcTexture);
+
+	WritePixels(srcTexture, writeFormat, pixels);
+}
+
 void Texture::SaveFile(wstring file)
 {
 	ID3D11Texture2D* srcTexture;
@@ -167,6 +175,63 @@ D3D11_TEXTURE2D_DESC Texture::ReadPixels(ID3D11Texture2D * src, DXGI_FORMAT read
 	return desc;
 }
 
+void Texture::WritePixels(ID3D11Texture2D * src, DXGI_FORMAT writeFormat, vector<D3DXCOLOR>& pixels)
+{
+	D3D11_TEXTURE2D_DESC srcDesc;
+	src->GetDesc(&srcDesc);
+
+	D3D11_TEXTURE2D_DESC desc;
+	ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
+	desc.Width = srcDesc.Width;
+	desc.Height = srcDesc.Height;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = writeFormat;
+	desc.SampleDesc = srcDesc.SampleDesc;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.Usage = D3D11_USAGE_STAGING;
+
+	HRESULT hr;
+
+	ID3D11Texture2D* texture;
+	hr = D3D::GetDevice()->CreateTexture2D(&desc, NULL, &texture);
+	assert(SUCCEEDED(hr));
+
+	hr = D3DX11LoadTextureFromTexture(D3D::GetDC(), src, NULL, texture);
+	assert(SUCCEEDED(hr));
+
+	UINT* colors = new UINT[desc.Width * desc.Height];
+	for (UINT y = 0; y < desc.Height; y++)
+	{
+		for (UINT x = 0; x < desc.Width; x++)
+		{
+			UINT index = desc.Width * y + x;
+
+			float f = 255.0f;
+
+			colors[index] = ((UINT)((f * pixels[index].a)) << 24)
+				+ ((UINT)((f * pixels[index].b)) << 16)
+				+ ((UINT)((f * pixels[index].g)) << 8)
+				+ ((UINT)((f * pixels[index].r)) << 0);
+			int temp = 10;
+		}
+	}
+
+	D3D11_MAPPED_SUBRESOURCE map;
+	D3D::GetDC()->Map(texture, 0, D3D11_MAP_WRITE, NULL, &map);
+	{
+		memcpy(map.pData, colors, sizeof(UINT) * desc.Width * desc.Height);
+	}
+	D3D::GetDC()->Unmap(texture, 0);
+
+	hr = D3DX11LoadTextureFromTexture(D3D::GetDC(), texture, NULL, src);
+	assert(SUCCEEDED(hr));
+
+	SAFE_DELETE_ARRAY(colors);
+	SAFE_RELEASE(src);
+	SAFE_RELEASE(texture);
+}
+
 void Textures::Create()
 {
 
@@ -259,7 +324,7 @@ void Textures::Load(Texture * texture, D3DX11_IMAGE_LOAD_INFO * loadInfo)
 		}
 		else
 		{
-			hr = LoadFromWICFile(texture->file.c_str(), WIC_FLAGS_NONE, &metaData, image);
+			hr = LoadFromWICFile(texture->file.c_str(), WIC_FLAGS_FORCE_RGB | WIC_FLAGS_IGNORE_SRGB, &metaData, image);
 			assert(SUCCEEDED(hr));
 		}
 

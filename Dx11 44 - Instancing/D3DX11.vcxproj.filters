@@ -189,6 +189,9 @@
     <ClCompile Include="Executes\TestInstancing.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
+    <ClCompile Include="Renders\TextureArray.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -393,6 +396,9 @@
     </ClInclude>
     <ClInclude Include="Executes\TestInstancing.h">
       <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\TextureArray.h">
+      <Filter>Renders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

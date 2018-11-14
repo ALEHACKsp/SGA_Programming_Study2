@@ -126,14 +126,21 @@ void Model::SaveMaterial(wstring file)
 		node->LinkEndChild(element);
 
 		element = document->NewElement("SpecularFile");
-		file = String::ToString(material->GetSpecularMap()->GetFile());
-		file = Path::GetFileName(file);
+		file = "";
+		if (material->GetSpecularMap() != NULL) {
+			file = String::ToString(material->GetSpecularMap()->GetFile());
+			file = Path::GetFileName(file);
+		}
 		element->SetText(file.c_str());
 		node->LinkEndChild(element);
+		
 
 		element = document->NewElement("NormalFile");
-		file = String::ToString(material->GetNormalMap()->GetFile());
-		file = Path::GetFileName(file);
+		file = "";
+		if (material->GetNormalMap() != NULL) {
+			file = String::ToString(material->GetNormalMap()->GetFile());
+			file = Path::GetFileName(file);
+		}
 		element->SetText(file.c_str());
 		node->LinkEndChild(element);
 	}

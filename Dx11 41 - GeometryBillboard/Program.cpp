@@ -24,7 +24,7 @@ Program::Program()
 
 	values->GlobalLight->Data.Direction = D3DXVECTOR3(-1, -1, 1);
 
-	//executes.push_back(new Export(values));
+	executes.push_back(new Export(values));
 
 	executes.push_back(new TestBillboard(values));
 }

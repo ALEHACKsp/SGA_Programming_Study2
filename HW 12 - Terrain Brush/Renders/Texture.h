@@ -12,6 +12,7 @@ public:
 
 	static void SaveFile(wstring file, ID3D11Texture2D* src);
 	static D3D11_TEXTURE2D_DESC ReadPixels(ID3D11Texture2D* src, DXGI_FORMAT readFormat, vector<D3DXCOLOR>* pixels);
+	static void WritePixels(ID3D11Texture2D* src, DXGI_FORMAT writeFormat, vector<D3DXCOLOR>& pixels);
 
 public:
 	Texture(wstring file, D3DX11_IMAGE_LOAD_INFO* loadInfo = NULL);
@@ -23,6 +24,7 @@ public:
 	UINT GetHeight() { return metaData.height; }
 
 	D3D11_TEXTURE2D_DESC ReadPixels(DXGI_FORMAT readFormat, vector<D3DXCOLOR>* pixels);
+	void WritePixels(DXGI_FORMAT writeFormat, vector<D3DXCOLOR>& pixels);
 	void SaveFile(wstring file);
 
 	void GetImageInfo(DirectX::TexMetadata* data)

@@ -295,11 +295,14 @@ bool Collision::IsOverlapRaySphere(Ray * ray, SphereCollider * collider)
 	D3DXVECTOR3 center = collider->Position();
 	float radius = collider->Radius() * collider->Scale().x;
 
-	D3DXVECTOR3 Q = center - origin;
-	float v = D3DXVec3Dot(&Q, &direction);
-	float d = (radius * radius) - (D3DXVec3LengthSq(&Q) - v * v);
+	//D3DXVECTOR3 Q = center - origin;
+	//float v = D3DXVec3Dot(&Q, &direction);
+	//float d = (radius * radius) - (D3DXVec3LengthSq(&Q) - v * v);
 
-	return d >= D3DX_16F_EPSILON;
+	//return d >= D3DX_16F_EPSILON;
+
+	bool result = D3DXSphereBoundProbe(&center, radius, &origin, &direction);
+	return result;
 }
 bool Collision::IsOverlayRayCapsule(Ray * ray, CapsuleCollider * collider)
 {

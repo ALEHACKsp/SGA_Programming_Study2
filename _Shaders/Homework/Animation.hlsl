@@ -62,7 +62,6 @@ float4 PS(PixelInput input) : SV_TARGET
             SpecularLighting(color, specular, input.Normal, input.ViewDir);
     }
 
-
     return color;
     // 디버깅 하기 위해서 normal을 반환형인 색상값으로
     //return float4((input.Normal * 0.5f) + 0.5f, 1);

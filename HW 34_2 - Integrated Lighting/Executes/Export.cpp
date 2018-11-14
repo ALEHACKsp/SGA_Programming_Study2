@@ -28,11 +28,11 @@ Export::Export(ExecuteValues * values)
 	//exporter->ExportMesh(Models + L"/Meshes/", L"Cylinder.mesh");
 	//SAFE_DELETE(exporter);
 
-	//// Plane
-	//exporter = new Fbx::Exporter(Assets + L"Meshes/Plane.fbx");
-	//exporter->ExportMaterial(Models + L"/Meshes/", L"Plane.material");
-	//exporter->ExportMesh(Models + L"/Meshes/", L"Plane.mesh");
-	//SAFE_DELETE(exporter);
+	// Plane
+	exporter = new Fbx::Exporter(Assets + L"Meshes/Plane.fbx");
+	exporter->ExportMaterial(Models + L"/Meshes/", L"Plane.material");
+	exporter->ExportMesh(Models + L"/Meshes/", L"Plane.mesh");
+	SAFE_DELETE(exporter);
 
 	//// Quad
 	//exporter = new Fbx::Exporter(Assets + L"Meshes/Quad.fbx");

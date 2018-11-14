@@ -299,7 +299,12 @@ float3 Lighting(LightingData data, float3 wPosition, float3 cPosition, Material 
 	dot(data.LightColorR, pixelIntensity),
 	dot(data.LightColorG, pixelIntensity),
 	dot(data.LightColorB, pixelIntensity));
-    color *= material.DiffuseColor;
+    
+	//color *= material.DiffuseColor;
+
+    float intensity = saturate(dot(material.Normal, -Direction));
+
+    color = saturate(color + intensity) * material.DiffuseColor.xyz;
 
     //return specular.rgb;
     return color;

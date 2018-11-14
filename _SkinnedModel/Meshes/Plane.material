@@ -9,7 +9,5 @@
             <A>1</A>
         </Diffuse>
         <DiffuseFile></DiffuseFile>
-        <SpecularFile></SpecularFile>
-        <NormalFile></NormalFile>
     </Material>
 </Materials>
