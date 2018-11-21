@@ -5,7 +5,7 @@
 class GizmoAxis : public ILine
 {
 public: 
-	enum class Kind { X, Y, Z };
+	enum class Kind { X, Y, Z, XZ, XY, YZ };
 public:
 	GizmoAxis(Kind kind, float lineOffset = 1.0f, float halfLineOffset = 0.5f, float lineLength = 3.0f);
 

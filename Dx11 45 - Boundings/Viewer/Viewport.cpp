@@ -109,3 +109,40 @@ void Viewport::GetRay(Ray * ray, D3DXVECTOR3 & start, D3DXMATRIX & world, D3DXMA
 	ray->Position = tempStart;
 	ray->Direction = direction;
 }
+
+void Viewport::GetRay(Ray * ray, D3DXVECTOR3 & start, D3DXMATRIX & view, D3DXMATRIX & projection)
+{
+	D3DXVECTOR2 screenSize;
+	screenSize.x = width;
+	screenSize.y = height;
+
+	D3DXVECTOR3 mouse = Mouse::Get()->GetPosition();
+
+
+	D3DXVECTOR2 point;
+	//Inv Viewport
+	{
+		point.x = ((2.0f * mouse.x) / screenSize.x) - 1.0f;
+		point.y = (((2.0f * mouse.y) / screenSize.y) - 1.0f) * -1.0f;
+	}
+
+	//Inv Projection
+	{
+		point.x = point.x / projection._11;
+		point.y = point.y / projection._22;
+	}
+
+	D3DXVECTOR3 direction;
+	//Inv View
+	{
+		D3DXMATRIX invView;
+		D3DXMatrixInverse(&invView, NULL, &view);
+
+		D3DXVec3TransformNormal(&direction, &D3DXVECTOR3(point.x, point.y, 1), &invView);
+		D3DXVec3Normalize(&direction, &direction);
+	}
+
+	ray->Position = start;
+	ray->Direction = direction;
+}
+

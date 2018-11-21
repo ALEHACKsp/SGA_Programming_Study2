@@ -71,18 +71,21 @@ void TestDebugDraw::Update()
 
 	D3DXMATRIX W;
 	cube->Matrix(&W);
-	values->Viewport->GetRay(ray, S, W, V, P);
+	//values->Viewport->GetRay(ray, S, W, V, P);
 
-	float result;
-	cubeTest = cubeBounding->Intersect(ray, result);
+	//cubeTest = cubeBounding->Intersect(ray, cubeResult);
+
+	values->Viewport->GetRay(ray, S, V, P);
+	cubeTest = cubeBounding->Intersect(ray, W, cubeResult);
 	cubeLine->Draw(W, cubeBounding);
 
 
 	sphere->Matrix(&W);
-	values->Viewport->GetRay(ray, S, W, V, P);
+	//values->Viewport->GetRay(ray, S, W, V, P);
 
 	//BSphere sphereCheck = sphereBounding->Transform(W);
-	sphereTest = sphereBounding->Intersect(ray, result);
+	sphereTest = sphereBounding->Intersect(ray, W, sphereResult);
+	//sphereTest = sphereBounding->Intersect(ray, sphereResult);
 	sphereLine->Draw(W, sphereBounding);
 }
 
@@ -112,6 +115,10 @@ void TestDebugDraw::Render()
 	cube->Position(&pos);
 	if (ImGui::DragFloat3("Cube Position", (float*)&pos, 0.1f))
 		cube->Position(pos);
+
+	ImGui::Separator();
+	ImGui::Text("cube result : %f", cubeResult);
+	ImGui::Text("sphere reulst : %f", sphereResult);
 
 	grid->Render();
 

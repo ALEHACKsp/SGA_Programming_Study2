@@ -30,4 +30,7 @@ private:
 	BSphere* sphereBounding;
 	bool sphereTest;
 	DebugLine* sphereLine;
+
+	float cubeResult;
+	float sphereResult;
 };

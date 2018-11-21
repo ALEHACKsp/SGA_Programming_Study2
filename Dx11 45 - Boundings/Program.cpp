@@ -36,7 +36,7 @@ Program::~Program()
 	for (Execute* exe : executes)
 		SAFE_DELETE(exe);
 
-	SAFE_DELETE(vaules->MainCamera);
+	SAFE_DELETE(values->MainCamera);
 	SAFE_DELETE(values->GlobalLight);
 	SAFE_DELETE(values->ViewProjection);
 	SAFE_DELETE(values->Perspective);

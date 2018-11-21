@@ -204,6 +204,9 @@
     <ClCompile Include="Renders\Gizmo\GizmoModel.cpp">
       <Filter>Renders\Gizmo</Filter>
     </ClCompile>
+    <ClCompile Include="Draw\MeshQuad.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -435,6 +438,9 @@
     </ClInclude>
     <ClInclude Include="Renders\Gizmo\GizmoModel.h">
       <Filter>Renders\Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\MeshQuad.h">
+      <Filter>Draw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

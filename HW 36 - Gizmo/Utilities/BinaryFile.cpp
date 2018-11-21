@@ -269,7 +269,12 @@ string BinaryReader::String()
 	ReadFile(fileHandle, temp, sizeof(char) * size, &this->size, NULL); //데이터 읽기
 	temp[size] = '\0';
 
-	return temp;
+	string result = temp;
+	string final(result.begin(), result.end());
+
+	delete[] temp;
+
+	return final;
 }
 
 void BinaryReader::Byte(void ** data, UINT dataSize)

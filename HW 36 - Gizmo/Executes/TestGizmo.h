@@ -22,13 +22,18 @@ private:
 	bool bPicking;
 
 	class MeshCube* cube;
-	Material* cubeMaterial;
-	BBox* cubeBounding;
+	struct BBox* cubeBounding;
+	Material* meshMaterial;
 	DebugLine* cubeLine;
+
+	//class MeshSphere* sphere;
+	//struct BSphere* sphereBounding;
 
 	//class GizmoModel* translate;
 	//class GizmoModel* rotate;
 	//class GizmoModel* scale;
 	
 	class Gizmo* gizmo;
+
+	//class MeshQuad* quad;
 };

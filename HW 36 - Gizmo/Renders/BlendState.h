@@ -12,7 +12,9 @@ public:
 
 	void BlendOp(D3D11_BLEND_OP val);
 	void DestBlend(D3D11_BLEND val);
+	void DestBlendAlpha(D3D11_BLEND val);
 	void SrcBlend(D3D11_BLEND val);
+	void SrcBlendAlpha(D3D11_BLEND val);
 
 private:
 	void Changed();

@@ -23,5 +23,5 @@ struct Ray : public ILine
 
 	D3DXVECTOR3 Position;
 	D3DXVECTOR3 Direction;
-	float Distance = 10.0f;
+	float Distance = 1000.0f;
 };

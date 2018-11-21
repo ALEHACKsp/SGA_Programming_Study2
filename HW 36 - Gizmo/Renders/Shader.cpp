@@ -5,6 +5,9 @@
 
 Shader::Shader(wstring shaderFile, string vsName, string psName)
 	: shaderFile(shaderFile), vsName(vsName), psName(psName)
+	, reflection(NULL), inputLayout(NULL)
+	, vertexBlob(NULL), vertexShader(NULL)
+	, pixelBlob(NULL), pixelShader(NULL)
 	, geometryBlob(NULL), geometryShader(NULL)
 {
 	CreateVertexShader();
@@ -16,12 +19,13 @@ Shader::~Shader()
 {
 	SAFE_RELEASE(reflection);
 
-	SAFE_RELEASE(inputLayout);
-	SAFE_RELEASE(vertexBlob);
-	SAFE_RELEASE(vertexShader);
-
-	SAFE_RELEASE(pixelBlob);
 	SAFE_RELEASE(pixelShader);
+	SAFE_RELEASE(pixelBlob);
+
+	SAFE_RELEASE(vertexShader);
+	SAFE_RELEASE(vertexBlob);
+
+	SAFE_RELEASE(inputLayout);
 
 	SAFE_RELEASE(geometryBlob);
 	SAFE_RELEASE(geometryShader);

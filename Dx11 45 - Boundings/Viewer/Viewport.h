@@ -14,6 +14,7 @@ public:
 
 	D3DXVECTOR3 GetDirection(D3DXMATRIX view, D3DXMATRIX projection);
 	void GetRay(struct Ray* ray, D3DXVECTOR3& start, D3DXMATRIX& world, D3DXMATRIX& view, D3DXMATRIX& projection);
+	void GetRay(struct Ray* ray, D3DXVECTOR3& start, D3DXMATRIX& view, D3DXMATRIX& projection);
 
 private:
 	float x, y;

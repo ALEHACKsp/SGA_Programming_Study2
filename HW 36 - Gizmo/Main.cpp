@@ -1,9 +1,30 @@
 #include "stdafx.h"
 #include "./Systems/Window.h"
 
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#define new new(_CLIENT_BLOCK,__FILE__, __LINE__)
+#endif
+
 int WINAPI WinMain(
 	HINSTANCE instance, HINSTANCE prevInstance, LPSTR param, int command)
 {
+	// 프로그램 실행시 최초 한번만 세팅
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+	// Material buffer
+	//_CrtSetBreakAlloc(1681); // 누수 메모리 번호
+	//_CrtSetBreakAlloc(1061); // 누수 메모리 번호
+	//_CrtSetBreakAlloc(1030); // 누수 메모리 번호
+
+	//_CrtSetBreakAlloc(3024); // 누수 메모리 번호
+	//_CrtSetBreakAlloc(3005); // 누수 메모리 번호
+	//_CrtSetBreakAlloc(1133); // 누수 메모리 번호
+	//_CrtSetBreakAlloc(1131); // 누수 메모리 번호
+	//_CrtSetBreakAlloc(1130); // 누수 메모리 번호
+	//_CrtSetBreakAlloc(1129); // 누수 메모리 번호
+
 	D3DDesc desc; // dx11 에서는 세팅하는 구조체 desc라는 이름 붙음
 	// 선생님이 구조체 만드신거
 

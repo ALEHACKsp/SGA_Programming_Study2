@@ -24,13 +24,14 @@ GizmoModel::~GizmoModel()
 {
 	SAFE_DELETE_ARRAY(vertices);
 
-	SAFE_DELETE(shader);
 	SAFE_DELETE(worldBuffer);
 
 	SAFE_DELETE(colorBuffer);
 
 	SAFE_RELEASE(indexBuffer);
 	SAFE_RELEASE(vertexBuffer);
+
+	SAFE_DELETE(shader);
 }
 
 void GizmoModel::CreateVertex()
@@ -134,7 +135,7 @@ void GizmoModel::Render()
 
 	colorBuffer->SetPSBuffer(10);
 
-	worldBuffer->SetMatrix(World());
+	worldBuffer->SetMatrix(Transformed());
 	worldBuffer->SetVSBuffer(1);
 	shader->Render();
 

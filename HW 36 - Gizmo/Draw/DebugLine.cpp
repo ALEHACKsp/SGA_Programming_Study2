@@ -11,6 +11,8 @@ DebugLine::DebugLine()
 
 	buffer = new Buffer();
 
+	vertexBuffer = NULL;
+
 	//Create Vertex Buffer
 	{
 		D3D11_BUFFER_DESC desc = { 0 };
@@ -26,6 +28,8 @@ DebugLine::DebugLine()
 
 DebugLine::~DebugLine()
 {
+	SAFE_DELETE(buffer);
+
 	SAFE_DELETE(shader);
 	SAFE_DELETE(worldBuffer);
 

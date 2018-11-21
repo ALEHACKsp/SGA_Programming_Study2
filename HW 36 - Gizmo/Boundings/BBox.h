@@ -94,6 +94,95 @@ struct BBox : public ILine
 		return true;
 	}
 
+	bool Intersect(Ray* ray, D3DXMATRIX& world, OUT float& result)
+	{
+		result = 0.0f;
+		float minValue = 0.0f, maxValue = FLT_MAX;
+
+		D3DXVECTOR3 rayPosition, rayDirection;
+		{
+			D3DXMATRIX invWorld;
+			D3DXMatrixInverse(&invWorld, NULL, &world);
+
+			D3DXVec3TransformCoord(&rayPosition, &ray->Position, &invWorld);
+			D3DXVec3TransformNormal(&rayDirection, &ray->Direction, &invWorld);
+			D3DXVec3Normalize(&rayDirection, &rayDirection);
+		}
+
+		//Check X
+		if (fabsf(rayDirection.x) >= 1e-6f)
+		{
+			float value = 1.0f / rayDirection.x;
+			float minX = (Min.x - rayPosition.x) * value;
+			float maxX = (Max.x - rayPosition.x) * value;
+
+			if (minX > maxX)
+			{
+				float temp = minX;
+				minX = maxX;
+				maxX = temp;
+			}
+
+			minValue = max(minX, minValue);
+			maxValue = min(maxX, maxValue);
+
+			if (minValue > maxValue)
+				return false;
+		}
+		else if (rayPosition.x < Min.x || rayPosition.x > Max.x)
+			return false;
+
+		//Check Y
+		if (fabsf(rayDirection.y) >= 1e-6f)
+		{
+			float value = 1.0f / rayDirection.y;
+			float minY = (Min.y - rayPosition.y) * value;
+			float maxY = (Max.y - rayPosition.y) * value;
+
+			if (minY > maxY)
+			{
+				float temp = minY;
+				minY = maxY;
+				maxY = temp;
+			}
+
+			minValue = max(minY, minValue);
+			maxValue = min(maxY, maxValue);
+
+			if (minValue > maxValue)
+				return false;
+		}
+		else if (rayPosition.y < Min.y || rayPosition.y > Max.y)
+			return false;
+
+
+		//Check Z
+		if (fabsf(rayDirection.z) >= 1e-6f)
+		{
+			float value = 1.0f / rayDirection.z;
+			float minZ = (Min.z - rayPosition.z) * value;
+			float maxZ = (Max.z - rayPosition.z) * value;
+
+			if (minZ > maxZ)
+			{
+				float temp = minZ;
+				minZ = maxZ;
+				maxZ = temp;
+			}
+
+			minValue = max(minZ, minValue);
+			maxValue = min(maxZ, maxValue);
+
+			if (minValue > maxValue)
+				return false;
+		}
+		else if (rayPosition.z < Min.z || rayPosition.z > Max.z)
+			return false;
+
+		result = minValue;
+		return true;
+	}
+
 	void GetLine(D3DXMATRIX& world, vector<D3DXVECTOR3>& lines)
 	{
 		D3DXVECTOR3 tempMin;

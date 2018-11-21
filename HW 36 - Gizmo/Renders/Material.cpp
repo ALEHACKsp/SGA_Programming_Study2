@@ -26,6 +26,8 @@ Material::~Material()
 	if (bShaderDelete == true)
 		SAFE_DELETE(shader);
 
+	SAFE_DELETE(buffer);
+
 	SAFE_DELETE(diffuseMap);
 	SAFE_DELETE(specularMap);
 	SAFE_DELETE(normalMap);

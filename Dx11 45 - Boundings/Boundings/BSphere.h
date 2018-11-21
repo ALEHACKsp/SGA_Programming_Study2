@@ -51,6 +51,46 @@ struct BSphere : public ILine
 		return true;
 	}
 
+	bool Intersect(Ray* ray, D3DXMATRIX& world, OUT float& result)
+	{
+		result = 0.0f;
+
+		D3DXVECTOR3 rayPosition, rayDirection;
+		{
+			D3DXMATRIX invWorld;
+			D3DXMatrixInverse(&invWorld, NULL, &world);
+
+			D3DXVec3TransformCoord(&rayPosition, &ray->Position, &invWorld);
+			D3DXVec3TransformNormal(&rayDirection, &ray->Direction, &invWorld);
+			D3DXVec3Normalize(&rayDirection, &rayDirection);
+		}
+
+		D3DXVECTOR3 tempVec;
+		tempVec = Center - Center;
+
+		float x = tempVec.x - rayPosition.x;
+		float y = tempVec.y - rayPosition.y;
+		float z = tempVec.z - rayPosition.z;
+
+		float sqr = x * x + y * y + z * z;
+		float radius = Radius * Radius;
+
+		if (sqr <= radius)
+			return true;
+
+		float direction = x * rayDirection.x + y * rayDirection.y + z * rayDirection.z;
+		if (direction < 0.0f)
+			return false;
+
+		float temp = sqr - direction * direction;
+		if (temp > radius)
+			return false;
+
+
+		result = direction - sqrtf(radius - temp);
+		return true;
+	}
+
 	void GetLine(D3DXMATRIX& world, vector<D3DXVECTOR3>& lines)
 	{
 		BSphere sphere = Transform(world);
