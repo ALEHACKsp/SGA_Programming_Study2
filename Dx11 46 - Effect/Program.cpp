@@ -38,6 +38,7 @@ Program::~Program()
 
 	Models::Delete();
 
+	Textures::Delete();
 	Context::Delete();
 }
 
