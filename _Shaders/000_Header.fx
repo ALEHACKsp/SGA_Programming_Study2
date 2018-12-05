@@ -23,17 +23,19 @@ cbuffer CB_World
 
 cbuffer CB_Light
 {
-    float4 LightColor;
+    float4 LightAmbient;
+    float4 LightDiffuse;
+    float4 LightSpecular;
     float3 LightDirection;
 };
 
 cbuffer CB_Material
 {
     float4 Ambient;
-    float4 Diffuse; 
+    float4 Diffuse;
     float4 Specular;
     float Shininess;
-}
+};
 
 //-----------------------------------------------------------------------------
 // Textures
@@ -135,4 +137,184 @@ matrix SkinWorld(float4 blendIndices, float4 blendWeights)
     transform += mul(blendWeights.w, Bones[(uint) blendIndices.w]);
 
     return transform;
+}
+
+//-----------------------------------------------------------------------------
+// Global Functions
+//-----------------------------------------------------------------------------
+
+float3 WorldNormal(float3 normal)
+{
+    return normalize(mul(normal, (float3x3) World));
+}
+
+//-----------------------------------------------------------------------------
+// Lighting
+//-----------------------------------------------------------------------------
+struct Material
+{
+    float4 Ambient;
+    float4 Diffuse;
+    float4 Specular;
+    float Shininess;
+};
+
+//-----------------------------------------------------------------------------
+// Directional Lighting
+//-----------------------------------------------------------------------------
+
+struct DirectionalLight
+{
+    float4 Ambient;
+    float4 Diffuse;
+    float4 Specular;
+    float3 Direction;
+};
+
+void ComputeDirectionalLight(Material m, DirectionalLight l, float3 normal, float3 toEye, out float4 ambient, out float4 diffuse, out float4 specular)
+{
+    ambient = float4(0, 0, 0, 0);
+    diffuse = float4(0, 0, 0, 0);
+    specular = float4(0, 0, 0, 0);
+
+    float3 light = -l.Direction;
+    ambient = m.Ambient * l.Ambient;
+
+    float diffuseFactor = dot(light, normal);
+
+    [flatten]
+    if (diffuseFactor > 0.0f)
+    {
+        diffuse = diffuseFactor * m.Diffuse * l.Diffuse;
+
+        
+        float3 r = reflect(-light, normal);
+        
+        float specularFactor = 0;
+        specularFactor = saturate(dot(r, toEye));
+        specularFactor = pow(specularFactor, m.Specular.a);
+        specular = specularFactor * m.Specular * l.Specular;
+    }
+}
+
+//-----------------------------------------------------------------------------
+// Point Lighting
+//-----------------------------------------------------------------------------
+
+struct PointLight
+{
+    float4 Ambient;
+    float4 Diffuse;
+    float4 Specular;
+
+    float3 Position;
+    float Range;
+
+    float3 Attenuation;
+    float PointLight_Padding;
+};
+
+cbuffer CB_PointLight
+{
+    PointLight PointLights[16];
+    int PointLightCount;
+};
+
+void ComputePointLight(Material m, PointLight l, float3 position, float3 normal, float3 toEye, out float4 ambient, out float4 diffuse, out float4 specular)
+{
+    ambient = float4(0, 0, 0, 0);
+    diffuse = float4(0, 0, 0, 0);
+    specular = float4(0, 0, 0, 0);
+
+    float3 light = l.Position - position;
+    float dist = length(light);
+    
+    if (dist > l.Range)
+        return;
+
+    light /= dist;
+    ambient = m.Ambient * l.Ambient;
+
+    float diffuseFactor = dot(light, normal);
+
+    [flatten]
+    if (diffuseFactor > 0.0f)
+    {
+        diffuse = diffuseFactor * m.Diffuse * l.Diffuse;
+
+        float3 r = reflect(-light, normal);
+        
+        float specularFactor = 0;
+        specularFactor = saturate(dot(r, toEye));
+        specularFactor = pow(specularFactor, m.Specular.a);
+        specular = specularFactor * m.Specular * l.Specular;
+    }
+
+
+    float attenuate = 1.0f / dot(l.Attenuation, float3(1.0f, dist, dist * dist));
+
+    diffuse *= attenuate;
+    specular *= attenuate;
+}
+
+//-----------------------------------------------------------------------------
+// Spot Lighting
+//-----------------------------------------------------------------------------
+
+struct SpotLight
+{
+    float4 Ambient;
+    float4 Diffuse;
+    float4 Specular;
+
+    float3 Position;
+    float PointLight_Padding;
+
+    float3 Direction;
+    float Spot;
+
+    float3 Attenuation;
+    float PointLight_Padding2;
+};
+
+cbuffer CB_SpotLight
+{
+    SpotLight SpotLights[16];
+    int SpotLightCount;
+};
+
+void ComputeSpotLight(Material m, SpotLight l, float3 position, float3 normal, float3 toEye, out float4 ambient, out float4 diffuse, out float4 specular)
+{
+    ambient = float4(0, 0, 0, 0);
+    diffuse = float4(0, 0, 0, 0);
+    specular = float4(0, 0, 0, 0);
+
+    float3 light = l.Position - position;
+    float dist = length(light);
+
+    light /= dist;
+    ambient = m.Ambient * l.Ambient;
+
+    float diffuseFactor = dot(light, normal);
+
+    [flatten]
+    if (diffuseFactor > 0.0f)
+    {
+        diffuse = diffuseFactor * m.Diffuse * l.Diffuse;
+
+        float3 r = reflect(-light, normal);
+        
+        float specularFactor = 0;
+        specularFactor = saturate(dot(r, toEye));
+        specularFactor = pow(specularFactor, m.Specular.a);
+        specular = specularFactor * m.Specular * l.Specular;
+    }
+
+
+    float spot = pow(max(dot(-light, l.Direction), 0.0f), l.Spot);
+    float attenuate = spot / dot(l.Attenuation, float3(1.0f, dist, dist * dist));
+
+    ambient *= attenuate;
+    diffuse *= attenuate;
+    specular *= attenuate;
 }
