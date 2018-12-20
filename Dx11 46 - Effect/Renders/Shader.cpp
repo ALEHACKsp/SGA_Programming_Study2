@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Shader.h"
 
-Shader::Shader(wstring file)
+Shader::Shader(wstring file, bool bSubContext)
 	: file(file)
 {
 	initialStateBlock = new StateBlock();
@@ -12,6 +12,9 @@ Shader::Shader(wstring file)
 	}
 
 	CreateEffect();
+
+	if (bSubContext == false)
+		Context::Get()->AddShader(this);
 }
 
 Shader::~Shader()
@@ -31,26 +34,8 @@ Shader::~Shader()
 void Shader::CreateEffect()
 {
 	ID3DBlob* fxBlob;
-	ID3DBlob* error;
-	
-	//UINT flag = D3D10_SHADER_ENABLE_STRICTNESS;
-	//UINT flag = D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY;
-	UINT flag = D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY 
-		| D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
 
-	HRESULT hr = D3DCompileFromFile(file.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, NULL, "fx_5_0", flag, NULL, &fxBlob, &error);
-	if (FAILED(hr))
-	{
-		if (error != NULL)
-		{
-			string str = (const char *)error->GetBufferPointer();
-			MessageBoxA(NULL, str.c_str(), "Shader Error", MB_OK);
-		}
-		assert(false);
-	}
-	
-	hr = D3DX11CreateEffectFromMemory(fxBlob->GetBufferPointer(), fxBlob->GetBufferSize(), 0, D3D::GetDevice(), &effect);
-	assert(SUCCEEDED(hr));
+	Shaders::GetEffect(file, &fxBlob, &effect);
 
 	effect->GetDesc(&effectDesc);
 	for (UINT t = 0; t < effectDesc.Techniques; t++)
@@ -72,7 +57,7 @@ void Shader::CreateEffect()
 			for (UINT s = 0; s < pass.EffectVsDesc.NumInputSignatureEntries; s++)
 			{
 				D3D11_SIGNATURE_PARAMETER_DESC desc;
-				
+
 				HRESULT hr = pass.PassVsDesc.pShaderVariable->GetInputSignatureElementDesc(pass.PassVsDesc.ShaderIndex, s, &desc);
 				assert(SUCCEEDED(hr));
 
@@ -121,9 +106,7 @@ void Shader::CreateEffect()
 		variableMap.insert(pair<string, EffectVariable>(vDesc.Name, variable));
 	}
 
-	SAFE_RELEASE(fxBlob);
-
-	Context::Get()->AddShader(this);
+	//SAFE_RELEASE(fxBlob);
 }
 
 ID3D11InputLayout * Shader::CreateInputLayout(ID3DBlob * fxBlob, D3DX11_EFFECT_SHADER_DESC* effectVsDesc, vector<D3D11_SIGNATURE_PARAMETER_DESC>& params)
@@ -191,8 +174,8 @@ ID3D11InputLayout * Shader::CreateInputLayout(ID3DBlob * fxBlob, D3DX11_EFFECT_S
 		inputLayoutDesc.push_back(elementDesc);
 	}
 
-	
-	const void* pCode =  effectVsDesc->pBytecode;
+
+	const void* pCode = effectVsDesc->pBytecode;
 	UINT pCodeSize = effectVsDesc->BytecodeLength;
 
 	if (inputLayoutDesc.size() > 0)
@@ -250,6 +233,22 @@ void Shader::Pass::DrawIndexedInstanced(UINT indexCountPerInstance, UINT instanc
 	EndDraw();
 }
 
+void Shader::Pass::Dispatch(UINT x, UINT y, UINT z)
+{
+	IPass->Apply(0, D3D::GetDC());
+	D3D::GetDC()->Dispatch(x, y, z);
+
+
+	ID3D11ShaderResourceView* null[1] = { 0 };
+	D3D::GetDC()->CSSetShaderResources(0, 1, null);
+
+	ID3D11UnorderedAccessView* nullUav[1] = { 0 };
+	D3D::GetDC()->CSSetUnorderedAccessViews(0, 1, nullUav, NULL);
+
+	D3D::GetDC()->CSSetShader(NULL, NULL, 0);
+}
+
+
 void Shader::Pass::BeginDraw()
 {
 	IPass->ComputeStateBlockMask(&StateBlockMask);
@@ -268,6 +267,10 @@ void Shader::Pass::EndDraw()
 
 	if (StateBlockMask.OMBlendState == 1)
 		D3D::GetDC()->OMSetBlendState(StateBlock->OMBlendState, StateBlock->OMBlendFactor, StateBlock->OMSampleMask);
+
+	D3D::GetDC()->HSSetShader(NULL, NULL, 0);
+	D3D::GetDC()->DSSetShader(NULL, NULL, 0);
+	D3D::GetDC()->GSSetShader(NULL, NULL, 0);
 }
 
 ID3DX11EffectVariable * Shader::Variable(string name)
@@ -300,14 +303,19 @@ ID3DX11EffectShaderResourceVariable * Shader::AsShaderResource(string name)
 	return variableMap[name].Variable->AsShaderResource();
 }
 
-ID3DX11EffectRenderTargetViewVariable * Shader::AsRenderTargetView(string name)
+ID3DX11EffectRenderTargetViewVariable * Shader::AsRTV(string name)
 {
 	return variableMap[name].Variable->AsRenderTargetView();
 }
 
-ID3DX11EffectDepthStencilViewVariable * Shader::AsDepthStencilView(string name)
+ID3DX11EffectDepthStencilViewVariable * Shader::AsDSV(string name)
 {
 	return variableMap[name].Variable->AsDepthStencilView();
+}
+
+ID3DX11EffectUnorderedAccessViewVariable * Shader::AsUAV(string name)
+{
+	return variableMap[name].Variable->AsUnorderedAccessView();
 }
 
 ID3DX11EffectConstantBuffer * Shader::AsConstantBuffer(string name)
@@ -360,6 +368,11 @@ void Shader::Technique::DrawIndexedInstanced(UINT pass, UINT indexCountPerInstan
 	Passes[pass].DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
 }
 
+void Shader::Technique::Dispatch(UINT pass, UINT x, UINT y, UINT z)
+{
+	Passes[pass].Dispatch(x, y, z);
+}
+
 void Shader::Draw(UINT technique, UINT pass, UINT vertexCount, UINT startVertexLocation)
 {
 	techniques[technique].Passes[pass].Draw(vertexCount, startVertexLocation);
@@ -378,4 +391,64 @@ void Shader::DrawInstanced(UINT technique, UINT pass, UINT vertexCountPerInstanc
 void Shader::DrawIndexedInstanced(UINT technique, UINT pass, UINT indexCountPerInstance, UINT instanceCount, UINT startIndexLocation, INT baseVertexLocation, UINT startInstanceLocation)
 {
 	techniques[technique].Passes[pass].DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
+}
+
+void Shader::Dispatch(UINT technique, UINT pass, UINT x, UINT y, UINT z)
+{
+	techniques[technique].Passes[pass].Dispatch(x, y, z);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+unordered_map<wstring, Shaders::ShaderDesc> Shaders::shaders;
+
+void Shaders::Delete()
+{
+	for (Pair p : shaders)
+	{
+		SAFE_RELEASE(p.second.blob);
+		SAFE_RELEASE(p.second.effect);
+	}
+}
+
+void Shaders::GetEffect(wstring fileName, ID3DBlob** blob, ID3DX11Effect** effect)
+{
+	bool isFind = false;
+
+	if (shaders.count(fileName) < 1)
+	{
+		Pair p;
+
+		// 못찾았을 경우.
+		ID3DBlob* error;
+		INT flag = D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY | D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
+
+		HRESULT hr = D3DCompileFromFile(fileName.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, NULL, "fx_5_0", flag, NULL, &p.second.blob, &error);
+		if (FAILED(hr))
+		{
+			if (error != NULL)
+			{
+				string str = (const char *)error->GetBufferPointer();
+				MessageBoxA(NULL, str.c_str(), "Shader Error", MB_OK);
+			}
+			assert(false);
+		}
+
+		hr = D3DX11CreateEffectFromMemory(p.second.blob->GetBufferPointer(), p.second.blob->GetBufferSize(), 0, D3D::GetDevice(), &p.second.effect);
+		assert(SUCCEEDED(hr));
+
+		p.first = fileName;
+
+		shaders.insert(p);
+
+		*blob = p.second.blob;
+		p.second.effect->CloneEffect(D3DX11_EFFECT_CLONE_FORCE_NONSINGLE, effect);
+	}
+	else
+	{
+		ShaderDesc desc = shaders.at(fileName);
+
+		*blob = desc.blob;
+		desc.effect->CloneEffect(D3DX11_EFFECT_CLONE_FORCE_NONSINGLE, effect);
+	}
 }

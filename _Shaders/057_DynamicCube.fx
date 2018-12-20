@@ -104,7 +104,7 @@ SamplerState Sampler
 TextureCube CubeMap;
 
 //-----------------------------------------------------------------------------
-// PisxelShader
+// Pisxel Shader
 //-----------------------------------------------------------------------------
 
 float4 PS(VertexOutput input) : SV_TARGET

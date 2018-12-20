@@ -66,7 +66,9 @@ float4 PS(VertexOutput input) : SV_TARGET
     float3 normal = normalize(input.Normal);
     float NDotL = dot(-LightDirection, normal);
 
-    return diffuse * NDotL * LightColor;
+    //return diffuse;
+    return diffuse * NDotL;
+    //return diffuse * NDotL * LightColor;
     //return saturate(diffuse + LightColor) * NDotL;
 }
 

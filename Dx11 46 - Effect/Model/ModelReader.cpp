@@ -138,6 +138,8 @@ void Models::ReadMaterialData(wstring file)
 	} while (matNode != NULL);
 
 	materialMap[file] = materials;
+
+	SAFE_DELETE(document);
 }
 
 void Models::LoadMesh(wstring file, vector<class ModelBone*>* bones, vector<class ModelMesh*>* meshes)

@@ -12,14 +12,17 @@ TestModel::TestModel()
 	//models.back()->Scale(0.01f, 0.01f, 0.01f);
 	//models.back()->SetDiffuseMap(Textures + L"Red.png");
 
-	Context::Get()->GetGlobalLight()->Color = D3DXCOLOR(0, 1, 0, 1);
+	for (int i = 0; i < 20; i++) {
 
-	models.push_back(new GameModel
-	(
-		Shaders + L"052_Model.fx",
-		Models + L"Meshes/", L"Tank.material",
-		Models + L"Meshes/", L"Tank.mesh"
-	));
+		models.push_back(new GameModel
+		(
+			Shaders + L"052_Model.fx",
+			Models + L"Meshes/", L"Tank.material",
+			Models + L"Meshes/", L"Tank.mesh"
+		));
+
+		models.back()->Position(0, 0, i * 50);
+	}
 
 	//models.push_back(new GameModel
 	//(

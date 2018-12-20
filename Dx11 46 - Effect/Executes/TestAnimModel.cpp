@@ -3,18 +3,21 @@
 
 TestAnimModel::TestAnimModel()
 {
-	//Context::Get()->GetGlobalLight()->Direction = D3DXVECTOR3(1, 1, 1);
+	int count = 10;
 
-	models.push_back(new GameAnimModel
-	(
-		Shaders + L"052_Model.fx",
-		Models + L"Kachujin/", L"Kachujin.material",
-		Models + L"Kachujin/", L"Kachujin.mesh"
-	));
+	for (int i = 0; i < count; i++) {
+		models.push_back(new GameAnimModel
+		(
+			Shaders + L"052_Model.fx",
+			Models + L"Kachujin/", L"Kachujin.material",
+			Models + L"Kachujin/", L"Kachujin.mesh"
+		));
 
-	models.back()->Scale(0.0125f, 0.0125f, 0.0125f);
-	models.back()->AddClip(Models + L"Kachujin/Samba_Dance.anim");
-	models.back()->Play(0, true);
+		models.back()->Position(0, 0, i * 5);
+		models.back()->Scale(0.0125f, 0.0125f, 0.0125f);
+		models.back()->AddClip(Models + L"Kachujin/Samba_Dance.anim");
+		models.back()->Play(0, true);
+	}
 }
 
 TestAnimModel::~TestAnimModel()

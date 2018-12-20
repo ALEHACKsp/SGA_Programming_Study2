@@ -56,8 +56,8 @@ VertexOutput VS_Model(VertexTextureNormal input)
     output.Position = mul(input.Position, World);
     output.wPosition = output.Position;
 
-    output.Position = mul(output.Position, View2);
-    output.Position = mul(output.Position, Projection2);
+    output.Position = mul(output.Position, View);
+    output.Position = mul(output.Position, Projection);
 
     output.Normal = WorldNormal(input.Normal);
     output.Uv = input.Uv;
@@ -73,8 +73,8 @@ VertexOutput VS2_Model(VertexTextureNormal input)
     output.Position = mul(input.Position, World);
     output.wPosition = output.Position;
 
-    output.Position = mul(output.Position, View);
-    output.Position = mul(output.Position, Projection);
+    output.Position = mul(output.Position, View2);
+    output.Position = mul(output.Position, Projection2);
 
     output.Normal = WorldNormal(input.Normal);
     output.Uv = input.Uv;

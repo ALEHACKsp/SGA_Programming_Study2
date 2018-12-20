@@ -20,6 +20,9 @@ int WINAPI WinMain(
 	//_CrtSetBreakAlloc(837);
 	//_CrtSetBreakAlloc(836);
 	//_CrtSetBreakAlloc(823);
+	
+	// xml document new 한거 delete 안해서 그런거 modelreader 쪽
+	//_CrtSetBreakAlloc(837);
 
 	D3DDesc desc; // dx11 에서는 세팅하는 구조체 desc라는 이름 붙음
 	// 선생님이 구조체 만드신거
