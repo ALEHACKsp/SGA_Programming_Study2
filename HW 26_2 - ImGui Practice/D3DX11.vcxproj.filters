@@ -171,6 +171,9 @@
     <ClCompile Include="Executes\TestImGuiDragnDrop.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
+    <ClCompile Include="Executes\TestImGuizmo.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -356,6 +359,9 @@
       <Filter>Executes</Filter>
     </ClInclude>
     <ClInclude Include="Executes\TestImGuiDragnDrop.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\TestImGuizmo.h">
       <Filter>Executes</Filter>
     </ClInclude>
   </ItemGroup>

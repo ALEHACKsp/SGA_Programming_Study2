@@ -35,6 +35,17 @@ using namespace std;
 #include <imguiDx11.h>
 #pragma comment(lib, "imgui.lib")
 
+//#include <./imgui-master/imgui.h>
+//#include "./imgui-master/examples/imgui_impl_dx11.h"
+
+//#include "./ImGuizmo/imgui.h"
+//#include "./ImGuizmo/imconfig.h"
+//#include "./ImGuizmo/imgui_internal.h"
+//#include "./ImGuizmo/ImCurveEdit.h"
+//#include "./ImGuizmo/ImGradient.h"
+//#include "./ImGuizmo/ImGuizmo.h"
+
+
 //Json Cpp
 #include <json/json.h>
 #pragma comment(lib, "jsoncpp.lib")

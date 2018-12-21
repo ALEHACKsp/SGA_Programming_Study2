@@ -10,6 +10,7 @@
 #include "./Executes/TestAnimation.h"
 #include "./Executes/TestImGui.h"
 #include "./Executes/TestImGuiDragnDrop.h"
+#include "./Executes/TestImGuizmo.h"
 
 Program::Program()
 {
@@ -36,7 +37,8 @@ Program::Program()
 
 	//executes.push_back(new TestAnimation(values));
 	//executes.push_back(new TestImGui(values));
-	executes.push_back(new TestImGuiDragnDrop(values));
+	//executes.push_back(new TestImGuiDragnDrop(values));
+	executes.push_back(new TestImGuizmo(values));
 }
 
 Program::~Program()
@@ -95,21 +97,21 @@ void Program::PostRender()
 	for (Execute* exe : executes)
 		exe->PostRender();
 
-	//ImGui::Text("FPS : %f", Time::Get()->FPS());
+	ImGui::Text("FPS : %f", Time::Get()->FPS());
 	//// ±¸ºÐÀÚ »ý±è
 	//ImGui::Separator();
 	//ImGui::SliderFloat3("Direction", 
 	//(float *)&values->GlobalLight->Data.Direction, -1, 1);
 	//ImGui::Separator();
 	//
-	//D3DXVECTOR3 vec;
-	//values->MainCamera->Position(&vec);
-	//ImGui::LabelText("CamearPos", "%.2f, %.2f, %.2f", 
-	//	vec.x, vec.y, vec.z);
+	D3DXVECTOR3 vec;
+	values->MainCamera->Position(&vec);
+	ImGui::LabelText("CamearPos", "%.2f, %.2f, %.2f", 
+		vec.x, vec.y, vec.z);
 
-	//D3DXVECTOR2 rot;
-	//values->MainCamera->RotationDegree(&rot);
-	//ImGui::LabelText("CameraRot", "%.2f, %.2f", rot.x, rot.y);
+	D3DXVECTOR2 rot;
+	values->MainCamera->RotationDegree(&rot);
+	ImGui::LabelText("CameraRot", "%.2f, %.2f", rot.x, rot.y);
 }
 
 void Program::ResizeScreen()

@@ -158,6 +158,7 @@
     <ClCompile Include="Executes\TestAnimation.cpp" />
     <ClCompile Include="Executes\TestImGui.cpp" />
     <ClCompile Include="Executes\TestImGuiDragnDrop.cpp" />
+    <ClCompile Include="Executes\TestImGuizmo.cpp" />
     <ClCompile Include="Fbx\Exporter.cpp" />
     <ClCompile Include="Fbx\Utility.cpp" />
     <ClCompile Include="LandScape\QuadTree.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Executes\TestAnimation.h" />
     <ClInclude Include="Executes\TestImGui.h" />
     <ClInclude Include="Executes\TestImGuiDragnDrop.h" />
+    <ClInclude Include="Executes\TestImGuizmo.h" />
     <ClInclude Include="Fbx\Exporter.h" />
     <ClInclude Include="Fbx\Type.h" />
     <ClInclude Include="Fbx\Utility.h" />

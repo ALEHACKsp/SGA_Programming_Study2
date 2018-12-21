@@ -24,7 +24,7 @@ WPARAM Window::Run(IExecute * main)
 	ImGui::Create(desc.Handle, D3D::GetDevice(), D3D::GetDC());
 	ImGui::StyleColorsDark();
 
-	ImGui::GetIO().Fonts->AddFontFromFileTTF()
+	//ImGui::GetIO().Fonts->AddFontFromFileTTF()
 
 	mainExecute->Initialize();
 	mainExecute->Ready();
