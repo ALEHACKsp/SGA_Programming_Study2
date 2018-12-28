@@ -9,6 +9,9 @@ public:
 	Terrain(InitDesc& desc);
 	~Terrain();
 
+	void Initialize();
+	void Ready(Material* material);
+
 	void Update();
 	void Render();
 

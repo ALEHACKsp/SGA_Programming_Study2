@@ -1,0 +1,775 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Systems\D3D.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\Keyboard.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\Mouse.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\Time.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\Window.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\Shader.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\BinaryFile.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Math.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Path.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\String.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Xml.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Perspective.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Viewport.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Camera.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Freedom.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\Material.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Orbit.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\Texture.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\LineDraw.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Fbx\Exporter.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelBone.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelMeshPart.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelMesh.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Program.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Model\ModelReader.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameRender.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameModel.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Manifold.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Collision.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ExportMesh.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="LandScape\Terrain.cpp">
+      <Filter>LandsScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\DrawLandscape.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Gizmo.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\PickingObject.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Landscape\Sky.cpp">
+      <Filter>LandsScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\RasterizerState.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\SamplerState.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\DepthStencilState.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Billboard.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapTool.cpp">
+      <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapToolCommand\MapToolCommandCaretaker.cpp">
+      <Filter>MapTool\MapToolCommaend</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapToolCommand\MapToolCommands.cpp">
+      <Filter>MapTool\MapToolCommaend</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapToolCreateObject.cpp">
+      <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Frustum.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Fixity.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Landscape\QuadTree.cpp">
+      <Filter>LandsScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\RenderTarget.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\Render2D.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Fbx\Utility.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffects\Grayscale.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffects\Blur.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffects\Mosaic.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffects\ColorShift.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffects\Gamma.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffects\Embossing.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffects\Sharpening.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="PostEffects\GaussianBlur.cpp">
+      <Filter>PostEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ExePicking.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ExportAnim.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelKeyframe.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelClip.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\MeshObject.cpp">
+      <Filter>Objects\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameAnimModel.cpp">
+      <Filter>Objects\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameTree.cpp">
+      <Filter>Objects\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Bullet.cpp">
+      <Filter>Objects\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\TestAnimation.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameTank.cpp">
+      <Filter>Objects\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelTweener.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationTool\AnimationTool.cpp">
+      <Filter>AnimationTool</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\AnimationEditor.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Collider.cpp">
+      <Filter>Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\CapsuleCollider.cpp">
+      <Filter>Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Paladin.cpp">
+      <Filter>Objects\Models\ActionGameObj</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Vanguard.cpp">
+      <Filter>Objects\Models\ActionGameObj</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Timer.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\DirectWrite.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Landscape\Water.cpp">
+      <Filter>LandsScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\BlendState.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Lights\Projection.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Lights\SpotLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Lights\AreaLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Lights\PointLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Lights\Shadow.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\TestScattering.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Landscape\TerrainRender.cpp">
+      <Filter>LandsScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\MeshBunny.cpp">
+      <Filter>Objects\Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\MapEditor.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapToolBrush.cpp">
+      <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapTool\MapToolData.cpp">
+      <Filter>MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="Landscape\TerrainQuadTree.cpp">
+      <Filter>LandsScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\SphereCollider.cpp">
+      <Filter>Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\RayCollider.cpp">
+      <Filter>Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\Trail.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Landscape\Cloud.cpp">
+      <Filter>LandsScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Effects\Particles.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\RTS.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\Swat.cpp">
+      <Filter>Objects\Models\ActionGameObj</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\AK.cpp">
+      <Filter>Objects\Models\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Landscape\Rain.cpp">
+      <Filter>LandsScape</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\TestRain.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\MeshCylinder.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\MeshGrid.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\MeshSphere.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\Mesh.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\MeshCube.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\RayTracingRT.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\GizmoComponent.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\BoxCollider.cpp">
+      <Filter>Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Transform.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\DebugLine.cpp">
+      <Filter>Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PlaneCollider.cpp">
+      <Filter>Physics\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\TestGizmo.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Systems\D3D.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\Keyboard.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\Mouse.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\Time.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\Window.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\VertexLayouts.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\GlobalBuffers.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\Shader.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\ShaderBuffer.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\BinaryFile.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Math.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Path.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\String.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Xml.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Perspective.h">
+      <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Viewport.h">
+      <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\Execute.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Camera.h">
+      <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Freedom.h">
+      <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\Material.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Orbit.h">
+      <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\Texture.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\LineDraw.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Fbx\Type.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="Fbx\Exporter.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelBone.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelMeshPart.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelMesh.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Program.h" />
+    <ClInclude Include="Objects\GameRender.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameModel.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ICloneable.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Manifold.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Collision.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ExportMesh.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="LandScape\Terrain.h">
+      <Filter>LandsScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\DrawLandscape.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Gizmo.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\PickingObject.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Landscape\Sky.h">
+      <Filter>LandsScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\RasterizerState.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\SamplerState.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\DepthStencilState.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Billboard.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool\MapTool.h">
+      <Filter>MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool\MapToolCommand\MapToolCommand.h">
+      <Filter>MapTool\MapToolCommaend</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool\MapToolCommand\MapToolCommandCaretaker.h">
+      <Filter>MapTool\MapToolCommaend</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool\MapToolCommand\MapToolCommands.h">
+      <Filter>MapTool\MapToolCommaend</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool\MapToolCreateObject.h">
+      <Filter>MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Frustum.h">
+      <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Fixity.h">
+      <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Landscape\QuadTree.h">
+      <Filter>LandsScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\RenderTarget.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\Render2D.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Fbx\Utility.h">
+      <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffects\Grayscale.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffects\Blur.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffects\Mosaic.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffects\ColorShift.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffects\Gamma.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffects\Embossing.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffects\Sharpening.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="PostEffects\GaussianBlur.h">
+      <Filter>PostEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ExePicking.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ExportAnim.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelKeyframe.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelClip.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\MeshObject.h">
+      <Filter>Objects\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameAnimModel.h">
+      <Filter>Objects\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameTree.h">
+      <Filter>Objects\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Bullet.h">
+      <Filter>Objects\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\TestAnimation.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameTank.h">
+      <Filter>Objects\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelTweener.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationTool\AnimationTool.h">
+      <Filter>AnimationTool</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\AnimationEditor.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\Collider.h">
+      <Filter>Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\CapsuleCollider.h">
+      <Filter>Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Paladin.h">
+      <Filter>Objects\Models\ActionGameObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Vanguard.h">
+      <Filter>Objects\Models\ActionGameObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Timer.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\DirectWrite.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Landscape\Water.h">
+      <Filter>LandsScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\BlendState.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Lights\Projection.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Lights\PointLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Lights\SpotLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Lights\AreaLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Lights\Shadow.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\TestScattering.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Landscape\TerrainRender.h">
+      <Filter>LandsScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\MeshBunny.h">
+      <Filter>Objects\Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\MapEditor.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool\MapToolBrush.h">
+      <Filter>MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="MapTool\MapToolData.h">
+      <Filter>MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="Landscape\TerrainQuadTree.h">
+      <Filter>LandsScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\SphereCollider.h">
+      <Filter>Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\RayCollider.h">
+      <Filter>Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\Trail.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Landscape\Cloud.h">
+      <Filter>LandsScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Effects\Particles.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\RTS.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Swat.h">
+      <Filter>Objects\Models\ActionGameObj</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\AK.h">
+      <Filter>Objects\Models\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Landscape\Rain.h">
+      <Filter>LandsScape</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\TestRain.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\MeshCube.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\MeshCylinder.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\MeshGrid.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\MeshSphere.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\Mesh.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\RayTracingRT.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\GizmoComponent.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\BoxCollider.h">
+      <Filter>Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Transform.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\DebugLine.h">
+      <Filter>Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="Interfaces\ILine.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PlaneCollider.h">
+      <Filter>Physics\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\TestGizmo.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{fe6e3837-b2a2-4583-bacc-7b696e7aecdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renders">
+      <UniqueIdentifier>{c853b6ec-f385-469d-abf3-4d3a8100c836}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{dcfbd521-e1de-43d0-8e52-657205278d39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executes">
+      <UniqueIdentifier>{8093526b-c48a-48e6-b3c3-637e680c9304}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer">
+      <UniqueIdentifier>{fcee1d40-e6d6-4990-a0f9-065f86130f02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fbx">
+      <UniqueIdentifier>{34a04cd2-2b86-4d78-a690-e9b1b448f79d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{6365e3e8-de15-4dec-8173-448ffc0ff735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{b000ee87-907d-492b-a4e7-6636db9fe7aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{7596441e-b4cf-47c4-bb6a-aec0e7add473}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LandsScape">
+      <UniqueIdentifier>{e3ed3b0a-f824-4ab1-8f27-98afda4cb2b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapTool">
+      <UniqueIdentifier>{dfcea148-311f-4615-a85d-579a09e26d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MapTool\MapToolCommaend">
+      <UniqueIdentifier>{42bd66ab-0581-4bea-b090-724a48e51d61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{133aacdd-850a-4ac2-ac93-3dde4d082ef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PostEffects">
+      <UniqueIdentifier>{98d20419-4fa7-46d9-a4d0-631d4809222a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Meshes">
+      <UniqueIdentifier>{65437239-d80f-4c82-b510-37db40fd1e0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Models">
+      <UniqueIdentifier>{0b5b4db7-dc7c-4df3-9be0-69cd723ddba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AnimationTool">
+      <UniqueIdentifier>{23b3f365-706d-469e-8649-0027f8f92770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics\Collider">
+      <UniqueIdentifier>{533bdcd4-7edf-4df3-8748-a4662a02fab6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Models\ActionGameObj">
+      <UniqueIdentifier>{ef0cb202-fc46-4b2b-94ae-ac3aed52ab23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lights">
+      <UniqueIdentifier>{0f6fd95b-96b9-4d73-899d-c7224f424e8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects">
+      <UniqueIdentifier>{5f6e56a0-0e9b-4f9d-b6bd-17b0e18ff76e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Models\Weapons">
+      <UniqueIdentifier>{f3aec492-b8a5-4c1b-9edb-135bafdb165d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Draw">
+      <UniqueIdentifier>{346c5df7-cfef-4c76-bc66-f874ca71e14f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -31,21 +31,26 @@ void TestTerrain::Initialize()
 
 			0.5f
 		};
-		desc.material = new Material(Shaders + L"061_Terrain.fx");
-
+		
 		terrain = new Terrain(desc);
+		ProgressBar::Get()->Set(1.0f, 40);
+		terrain->Initialize();
 	}
 }
 
 void TestTerrain::Ready()
 {
+	terrainMaterial = new Material(Shaders + L"061_Terrain.fx");
+	terrain->Ready(terrainMaterial);
 }
 
 void TestTerrain::Destroy()
 {
 	SAFE_DELETE(sky);
 
+	SAFE_DELETE(terrainMaterial);
 	SAFE_DELETE(terrain);
+
 }
 
 void TestTerrain::Update()
@@ -59,6 +64,7 @@ void TestTerrain::PreRender()
 
 void TestTerrain::Render()
 {
+
 	sky->Render();
 	terrain->Render();
 }

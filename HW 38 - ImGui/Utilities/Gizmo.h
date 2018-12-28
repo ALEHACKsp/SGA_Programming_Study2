@@ -42,6 +42,9 @@ void EditTransform(const float *cameraView, float *cameraProjection, float* matr
 		if (ImGui::RadioButton("World", mCurrentGizmoMode == ImGuizmo::WORLD))
 			mCurrentGizmoMode = ImGuizmo::WORLD;
 	}
+	else
+		mCurrentGizmoMode = ImGuizmo::LOCAL;
+
 	if (Keyboard::Get()->Down('Z'))
 		useSnap = !useSnap;
 	ImGui::Checkbox("", &useSnap);

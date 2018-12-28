@@ -44,6 +44,8 @@ TestTerrain::~TestTerrain()
 	SAFE_DELETE(sky);
 
 	SAFE_DELETE(terrain);
+
+	SAFE_DELETE(pathFinding);
 }
 
 void TestTerrain::Update()

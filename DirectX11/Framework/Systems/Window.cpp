@@ -4,6 +4,10 @@
 
 IExecute* Window::mainExecute = NULL;
 
+bool Window::bInitialize = false;
+float Window::progress = 0.0f;
+mutex* Window::mu = NULL;
+
 WPARAM Window::Run(IExecute * main)
 {
 	mainExecute = main;
@@ -21,13 +25,20 @@ WPARAM Window::Run(IExecute * main)
 	Time::Create();
 	Time::Get()->Start();
 
+	ProgressBar::Create();
+
 	ImGui::Create(desc.Handle, D3D::GetDevice(), D3D::GetDC());
 	ImGui::StyleColorsDark();
 
-	//ImGui::GetIO().Fonts->AddFontFromFileTTF()
+	mu = new mutex();
+	thread t = thread([&]()
+	{
+		mainExecute->Initialize();
 
-	mainExecute->Initialize();
-	mainExecute->Ready();
+		mu->lock();
+		bInitialize = true;
+		mu->unlock();
+	});
 
 	MSG msg = { 0 };
 	while (true)
@@ -42,37 +53,34 @@ WPARAM Window::Run(IExecute * main)
 		}
 		else
 		{
-			Time::Get()->Update();
-
-			if (ImGui::IsMouseHoveringAnyWindow() == false)
+			if (mu != NULL)
 			{
-				Keyboard::Get()->Update();
-				Mouse::Get()->Update();
-			}
+				bool temp = false;
+				mu->lock();
+				temp = bInitialize;
+				mu->unlock();
 
-			mainExecute->Update();
-			ImGui::Update();
-
-			mainExecute->PreRender();
-
-			D3D::Get()->SetRenderTarget();
-			D3D::Get()->Clear(D3DXCOLOR(0, 0, 0, 1));
-			{
-				mainExecute->Render();
-				ImGui::Render();
-
-				DirectWrite::GetDC()->BeginDraw();
+				if (temp == false)
+					ProgressRender();
+				else
 				{
-					mainExecute->PostRender();
+					t.join();
+					SAFE_DELETE(mu);
+
+					mainExecute->Ready();
+					ProgressBar::Get()->Done();
 				}
-				DirectWrite::GetDC()->EndDraw();
 			}
-			D3D::Get()->Present();
+			else
+			{
+				MainRender();
+			}
 		}
 	}
 	mainExecute->Destroy();
 
 	ImGui::Delete();
+	ProgressBar::Delete();
 	Time::Delete();
 	Mouse::Delete();
 	Keyboard::Delete();
@@ -169,6 +177,67 @@ void Window::Destroy()
 	DestroyWindow(desc.Handle);
 
 	UnregisterClass(desc.AppName.c_str(), desc.Instance);
+}
+
+void Window::ProgressRender()
+{
+	Time::Get()->Update();
+
+	if (ImGui::IsMouseHoveringAnyWindow() == false)
+	{
+		Keyboard::Get()->Update();
+		Mouse::Get()->Update();
+	}
+
+	ImGui::Update();
+
+
+	D3D::Get()->SetRenderTarget();
+	D3D::Get()->Clear(D3DXCOLOR(0, 0, 0, 1));
+	{
+		// ¿©±â´Ù ·Îµù È­¸é ¶ç¿ï²¬ ·»´õ ÇÏ¸é µÊ
+		// Initialize µµÁßÀº ¿©±â¼­ ·»´õÇÒ ²¨
+
+		ProgressBar::Get()->Update();
+		ProgressBar::Get()->Render();
+
+		ImGui::Render();
+	}
+	D3D::Get()->Present();
+}
+
+void Window::MainRender()
+{
+	Time::Get()->Update();
+
+	if (ImGui::IsMouseHoveringAnyWindow() == false)
+	{
+		Keyboard::Get()->Update();
+		Mouse::Get()->Update();
+	}
+
+	mainExecute->Update();
+	ImGui::Update();
+
+	mainExecute->PreRender();
+
+	D3D::Get()->SetRenderTarget();
+	D3D::Get()->Clear(D3DXCOLOR(0, 0, 0, 1));
+	{
+		mainExecute->Render();
+	
+		ProgressBar::Get()->Update();
+		ProgressBar::Get()->Render();
+
+		ImGui::Render();
+
+		DirectWrite::GetDC()->BeginDraw();
+		{
+			mainExecute->PostRender();
+		}
+		DirectWrite::GetDC()->EndDraw();
+	}
+	D3D::Get()->Present();
 }
 
 LRESULT CALLBACK Window::WndProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam)

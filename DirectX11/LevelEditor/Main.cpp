@@ -5,6 +5,13 @@
 
 #include "Executes\TestTerrain.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#define DBG_NEW new(_CLIENT_BLOCK,__FILE__, __LINE__)
+#endif
+
 void Main::Initialize()
 {
 	Context::Create();
@@ -20,6 +27,8 @@ void Main::Initialize()
 
 void Main::Ready()
 {
+	for (IExecute* exe : executes)
+		exe->Ready();
 }
 
 void Main::Destroy()
@@ -119,6 +128,10 @@ void Main::Push(IExecute * execute)
 
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR param, int command)
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+	//_CrtSetBreakAlloc(1686);
+
 	D3DDesc desc;
 	desc.AppName = L"D3D Game";
 	desc.Instance = instance;

@@ -17,6 +17,8 @@ public:
 
 private:
 	class CubeSky* sky;
+
+	Material* terrainMaterial;
 	class Terrain* terrain;
 	class PathFinding* pathFinding;
 };

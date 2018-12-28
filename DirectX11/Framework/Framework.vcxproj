@@ -68,6 +68,7 @@
     <ClInclude Include="Utilities\Path.h" />
     <ClInclude Include="Utilities\Point.h" />
     <ClInclude Include="Utilities\PriorityQueue.h" />
+    <ClInclude Include="Utilities\ProgressBar.h" />
     <ClInclude Include="Utilities\Rect.h" />
     <ClInclude Include="Utilities\String.h" />
     <ClInclude Include="Utilities\Xml.h" />
@@ -124,6 +125,7 @@
     <ClCompile Include="Utilities\Path.cpp" />
     <ClCompile Include="Utilities\Point.cpp" />
     <ClCompile Include="Utilities\PriorityQueue.cpp" />
+    <ClCompile Include="Utilities\ProgressBar.cpp" />
     <ClCompile Include="Utilities\Rect.cpp" />
     <ClCompile Include="Utilities\String.cpp" />
     <ClCompile Include="Utilities\Xml.cpp" />

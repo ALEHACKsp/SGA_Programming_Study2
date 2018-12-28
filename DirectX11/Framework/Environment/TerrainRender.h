@@ -9,10 +9,11 @@ public:
 	static const float MinTessellation;
 
 public:
-	TerrainRender(Material* material, class Terrain* terrain);
+	TerrainRender(class Terrain* terrain);
 	~TerrainRender();
 
 	void Initialize();
+	void Ready(Material* material);
 
 	void Render();
 

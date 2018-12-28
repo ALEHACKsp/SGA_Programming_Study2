@@ -32,6 +32,8 @@ TestModel::TestModel()
 	//	Models + L"Kachujin/", L"Kachujin.material",
 	//	Models + L"Kachujin/", L"Kachujin.mesh"
 	//));
+
+	D3DXMatrixIdentity(&matCube);
 }
 
 TestModel::~TestModel()
@@ -57,13 +59,15 @@ void TestModel::Render()
 	V = Context::Get()->GetView();
 	P = Context::Get()->GetProjection();
 
-	//D3DXMATRIX W;
-	//D3DXMatrixIdentity(&W);
+	D3DXMATRIX W;
+	D3DXMatrixIdentity(&W);
 
-	//ImGuizmo::DrawGrid((float*)V, (float*)P, (float*)W, 10.0f);
+	//ImGuizmo::DrawCube((float*)V, (float*)P, (float*)matCube);
+	ImGuizmo::DrawGrid((float*)V, (float*)P, (float*)W, 10.0f);
 
 	D3DXMATRIX world = models.back()->World();
 
+	//EditTransform((float*)V, (float*)P, (float*)matCube);
 	EditTransform((float*)V, (float*)P, (float*)world);
 
 	models.back()->World(world);

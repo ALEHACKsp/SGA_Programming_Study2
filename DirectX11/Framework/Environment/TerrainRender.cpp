@@ -11,27 +11,14 @@ const float TerrainRender::MinDistance = 20.0f;
 const float TerrainRender::MaxTessellation = 6.0f;
 const float TerrainRender::MinTessellation = 0.0f;
 
-TerrainRender::TerrainRender(Material * material, Terrain * terrain)
-	: material(material), terrain(terrain)//, bUseTessellation(true)
+TerrainRender::TerrainRender(Terrain * terrain)
+	: terrain(terrain)//, bUseTessellation(true)
 	, quadPatchVB(NULL), quadPatchIB(NULL)
 	, layerMapArraySRV(NULL), blendMapSRV(NULL), heightMapSRV(NULL)
 	, bvhVertexBuffer(NULL), bvhIndexBuffer(NULL)
 	, bWireFrame(false)
 {
-	D3DXMatrixIdentity(&world);
-
-	D3D11_BUFFER_DESC desc;
-	desc.Usage = D3D11_USAGE_DYNAMIC;
-	desc.ByteWidth = sizeof(Buffer);
-	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	desc.MiscFlags = 0;
-	desc.StructureByteStride = 0;
-
-	HRESULT hr = D3D::GetDevice()->CreateBuffer(&desc, NULL, &cBuffer);
-	assert(SUCCEEDED(hr));
-
-	frustum = new Frustum(1000);
+	
 }
 
 TerrainRender::~TerrainRender()
@@ -57,25 +44,38 @@ TerrainRender::~TerrainRender()
 
 void TerrainRender::Initialize()
 {
+	D3DXMatrixIdentity(&world);
+
+	frustum = new Frustum(1000);
+
 	patchVertexRows = ((UINT)(terrain->Desc().HeightMapHeight - 1) / Terrain::CellsPerPatch) + 1;
 	patchVertexCols = ((UINT)(terrain->Desc().HeightMapWidth - 1) / Terrain::CellsPerPatch) + 1;
 
 	patchVerticesCount = patchVertexRows * patchVertexCols;
 	patchQuadFacesCount = (patchVertexRows - 1) * (patchVertexCols - 1);
 
-	//if (bUseTessellation == true)
-	//{
 	CalcAllPatchBoundsY();
+
+	//CreateBlendMap();
+}
+
+void TerrainRender::Ready(Material* material)
+{
+	this->material = material;
 
 	BuildQuadPatchVB();
 	BuildQuadPatchIB();
-	//}
-	//else
-	//{
-	//	BuildPatches();
-	//}
 
-	CreateBlendMap();
+	D3D11_BUFFER_DESC desc;
+	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.ByteWidth = sizeof(Buffer);
+	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.MiscFlags = 0;
+	desc.StructureByteStride = 0;
+
+	HRESULT hr = D3D::GetDevice()->CreateBuffer(&desc, NULL, &cBuffer);
+	assert(SUCCEEDED(hr));
 
 	vector<wstring> textures;
 	for (int i = 0; i < 5; i++)

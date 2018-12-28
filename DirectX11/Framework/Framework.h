@@ -14,6 +14,8 @@
 #include <unordered_map>
 #include <functional>
 #include <iterator>
+#include <thread>
+#include <mutex>
 using namespace std;
 
 // DirectWrite
@@ -94,6 +96,7 @@ const wstring Materials = L"../../_Materials/";
 #include "./Utilities/String.h"
 #include "./Utilities/Path.h"
 #include "./Utilities/Math.h"
+#include "./Utilities/ProgressBar.h"
 
 #include "./Boundings/Ray.h"
 #include "./Boundings/BBox.h"

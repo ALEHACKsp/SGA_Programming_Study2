@@ -9,12 +9,7 @@ const UINT Terrain::CellsPerPatch = 64;
 Terrain::Terrain(InitDesc & desc)
 	: desc(desc)
 {
-	render = new TerrainRender(desc.material, this);
-	
-	heightMap = new HeightMap(desc.HeightMapWidth, desc.HeightMapHeight, desc.HeightScale);
-	heightMap->Load(desc.HeightMap);
 
-	render->Initialize();
 }
 
 Terrain::~Terrain()
@@ -22,7 +17,25 @@ Terrain::~Terrain()
 	SAFE_DELETE(render);
 	SAFE_DELETE(heightMap);
 
-	SAFE_DELETE(desc.material);
+	//SAFE_DELETE(desc.material);
+}
+
+void Terrain::Initialize()
+{
+	render = new TerrainRender(this);
+
+	heightMap = new HeightMap(desc.HeightMapWidth, desc.HeightMapHeight, desc.HeightScale);
+	heightMap->Load(desc.HeightMap);
+
+
+	render->Initialize();
+}
+
+void Terrain::Ready(Material* material)
+{
+	desc.material = material;
+
+	render->Ready(material);
 }
 
 void Terrain::Update()

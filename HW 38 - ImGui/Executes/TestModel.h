@@ -14,5 +14,7 @@ public:
 	void ResizeScreen() {}
 
 private:
+	D3DXMATRIX matCube;
+
 	vector<GameModel*> models;
 };

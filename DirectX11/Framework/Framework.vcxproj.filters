@@ -208,6 +208,9 @@
     <ClInclude Include="Systems\IExecute.h">
       <Filter>Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Utilities\ProgressBar.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Draw\DebugLine.cpp">
@@ -371,6 +374,9 @@
     </ClCompile>
     <ClCompile Include="Viewer\Viewport.cpp">
       <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\ProgressBar.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
