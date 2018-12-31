@@ -124,7 +124,7 @@ void CsResource::CreateUAV()
 	uavDesc.Buffer.FirstElement = 0;
 
 	//    & : == ÀÌ¶û °°À½
-	if (desc.MiscFlags & D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS/*¾ð¾îµµ´õµå ºä¶û °°À½*/)
+	if (desc.MiscFlags & D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS/*¾ð¿À´õµå ºä¶û °°À½*/)
 	{
 		uavDesc.Format = DXGI_FORMAT_R32_TYPELESS;
 		uavDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;

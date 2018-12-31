@@ -180,12 +180,66 @@ HullOutput HS(InputPatch<VertexOutput, 4> input, uint pointID : SV_OutputControl
 // Domain Shader
 //-----------------------------------------------------------------------------
 
+cbuffer CB_Brush
+{
+    int Type;
+    float3 Location;
+
+    int Range;
+    float3 Color;
+
+    float Capacity;
+};
+
+float3 BrushColor(float3 location)
+{
+    if (Type == 0)
+        return float3(0, 0, 0);
+
+    if (Type == 1 || Type == 4)
+    {
+        if ((location.x >= (Location.x - Range)) &&
+            (location.x <= (Location.x + Range)) &&
+            (location.z >= (Location.z - Range)) &&
+            (location.z <= (Location.z + Range)))
+        {
+            return Color;
+        }
+    }
+
+    if (Type == 2)
+    {
+        float dx = location.x - Location.x;
+        float dz = location.z - Location.z;
+
+        float dist = sqrt(dx * dx + dz * dz);
+
+        if (dist <= Range)
+            return Color;
+    }
+
+    if (Type == 3)
+    {
+        float dx = location.x - Location.x;
+        float dz = location.z - Location.z;
+
+        float dist = sqrt(dx * dx + dz * dz);
+
+        if (dist <= Range)
+            return Color;
+    }
+
+    return float3(0, 0, 0);
+}
+
 struct DomainOutput
 {
     float4 Position : SV_Position0;
     float3 wPosition : Position1;
     float2 Uv : Uv0;
     float2 TileUv : Uv1;
+
+    float3 BrushColor : COLOR0;
 };
 
 [domain("quad")]
@@ -210,6 +264,8 @@ DomainOutput DS(ConstantOutput input, float2 uvw : SV_DomainLocation, const Outp
     output.Position = mul(float4(output.wPosition, 1), World);
     output.Position = mul(float4(output.wPosition, 1), View);
     output.Position = mul(output.Position, Projection);
+
+    output.BrushColor = BrushColor(output.wPosition + float3(512, 0, 512));
 
     return output;
 }
@@ -269,6 +325,8 @@ float4 PS(DomainOutput input, uniform bool fogEnabled) : SV_TARGET
     color = lerp(color, c2, t.g);
     color = lerp(color, c3, t.b);
     color = lerp(color, c4, t.a);
+	
+    color *= dot(-LightDirection, normalize(normalW));
 
     [flatten]
     if (fogEnabled == true)
@@ -277,6 +335,8 @@ float4 PS(DomainOutput input, uniform bool fogEnabled) : SV_TARGET
 
         color = lerp(color, FogColor, fogFactor);
     }
+
+    color = color + float4(input.BrushColor, 0);
 
     return color;
 }
