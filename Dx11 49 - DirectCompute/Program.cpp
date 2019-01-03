@@ -28,9 +28,9 @@ Program::Program()
 
 	//executes.push_back(new Export);
 
-	//executes.push_back(new TestComputeAdd);
+	executes.push_back(new TestComputeAdd);
 	//executes.push_back(new TestComputeAppend);
-	executes.push_back(new TestComputeBlur);
+	//executes.push_back(new TestComputeBlur);
 }
 
 Program::~Program()

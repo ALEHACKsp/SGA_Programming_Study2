@@ -2,9 +2,8 @@
 // Compute Shader
 //-----------------------------------------------------------------------------
 
-static const int N = 8; // 그룹 스레드 크기
+static const int N = 16; // 그룹 스레드 크기
 
-Texture2D Input;
 RWTexture2D<float4> Output;
 
 cbuffer CB_Brush
@@ -24,7 +23,7 @@ float pi = 3.14159265f;
 void Brush(int3 groupThreadId : SV_GroupThreadId, int3 dispatchThreadId : SV_DispatchThreadId)
 {
     int width, height;
-    Input.GetDimensions(width, height);
+    Output.GetDimensions(width, height);
 
     int posX = int(Location.x) * 2;
     int posY = height - int(Location.z) * 2;
