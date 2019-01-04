@@ -679,6 +679,7 @@ void Sky::RenderClouds()
 	D3DXMatrixRotationX(&rotationX, -D3DX_PI / 2.0f);
 	D3DXMatrixTranslation(&translation2, camPos.x, camPos.y, camPos.z);
 	world = scale * translation1 * rotationX * translation2;
+	
 	worldBuffer->SetMatrix(world);
 
 	worldBuffer->SetVSBuffer(1);
