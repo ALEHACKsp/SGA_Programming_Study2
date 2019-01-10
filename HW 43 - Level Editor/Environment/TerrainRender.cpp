@@ -6,6 +6,11 @@
 #include "HeightMap.h"
 #include "./Viewer/Frustum.h"
 
+#include "Objects\Billboard.h"
+
+#include "Command\BrushCommand.h"
+#include "Command/BillboardCommand.h"
+
 const float TerrainRender::MaxDistance = 500.0f;
 const float TerrainRender::MinDistance = 20.0f;
 const float TerrainRender::MaxTessellation = 6.0f;
@@ -14,10 +19,11 @@ const float TerrainRender::MinTessellation = 0.0f;
 TerrainRender::TerrainRender(Material * material, Terrain * terrain)
 	: material(material), terrain(terrain)//, bUseTessellation(true)
 	, quadPatchVB(NULL), quadPatchIB(NULL)
-	, layerMapArraySRV(NULL), blendMapSRV(NULL), heightMapSRV(NULL)
 	, bvhVertexBuffer(NULL), bvhIndexBuffer(NULL)
 	, bWireFrame(false)
-	, heightMapTex(NULL), heightMapUAV(NULL)
+	, layerMapArraySRV(NULL)
+	, heightMapTex(NULL), heightMapSRV(NULL), heightMapUAV(NULL)
+	, blendMapTex(NULL), blendMapUAV(NULL), blendMapSRV(NULL)
 {
 	D3DXMatrixIdentity(&world);
 
@@ -51,7 +57,7 @@ TerrainRender::TerrainRender(Material * material, Terrain * terrain)
 
 	frustum = new Frustum(500);
 
-	pixelPickingShader = new Shader(Shaders + L"Homework/FastPicking.fx");
+	fastPickingShader = new Shader(Shaders + L"Homework/FastPicking.fx");
 
 	rtv = new RenderTargetView(
 		Context::Get()->GetViewport()->GetWidth(),
@@ -60,11 +66,18 @@ TerrainRender::TerrainRender(Material * material, Terrain * terrain)
 	dsv = new DepthStencilView(Context::Get()->GetViewport()->GetWidth(),
 		Context::Get()->GetViewport()->GetHeight());
 	render2D = new Render2D();
-	render2D->Position(0, 100);
+	render2D->Position(0, 75);
 	render2D->Scale(300, 300);
 
 	adjustHeightMapComputeShader = new Shader(Shaders + L"Homework/AdjustHeightMap.fx", true);
 
+	billboard = new Billboard();
+
+	blendMapComputeShader = new Shader(Shaders + L"Homework/CreateBlendMap.fx", true);
+
+	selectSRV = 0;
+	render2D->SRV(rtv->SRV());
+	selectEdit = 0;
 }
 
 TerrainRender::~TerrainRender()
@@ -83,7 +96,9 @@ TerrainRender::~TerrainRender()
 
 	SAFE_DELETE(layerMapArray);
 
+	SAFE_RELEASE(blendMapTex);
 	SAFE_RELEASE(blendMapSRV);
+	SAFE_RELEASE(blendMapUAV);
 
 	SAFE_RELEASE(heightMapTex);
 	SAFE_RELEASE(heightMapSRV);
@@ -91,12 +106,27 @@ TerrainRender::~TerrainRender()
 
 	SAFE_DELETE(frustum);
 
-	SAFE_DELETE(pixelPickingShader);
+	SAFE_DELETE(fastPickingShader);
 	SAFE_DELETE(rtv);
 	SAFE_DELETE(dsv);
 	SAFE_DELETE(render2D);
 
 	SAFE_DELETE(adjustHeightMapComputeShader);
+	SAFE_DELETE(blendMapComputeShader);
+
+	SAFE_DELETE(billboard);
+
+	while (!undoStack.empty()) {
+		Command * command = undoStack.top();
+		SAFE_DELETE(command);
+		undoStack.pop();
+	}
+
+	while (!redoStack.empty()) {
+		Command * command = redoStack.top();
+		SAFE_DELETE(command);
+		redoStack.pop();
+	}
 }
 
 void TerrainRender::Initialize()
@@ -107,19 +137,10 @@ void TerrainRender::Initialize()
 	patchVerticesCount = patchVertexRows * patchVertexCols;
 	patchQuadFacesCount = (patchVertexRows - 1) * (patchVertexCols - 1);
 
-	//if (bUseTessellation == true)
-	//{
 	CalcAllPatchBoundsY();
 
 	BuildQuadPatchVB();
 	BuildQuadPatchIB();
-	//}
-	//else
-	//{
-	//	BuildPatches();
-	//}
-
-	CreateBlendMap();
 
 	vector<wstring> textures;
 	for (int i = 0; i < 5; i++)
@@ -127,35 +148,43 @@ void TerrainRender::Initialize()
 	layerMapArray = new TextureArray(textures, 512, 512);
 	layerMapArraySRV = layerMapArray->GetSRV();
 
+	Shader* shader = material->GetShader();
+	shader->AsShaderResource("LayerMapArray")->SetResource(layerMapArraySRV);
+
 	terrain->GetHeightMap()->Build(&heightMapTex, &heightMapSRV, &heightMapUAV);
 
-	Shader* shader = material->GetShader();
-	shader->AsShaderResource("HeightMap")->SetResource(heightMapSRV);
-	shader->AsShaderResource("LayerMapArray")->SetResource(layerMapArraySRV);
+	CreateBlendMap();
+
 	shader->AsShaderResource("BlendMap")->SetResource(blendMapSRV);
+	
+	// buffer, brush
+	{
+		buffer.FogStart = 300.0f;
+		buffer.FogRange = 200.0f;
+		buffer.FogColor = D3DXCOLOR(192 / 255.0f, 192 / 255.0f, 192 / 255.0f, 1);
+		buffer.MinDistance = MinDistance;
+		buffer.MaxDistance = MaxDistance;
+		buffer.MinTessellation = MinTessellation;
+		buffer.MaxTessellation = MaxTessellation;
+		buffer.TexelCellSpaceU = 1.0f / terrain->Desc().HeightMapWidth;
+		buffer.TexelCellSpaceV = 1.0f / terrain->Desc().HeightMapHeight;
+		buffer.WorldCellSpace = terrain->Desc().CellSpacing;
+		buffer.TexScale = D3DXVECTOR2(5.0f, 5.0f);
 
-	buffer.FogStart = 300.0f;
-	buffer.FogRange = 200.0f;
-	buffer.FogColor = D3DXCOLOR(1, 1, 1, 1);
-	buffer.MinDistance = MinDistance;
-	buffer.MaxDistance = MaxDistance;
-	buffer.MinTessellation = MinTessellation;
-	buffer.MaxTessellation = MaxTessellation;
-	buffer.TexelCellSpaceU = 1.0f / terrain->Desc().HeightMapWidth;
-	buffer.TexelCellSpaceV = 1.0f / terrain->Desc().HeightMapHeight;
-	buffer.WorldCellSpace = terrain->Desc().CellSpacing;
-	buffer.TexScale = D3DXVECTOR2(5.0f, 5.0f);
+		brush.Type = 0;
+		brush.Location = D3DXVECTOR3(0, 0, 0);
+		brush.Range = 2;
+		brush.Color = D3DXVECTOR3(0, 1, 0);
+		brush.Capacity = 0.1f;
+	}
 
-	brush.Type = 1;
-	brush.Location = D3DXVECTOR3(0, 0, 0);
-	brush.Range = 2;
-	brush.Color = D3DXVECTOR3(0, 1, 0);
-	brush.Capacity = 0.1f;
+	UpdateHeightMap();
 
-	pixelPickingShader->AsShaderResource("HeightMap")->SetResource(heightMapSRV);
+	fastPickingShader->AsScalar("Width")->SetFloat(1024);
+	fastPickingShader->AsScalar("Height")->SetFloat(1024);
+	fastPickingShader->AsScalar("MaxHeight")->SetFloat(terrain->GetHeightMap()->MaxHeight());
 
-	pixelPickingShader->AsScalar("Width")->SetFloat(1024);
-	pixelPickingShader->AsScalar("Height")->SetFloat(1024);
+	billboard->GetShader()->AsScalar("MaxHeight")->SetFloat(terrain->GetHeightMap()->MaxHeight());
 }
 
 void TerrainRender::Update()
@@ -165,22 +194,34 @@ void TerrainRender::Update()
 		if (Keyboard::Get()->Press(VK_LCONTROL))
 		{
 			//Mouse::Get()->GetMoveValue 이거의 z 값 +- 값이 mouse wheel 값임
+			
+			if (!ImGui::IsAnyWindowHovered() && !ImGui::IsAnyItemActive() ) {
+				if (ImGui::GetIO().MouseWheel > 0) {
+					if (selectEdit == 0)
+						brush.Capacity += 0.01f;
+					else if (selectEdit == 1)
+						billboard->UpdateFactor(1);
+				}
+				else if (ImGui::GetIO().MouseWheel < 0) {
+					if (selectEdit == 0)
+						brush.Capacity -= 0.01f;
+					else if (selectEdit == 1)
+						billboard->UpdateFactor(-1);
+				}
+			}
 
-			if (ImGui::GetIO().MouseWheel > 0)
-				brush.Capacity += 0.01f;
-			else if (ImGui::GetIO().MouseWheel < 0)
-				brush.Capacity -= 0.01f;
+			if (Keyboard::Get()->Down('Z')) Undo();
+			if (Keyboard::Get()->Down('Y')) Redo();
+			
 		}
 		else
 		{
-			if (ImGui::GetIO().MouseWheel > 0)
+			if (!ImGui::IsAnyWindowHovered() && !ImGui::IsAnyItemActive() && ImGui::GetIO().MouseWheel > 0)
 				brush.Range++;
-			else if (ImGui::GetIO().MouseWheel < 0)
+			else if (!ImGui::IsAnyWindowHovered() && !ImGui::IsAnyItemActive() && ImGui::GetIO().MouseWheel < 0)
 				brush.Range--;
 			if (brush.Range <= 0) brush.Range = 1;
 		}
-
-		
 
 		if (Keyboard::Get()->Down('1')) brush.Type = 0;
 		if (Keyboard::Get()->Down('2')) brush.Type = 1;
@@ -191,56 +232,69 @@ void TerrainRender::Update()
 
 	if (Keyboard::Get()->Down('C')) bWireFrame = !bWireFrame;
 
+	// Pick
 	if (Pick(&pickPos) && !ImGui::IsAnyWindowHovered() && !ImGui::IsAnyItemActive()) {
-		if (Mouse::Get()->Press(0)) {
-			AdjustY();
+		brush.Location = pickPos;
+		
+		if (selectEdit == 0 && brush.Type != 0 ) {
+			if (Mouse::Get()->Down(0)) {
+				undoStack.push(new BrushCommand(this));
+			}
+
+			if(Mouse::Get()->Press(0))
+				AdjustY();
+
+			if (Mouse::Get()->Up(0)) {
+				undoStack.top()->Execute();
+			}
+		}
+		else if (selectEdit == 1 && Mouse::Get()->Down(0)) {
+			undoStack.push(new BillboardCommand(billboard));
+			AddBillboard();
+			undoStack.top()->Execute();
 		}
 	}
 }
 
 void TerrainRender::PreRender()
 {
-	Context::Get()->GetViewport()->RSSetViewport();
-	
-	D3D::Get()->SetRenderTarget(rtv->RTV(), dsv->DSV());
-	D3D::Get()->Clear(D3DXCOLOR(0,0,0,0), rtv->RTV(), dsv->DSV());
+	// FastPicking 
+	{
+		Context::Get()->GetViewport()->RSSetViewport();
 
-	frustum->GetPlanes(buffer.WorldFrustumPlanes);
+		D3D::Get()->SetRenderTarget(rtv->RTV(), dsv->DSV());
+		D3D::Get()->Clear(D3DXCOLOR(0, 0, 0, 0), rtv->RTV(), dsv->DSV());
 
-	D3D11_MAPPED_SUBRESOURCE subResource;
-	HRESULT hr = D3D::GetDC()->Map
-	(
-		cBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource
-	);
-	assert(SUCCEEDED(hr));
+		frustum->GetPlanes(buffer.WorldFrustumPlanes);
 
-	memcpy(subResource.pData, &buffer, sizeof(Buffer));
-	D3D::GetDC()->Unmap(cBuffer, 0);
+		D3D11_MAPPED_SUBRESOURCE subResource;
+		HRESULT hr = D3D::GetDC()->Map
+		(
+			cBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource
+		);
+		assert(SUCCEEDED(hr));
 
-	hr = pixelPickingShader->AsConstantBuffer("CB_Terrain")->SetConstantBuffer(cBuffer);
-	assert(SUCCEEDED(hr));
+		memcpy(subResource.pData, &buffer, sizeof(Buffer));
+		D3D::GetDC()->Unmap(cBuffer, 0);
 
-	UINT stride = sizeof(TerrainCP);
-	UINT offset = 0;
+		hr = fastPickingShader->AsConstantBuffer("CB_Terrain")->SetConstantBuffer(cBuffer);
+		assert(SUCCEEDED(hr));
 
-	D3D::GetDC()->IASetVertexBuffers(0, 1, &quadPatchVB, &stride, &offset);
-	D3D::GetDC()->IASetIndexBuffer(quadPatchIB, DXGI_FORMAT_R16_UINT, 0);
-	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
+		UINT stride = sizeof(TerrainCP);
+		UINT offset = 0;
 
-	pixelPickingShader->AsMatrix("World")->SetMatrix(world);
-	pixelPickingShader->DrawIndexed(0, 0, patchQuadFacesCount * 4);
+		D3D::GetDC()->IASetVertexBuffers(0, 1, &quadPatchVB, &stride, &offset);
+		D3D::GetDC()->IASetIndexBuffer(quadPatchIB, DXGI_FORMAT_R16_UINT, 0);
+		D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
+
+		fastPickingShader->AsMatrix("World")->SetMatrix(world);
+		fastPickingShader->DrawIndexed(0, 0, patchQuadFacesCount * 4);
+	}
 }
 
 void TerrainRender::Render()
 {
-	// wheel test
-	//ImGui::Text("Wheel %.1f", ImGui::GetIO().MouseWheel);
-
-	ImGui::Text("%f %f %f", pickPos.x, pickPos.y, pickPos.z);
-
-	brush.Location = pickPos;
-
-	ImGui::Checkbox("WireFrame", &bWireFrame);
+	ImGuiRender();
 
 	frustum->GetPlanes(buffer.WorldFrustumPlanes);
 	
@@ -260,36 +314,6 @@ void TerrainRender::Render()
 		assert(SUCCEEDED(hr));
 	}
 	
-	ImGui::Begin("Brush");
-
-	if (ImGui::Button("Save HeightMap"))
-	{
-		func = bind(&TerrainRender::SaveHeightMap, this, placeholders::_1);
-		Path::SaveFileDialog(L"", L"Raw Files(*.raw)\0*.raw\0", Textures + L"Terrain", func);
-	}
-
-	ImGui::SameLine(120);
-	if (ImGui::Button("Load HeightMap"))
-	{
-		func = bind(&TerrainRender::LoadHeightMap, this, placeholders::_1);
-		Path::OpenFileDialog(L"", L"Raw Files(*.raw)\0*.raw\0", Textures + L"Terrain", func);
-	}
-
-	ImGui::RadioButton("None", &brush.Type, 0);
-	ImGui::SameLine(80);
-	ImGui::RadioButton("Rect", &brush.Type, 1);
-	ImGui::SameLine(160);
-	ImGui::RadioButton("Circle", &brush.Type, 2);
-	ImGui::RadioButton("Cone", &brush.Type, 3);
-	ImGui::SameLine(80);
-	ImGui::RadioButton("Flat", &brush.Type, 4);
-
-	ImGui::DragInt("Range", &brush.Range, 1, 1, 50);
-	ImGui::ColorEdit3("Color", (float*)&brush.Color);
-	ImGui::DragFloat("Capacity", &brush.Capacity, 0.01f);
-
-	ImGui::End();
-
 	// CB_Brush
 	{
 		D3D11_MAPPED_SUBRESOURCE subResource;
@@ -318,32 +342,29 @@ void TerrainRender::Render()
 	material->GetShader()->AsMatrix("World")->SetMatrix(world);
 	material->GetShader()->DrawIndexed(0, pass, patchQuadFacesCount * 4);
 
-	//render2D->SRV(rtv->SRV());
-	render2D->SRV(heightMapSRV);
+	billboard->Render();
+
 	render2D->Render();
 }
 
 bool TerrainRender::Pick(OUT D3DXVECTOR3 * val)
 {
-	float x, y;
+	float x, y, z;
 	D3DXVECTOR3 position = Mouse::Get()->GetPosition();
 	D3DXCOLOR result = Textures::ReadPixel(rtv->Texture(), position.x, position.y);
-	//x = (0x000000ff & result) >> 0;
-	//y = (0x0000ff00 & result) >> 8;
 
-	x = result.r * 1024;
-	y = result.g * 1024;
+	x = result.r * 1024 - 512;
+	y = result.b * terrain->GetHeightMap()->MaxHeight();
+	z = result.g * 1024 - 512;
 
-	(*val) = D3DXVECTOR3(x, 0, y);
+	(*val) = D3DXVECTOR3(x, y, z);
 
-	return x + y > 0;
+	return x + z + 1024 > 0;
 }
 
 void TerrainRender::LoadHeightMap(wstring fileName)
 {
 	terrain->GetHeightMap()->Load(fileName);
-
-	CreateBlendMap();
 
 	SAFE_RELEASE(heightMapTex);
 	SAFE_RELEASE(heightMapSRV);
@@ -351,25 +372,205 @@ void TerrainRender::LoadHeightMap(wstring fileName)
 
 	terrain->GetHeightMap()->Build(&heightMapTex, &heightMapSRV, &heightMapUAV);
 
-	material->GetShader()->AsShaderResource("HeightMap")->SetResource(heightMapSRV);
-	pixelPickingShader->AsShaderResource("HeightMap")->SetResource(heightMapSRV);
+	CreateBlendMap();
+
+	material->GetShader()->AsShaderResource("BlendMap")->SetResource(blendMapSRV);
+
+	UpdateHeightMap();
 }
 
 void TerrainRender::SaveHeightMap(wstring fileName)
 {
-	//terrain->GetHeightMap()->Save(fileName, heightMapTex);
 	terrain->GetHeightMap()->Save(fileName, heightMapSRV);
+}
 
-	//CreateBlendMap();
+void TerrainRender::ImGuiRender()
+{
+	// wheel test
+	//ImGui::Text("Wheel %.1f", ImGui::GetIO().MouseWheel);
 
-	//SAFE_RELEASE(heightMapTex);
-	//SAFE_RELEASE(heightMapSRV);
-	//SAFE_RELEASE(heightMapUAV);
+	ImGui::Text("%f %f %f", pickPos.x, pickPos.y, pickPos.z);
 
-	//terrain->GetHeightMap()->Build(&heightMapTex, &heightMapSRV, &heightMapUAV);
+	ImGui::Checkbox("WireFrame", &bWireFrame);
 
-	//material->GetShader()->AsShaderResource("HeightMap")->SetResource(heightMapSRV);
-	//pixelPickingShader->AsShaderResource("HeightMap")->SetResource(heightMapSRV);
+	// Map
+	{
+		ImGui::Begin("Map");
+
+		// Select SRV
+		{
+			ImGui::Columns(2);
+
+			if (ImGui::RadioButton("FastPicking Map", &selectSRV, 0)) render2D->SRV(rtv->SRV());
+			if (ImGui::RadioButton("Height Map", &selectSRV, 1)) render2D->SRV(heightMapSRV);
+			if (ImGui::RadioButton("Blend Map", &selectSRV, 2)) render2D->SRV(blendMapSRV);
+
+			ImGui::NextColumn();
+
+			ImGui::Text("Select Edit");
+			ImGui::RadioButton("Brush", &selectEdit, 0);
+			ImGui::RadioButton("Billboard", &selectEdit, 1);
+
+			ImGui::Text("Instance Count %d", billboard->GetCount());
+
+			ImGui::Columns(1);
+		}
+
+		ImGui::End();
+	}
+	
+	// Brush
+	{
+		ImGui::Begin("Brush");
+
+		if (ImGui::Button("Save HeightMap"))
+		{
+			func = bind(&TerrainRender::SaveHeightMap, this, placeholders::_1);
+			Path::SaveFileDialog(L"", L"Raw Files(*.raw)\0*.raw\0", Textures + L"Terrain", func);
+		}
+
+		ImGui::SameLine(120);
+		if (ImGui::Button("Load HeightMap"))
+		{
+			func = bind(&TerrainRender::LoadHeightMap, this, placeholders::_1);
+			Path::OpenFileDialog(L"", L"Raw Files(*.raw)\0*.raw\0", Textures + L"Terrain", func);
+		}
+
+		ImGui::RadioButton("None", &brush.Type, 0);
+		ImGui::SameLine(80);
+		ImGui::RadioButton("Rect", &brush.Type, 1);
+		ImGui::SameLine(160);
+		ImGui::RadioButton("Circle", &brush.Type, 2);
+		ImGui::RadioButton("Cone", &brush.Type, 3);
+		ImGui::SameLine(80);
+		ImGui::RadioButton("Flat", &brush.Type, 4);
+
+		ImGui::DragInt("Range", &brush.Range, 1, 1, 50);
+		ImGui::ColorEdit3("Color", (float*)&brush.Color);
+		ImGui::DragFloat("Capacity", &brush.Capacity, 0.01f);
+
+		ImGui::End();
+	}
+
+	// Billboard
+	{
+		ImGui::Begin("Billboard");
+
+		ImGui::Columns(2);
+		//ImGui::SetColumnWidth(0, 115);
+
+		billboard->ImGuiRender(false, false);
+
+		ImGui::NextColumn();
+
+		ImGui::RadioButton("Single", &brush.Type, 0);
+		ImGui::RadioButton("Rect", &brush.Type, 1);
+		ImGui::SameLine(80);
+		ImGui::RadioButton("Circle", &brush.Type, 2);
+
+		ImGui::DragInt("Range", &brush.Range, 1, 1, 50);
+		ImGui::ColorEdit3("Color", (float*)&brush.Color);
+		ImGui::InputInt("Factor", billboard->Factor());
+
+		ImGui::Columns(1);
+
+		ImGui::End();
+	}
+
+	// Command
+	{
+		//string name = "Command (Stack " + to_string(undoStack.size()) + "/" + to_string(redoStack.size()) + ")";
+
+		ImGui::Begin("Command");
+		//ImGui::Begin(name.c_str());
+		//ImGui::SetWindowPos(ImVec2(0, 300));
+		//ImGui::SetWindowSize(ImVec2(300, 345));
+		// 0, 300
+		//ImGui::Text("%f %f", ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+		// 300 345
+		//ImGui::Text("%f %f", ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+
+		ImGui::BulletText("Stack (%d / %d)", undoStack.size(), redoStack.size());
+
+		ImGui::Columns(2);
+
+		{
+			ImGui::Text("Undo Stack");
+
+			stack<Command*> temp = undoStack;
+			stack<Command*> temp2;
+
+			while (!temp.empty()) {
+				temp2.push(temp.top());
+				temp.pop();
+			}
+
+			while (!temp2.empty()) {
+				temp2.top()->Render();
+				temp2.pop();
+			}
+		}
+
+		ImGui::NextColumn();
+
+		{
+			ImGui::Text("Redo Stack");
+
+			stack<Command*> temp = redoStack;
+			stack<Command*> temp2;
+
+			while (!temp.empty()) {
+				temp2.push(temp.top());
+				temp.pop();
+			}
+
+			while (!temp2.empty()) {
+				temp2.top()->Render();
+				temp2.pop();
+			}
+		}
+
+		ImGui::Columns(1);
+
+		ImGui::End();
+	}
+}
+
+void TerrainRender::SetHeightMap(ID3D11Texture2D * tex)
+{
+	SAFE_RELEASE(heightMapTex);
+	SAFE_RELEASE(heightMapSRV);
+	SAFE_RELEASE(heightMapUAV);
+
+	D3D11_TEXTURE2D_DESC desc;
+	tex->GetDesc(&desc);
+	D3D::GetDevice()->CreateTexture2D(&desc, NULL, &heightMapTex);
+
+	D3D::GetDC()->CopyResource(heightMapTex, tex);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc; // 안에 포인터 있으면 0 초기화 불가능, 생성자가 없어도 안됨
+											 // union 그 구조체 안에 가장 큰 사이즈로 맞추고 나머지는 그 공간 공유해서 쓰는거
+											 // union에서도 padding 잡아줄 수 있음
+	ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	srvDesc.Format = desc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = -1;
+
+	HRESULT hr = D3D::GetDevice()->CreateShaderResourceView(heightMapTex, &srvDesc, &heightMapSRV);
+	assert(SUCCEEDED(hr));
+
+	//SAFE_DELETE_ARRAY(temp);
+
+	D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+	ZeroMemory(&uavDesc, sizeof(D3D11_UNORDERED_ACCESS_VIEW_DESC));
+	uavDesc.Format = desc.Format;
+	uavDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
+
+	hr = D3D::GetDevice()->CreateUnorderedAccessView(heightMapTex, &uavDesc, &heightMapUAV);
+	assert(SUCCEEDED(hr));
+
+	UpdateHeightMap();
 }
 
 void TerrainRender::CalcAllPatchBoundsY()
@@ -482,59 +683,10 @@ void TerrainRender::BuildQuadPatchIB()
 
 void TerrainRender::CreateBlendMap()
 {
-	HeightMap* heightMap = terrain->GetHeightMap();
-
-	vector<D3DXCOLOR> colors;
-
-	UINT height = heightMap->Height();
-	UINT width = heightMap->Width();
-	UINT maxHeight = (UINT)heightMap->MaxHeight();
-
-	for (UINT y = 0; y < height; y++)
-	{
-		for (UINT x = 0; x < width; x++)
-		{
-			float elevation = heightMap->Data(y, x);
-
-			D3DXCOLOR color = D3DXCOLOR(0, 0, 0, 0);
-
-			if (elevation > maxHeight * (0.05f + Math::Random(-0.05f, 0.05f)))
-			{
-				// dark green grass texture
-				color.r = elevation / maxHeight + Math::Random(-0.05f, 0.05f);
-			}
-			if (elevation > maxHeight * (0.4f + Math::Random(-0.15f, 0.15f)))
-			{
-				// stone texture
-				color.g = elevation / maxHeight + Math::Random(-0.05f, 0.05f);
-			}
-			if (elevation > maxHeight * (0.75f + Math::Random(-0.1f, 0.1f)))
-			{
-				// snow texture
-				color.a = elevation / maxHeight + Math::Random(-0.05f, 0.05f);
-			}
-
-			colors.push_back(color);
-		}
-	}
-
-	//SmoothBlendMap(colors);
-	//SmoothBlendMap(colors);
-
-	//vector<UINT> colors8b(colors.size());
-	//const float f = 255.0f;
-
-	//vector<D3DXCOLOR>::iterator it = colors.begin();
-	//for (UINT i = 0; it != colors.end(); it++, i++)
-	//	colors8b[i] = ((UINT)((f * it->a)) << 24)
-	//	+ ((UINT)((f * it->b)) << 16)
-	//	+ ((UINT)((f * it->g)) << 8)
-	//	+ ((UINT)((f * it->r)) << 0);
-
 	DXGI_FORMAT format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
-	ID3D11Texture2D* texture = 0;
 	//   Create Blend Texture2D
+	if(blendMapTex == NULL)
 	{
 		UINT _width = terrain->GetHeightMap()->Width();
 		UINT _height = terrain->GetHeightMap()->Height();
@@ -548,63 +700,53 @@ void TerrainRender::CreateBlendMap()
 		desc.SampleDesc.Count = 1;
 		desc.SampleDesc.Quality = 0;
 		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;;
 
-		D3D11_SUBRESOURCE_DATA data = { 0 };
-		data.pSysMem = &colors[0];
-		data.SysMemPitch = _width * sizeof(D3DXCOLOR);
-		//data.SysMemSlicePitch = _width * _height * sizeof(D3DXCOLOR); // 3d할때만 쓴다고함
-
-		HRESULT hr = D3D::GetDevice()->CreateTexture2D(&desc, &data, &texture);
+		HRESULT hr = D3D::GetDevice()->CreateTexture2D(&desc, NULL, &blendMapTex);
 		assert(SUCCEEDED(hr));
 	}
 
-	//   Create Shader Resource View (To . blendMapSRV)
+	// Create BlendMap SRV
+	if (blendMapSRV == NULL)
 	{
-		D3D11_SHADER_RESOURCE_VIEW_DESC desc;
-		desc.Format = format;
-		desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		desc.Texture2D.MostDetailedMip = 0;
-		desc.Texture2D.MipLevels = 1;
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc; // 안에 포인터 있으면 0 초기화 불가능, 생성자가 없어도 안됨
+												 // union 그 구조체 안에 가장 큰 사이즈로 맞추고 나머지는 그 공간 공유해서 쓰는거
+												 // union에서도 padding 잡아줄 수 있음
+		ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+		srvDesc.Format = format;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MostDetailedMip = 0;
+		srvDesc.Texture2D.MipLevels = -1;
 
-		HRESULT hr = D3D::GetDevice()->CreateShaderResourceView(texture, &desc, &blendMapSRV);
+		HRESULT hr = D3D::GetDevice()->CreateShaderResourceView(blendMapTex, &srvDesc, &blendMapSRV);
 		assert(SUCCEEDED(hr));
 	}
 
-	SAFE_RELEASE(texture);
-	colors.clear();
-	//colors8b.clear();
+	// Create BlendMap UAV
+	if (blendMapUAV == NULL)
+	{
+		D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+		ZeroMemory(&uavDesc, sizeof(D3D11_UNORDERED_ACCESS_VIEW_DESC));
+		uavDesc.Format = format;
+		uavDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
+
+		HRESULT hr = D3D::GetDevice()->CreateUnorderedAccessView(blendMapTex, &uavDesc, &blendMapUAV);
+		assert(SUCCEEDED(hr));
+	}
+
+	blendMapComputeShader->AsScalar("MaxHeight")->SetFloat(terrain->GetHeightMap()->MaxHeight());
+	blendMapComputeShader->AsShaderResource("Input")->SetResource(heightMapSRV);
+	blendMapComputeShader->AsUAV("Output")->SetUnorderedAccessView(blendMapUAV);
+
+	blendMapComputeShader->Dispatch(0, 0, 256, 256, 1);
+
+	SmoothBlendMap();
+	SmoothBlendMap();
 }
 
-void TerrainRender::SmoothBlendMap(vector<D3DXCOLOR>& colors)
+void TerrainRender::SmoothBlendMap()
 {
-	HeightMap* heightMap = terrain->GetHeightMap();
-
-	int height = (int)heightMap->Height();
-	int width = (int)heightMap->Width();
-	float maxHeight = heightMap->MaxHeight();
-
-	for (int y = 0; y < height; y++)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			D3DXCOLOR sum = colors[x + y * height];
-			UINT num = 1;
-			for (int y1 = y - 1; y1 < y + 2; y1++)
-			{
-				for (int x1 = x - 1; x1 < x + 1; x1++)
-				{
-					if (heightMap->InBounds(y1, x1) == false)
-						continue;
-					sum += colors[x1 + y1 * height];
-					num++;
-				} // for(x1)
-			} // for(y1)
-
-			colors[x + y * height] = sum / (float)num;
-		} // for(x)
-	} // for(y)
-
+	blendMapComputeShader->Dispatch(0, 1, 256, 256, 1);
 }
 
 void TerrainRender::AdjustY()
@@ -625,12 +767,81 @@ void TerrainRender::AdjustY()
 		assert(SUCCEEDED(hr));
 	}
 
-
-	adjustHeightMapComputeShader->AsUAV("Output")->SetUnorderedAccessView(heightMapUAV);
+	
 
 	UINT width = 256;
 	UINT height = 256;
 
 	adjustHeightMapComputeShader->Dispatch(0, 0, width, height, 1);
+}
+
+void TerrainRender::AddBillboard()
+{	
+	// single billboard Add
+	if (brush.Type == 0) {
+		int exp = 1;
+		pair<int, int> temp = make_pair((int)(pickPos.x * exp), (int)(pickPos.z * exp));
+
+		if (checkSet.find(temp) == checkSet.end()) {
+			checkSet.insert(temp);
+			billboard->AddInstance(D3DXVECTOR3(pickPos.x, 0, pickPos.z));
+		}
+	}
+	
+	// multi billboard Add
+	else
+	{
+		vector<D3DXVECTOR3> vec(*billboard->Factor());
+
+		for (int i = 0; i < vec.size(); i++) {
+			if (brush.Type == 1 || brush.Type == 4)
+			{
+				vec[i].x = pickPos.x + Math::Random(-(float)brush.Range, (float)brush.Range);
+				vec[i].y = 0;
+				vec[i].z = pickPos.z + Math::Random(-(float)brush.Range, (float)brush.Range);
+			}
+			else if (brush.Type == 2 || brush.Type == 3)
+			{
+				float angle = Math::Random(0.0f, D3DX_PI * 2.0f);
+
+				vec[i].x = pickPos.x + Math::Random(-(float)brush.Range, (float)brush.Range) * cosf(angle);
+				vec[i].y = 0;
+				vec[i].z = pickPos.z + Math::Random(-(float)brush.Range, (float)brush.Range) * sinf(angle);
+			}
+		}
+
+		billboard->AddInstance(vec);
+	}
+}
+
+void TerrainRender::UpdateHeightMap()
+{
+	material->GetShader()->AsShaderResource("HeightMap")->SetResource(heightMapSRV);
+	fastPickingShader->AsShaderResource("HeightMap")->SetResource(heightMapSRV);
+	billboard->GetShader()->AsShaderResource("HeightMap")->SetResource(heightMapSRV);
+
+	adjustHeightMapComputeShader->AsUAV("Output")->SetUnorderedAccessView(heightMapUAV);
+
+	if (selectSRV == 1) render2D->SRV(heightMapSRV);
+}
+
+void TerrainRender::Undo()
+{
+	if (!undoStack.empty()) {
+		Command* command = undoStack.top();
+		command->Undo();
+		redoStack.push(command);
+		undoStack.pop();
+	}
+}
+
+void TerrainRender::Redo()
+{
+	if (!redoStack.empty()) {
+		Command* command = redoStack.top();
+		command->Execute();
+		undoStack.push(command);
+		redoStack.pop();
+	}
 }
 

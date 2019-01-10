@@ -360,7 +360,6 @@ TextureArray::TextureArray(vector<wstring> & names, UINT width, UINT height, UIN
 	vector<ID3D11Texture2D *> textures;
 	textures = CreateTextures(names, width, height, mipLevels);
 
-
 	D3D11_TEXTURE2D_DESC textureDesc;
 	textures[0]->GetDesc(&textureDesc);
 
@@ -418,7 +417,6 @@ TextureArray::TextureArray(vector<wstring> & names, UINT width, UINT height, UIN
 
 	for (ID3D11Texture2D* texture : textures)
 		SAFE_RELEASE(texture);
-
 	SAFE_RELEASE(textureArray);
 }
 

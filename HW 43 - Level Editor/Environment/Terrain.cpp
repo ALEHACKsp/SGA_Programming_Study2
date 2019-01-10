@@ -13,6 +13,7 @@ Terrain::Terrain(InitDesc & desc)
 	
 	heightMap = new HeightMap(desc.HeightMapWidth, desc.HeightMapHeight, desc.HeightScale);
 	heightMap->Load(desc.HeightMap);
+	//heightMap->Smooth();
 
 	render->Initialize();
 }

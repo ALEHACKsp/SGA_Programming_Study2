@@ -20,8 +20,8 @@ Program::Program()
 
 	Context::Create();
 
-	Context::Get()->GetMainCamera()->RotationDegree(0, 0);
-	Context::Get()->GetMainCamera()->Position(0, 0, -5);
+	Context::Get()->GetMainCamera()->RotationDegree(0, 90);
+	Context::Get()->GetMainCamera()->Position(40, 20, 30);
 
 	//((Freedom*)Context::Get()->GetMainCamera())->MoveSpeed(100.0f);
 	//((Freedom*)Context::Get()->GetMainCamera())->RotationSpeed(20.0f);
@@ -30,7 +30,7 @@ Program::Program()
 
 	executes.push_back(new TestScattering);
 	executes.push_back(new TestTerrain);
-	executes.push_back(new TestRain);
+	//executes.push_back(new TestRain);
 }
 
 Program::~Program()

@@ -64,7 +64,6 @@ void TestTerrain::PreRender()
 
 void TestTerrain::Render()
 {
-
 	sky->Render();
 	terrain->Render();
 }

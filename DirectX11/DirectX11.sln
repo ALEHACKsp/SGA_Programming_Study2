@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LevelEditor", "LevelEditor\
 		{0119A4BD-8AAD-42C4-8093-D369BFAEFD9E} = {0119A4BD-8AAD-42C4-8093-D369BFAEFD9E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModelEditor", "ModelEditor\ModelEditor.vcxproj", "{7DB15C58-8A55-49BB-BC68-FD04C40B1843}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -34,6 +36,14 @@ Global
 		{DFF26A32-2A3B-4A2C-BB98-102381FC59D8}.Release|x64.Build.0 = Release|x64
 		{DFF26A32-2A3B-4A2C-BB98-102381FC59D8}.Release|x86.ActiveCfg = Release|Win32
 		{DFF26A32-2A3B-4A2C-BB98-102381FC59D8}.Release|x86.Build.0 = Release|Win32
+		{7DB15C58-8A55-49BB-BC68-FD04C40B1843}.Debug|x64.ActiveCfg = Debug|x64
+		{7DB15C58-8A55-49BB-BC68-FD04C40B1843}.Debug|x64.Build.0 = Debug|x64
+		{7DB15C58-8A55-49BB-BC68-FD04C40B1843}.Debug|x86.ActiveCfg = Debug|Win32
+		{7DB15C58-8A55-49BB-BC68-FD04C40B1843}.Debug|x86.Build.0 = Debug|Win32
+		{7DB15C58-8A55-49BB-BC68-FD04C40B1843}.Release|x64.ActiveCfg = Release|x64
+		{7DB15C58-8A55-49BB-BC68-FD04C40B1843}.Release|x64.Build.0 = Release|x64
+		{7DB15C58-8A55-49BB-BC68-FD04C40B1843}.Release|x86.ActiveCfg = Release|Win32
+		{7DB15C58-8A55-49BB-BC68-FD04C40B1843}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

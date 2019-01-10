@@ -149,6 +149,9 @@ void GameRender::UpdateWorld()
 	world = S * R * T;
 
 	direction = D3DXVECTOR3(world._31, world._32, world._33);
+	D3DXVec3Normalize(&direction, &direction);
 	up = D3DXVECTOR3(world._21, world._22, world._23);
+	D3DXVec3Normalize(&up, &up);
 	right = D3DXVECTOR3(world._11, world._12, world._13);
+	D3DXVec3Normalize(&right, &right);
 }

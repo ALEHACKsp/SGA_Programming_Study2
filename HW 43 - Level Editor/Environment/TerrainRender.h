@@ -23,24 +23,33 @@ public:
 	void LoadHeightMap(wstring fileName);
 	void SaveHeightMap(wstring fileName);
 
+	void ImGuiRender();
+
+	ID3D11Texture2D* GetHeightMapTex() { return heightMapTex; }
+	void SetHeightMap(ID3D11Texture2D* tex);
+
 private:
 	void CalcAllPatchBoundsY();
 	void CalcPatchBoundsY(UINT row, UINT col);
 	void BuildQuadPatchVB();
 	void BuildQuadPatchIB();
-	//void BuildPatches();
 
 	void CreateBlendMap();
-	void SmoothBlendMap(vector<D3DXCOLOR>& colors);
+	void SmoothBlendMap();
 
 	void AdjustY();
+	void AddBillboard();
+
+	void UpdateHeightMap();
+
+	void Undo();
+	void Redo();
 
 private:
 	D3DXMATRIX world;
 	ID3D11Buffer* cBuffer;
 	ID3D11Buffer* brushBuffer;
 
-	//bool bUseTessellation;
 	class Terrain* terrain;
 
 	ID3D11Buffer* quadPatchVB;
@@ -50,7 +59,11 @@ private:
 
 	TextureArray* layerMapArray;
 	ID3D11ShaderResourceView* layerMapArraySRV;
+	
+	ID3D11Texture2D* blendMapTex;
 	ID3D11ShaderResourceView* blendMapSRV;
+	ID3D11UnorderedAccessView* blendMapUAV;
+	Shader* blendMapComputeShader;
 
 	ID3D11Texture2D* heightMapTex;
 	ID3D11ShaderResourceView* heightMapSRV;
@@ -74,9 +87,11 @@ private:
 	class Frustum* frustum;
 
 	bool bWireFrame;
+	int selectSRV;
+	int selectEdit;
 
 private:
-	Shader* pixelPickingShader;
+	Shader* fastPickingShader;
 	Render2D* render2D;
 
 	D3DXVECTOR3 pickPos;
@@ -87,6 +102,13 @@ private:
 
 	function<void(wstring)> func;
 
+private:
+	class Billboard* billboard;
+	set<pair<int, int>> checkSet;
+
+private:
+	stack<class Command*> undoStack;
+	stack<class Command*> redoStack;
 private:
 	struct BrushBuffer
 	{

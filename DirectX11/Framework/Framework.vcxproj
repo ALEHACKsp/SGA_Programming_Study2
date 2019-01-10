@@ -138,6 +138,9 @@
     <ClCompile Include="Viewer\RenderTargetView.cpp" />
     <ClCompile Include="Viewer\Viewport.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0119A4BD-8AAD-42C4-8093-D369BFAEFD9E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -213,7 +216,10 @@
     </Lib>
     <PostBuildEvent>
       <Command>copy /Y "$(OutDir)Framework.lib" "$(SolutionDir)LevelEditor\"
-copy /Y "$(OutDir)Framework.pdb" "$(SolutionDir)LevelEditor\"</Command>
+copy /Y "$(OutDir)Framework.pdb" "$(SolutionDir)LevelEditor\"
+
+copy /Y "$(OutDir)Framework.lib" "$(SolutionDir)ModelEditor\"
+copy /Y "$(OutDir)Framework.pdb" "$(SolutionDir)ModelEditor\"</Command>
       <Message>debug의 lib pdb 복사</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>

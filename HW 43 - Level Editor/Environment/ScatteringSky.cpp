@@ -5,7 +5,7 @@
 #include "./Viewer/Perspective.h"
 
 ScatteringSky::ScatteringSky()
-	: realTime(false), theta(D3DX_PI / 2), phi(0), timeSpeed(0.2f)
+	: realTime(false), theta(D3DX_PI / 2 + D3DX_PI / 4), phi(0), timeSpeed(0.2f)
 	, radius(10), slices(32), stacks(16)
 {
 	mieTarget = new RenderTarget(128, 64);
@@ -153,10 +153,12 @@ void ScatteringSky::PreRender()
 
 void ScatteringSky::Render()
 {
+	ImGui::Begin("Sky");
 	ImGui::Checkbox("RealTime", &realTime);
 	ImGui::DragFloat("Time Speed", &timeSpeed, 0.05f);
 	ImGui::DragFloat("Theta", &theta, 0.01f);
 	ImGui::DragFloat("Phi", &phi, 0.01f);
+	ImGui::End();
 
 	UINT stride = sizeof(VertexTexture);
 	UINT offset = 0;
@@ -171,9 +173,9 @@ void ScatteringSky::Render()
 	RenderMoon();
 	RenderGlow();
 
-	rayleigh2D->Render();
-	mie2D->Render();
-	perlinNoise2D->Render();
+	//rayleigh2D->Render();
+	//mie2D->Render();
+	//perlinNoise2D->Render();
 }
 
 void ScatteringSky::GenerateSphere()

@@ -43,66 +43,6 @@ void HeightMap::Load(wstring file)
 	SAFE_DELETE_ARRAY(temp);
 }
 
-void HeightMap::Save(wstring file, ID3D11Texture2D* tex)
-{
-	D3D11_TEXTURE2D_DESC srcDesc;
-	tex->GetDesc(&srcDesc);
-
-	D3D11_TEXTURE2D_DESC desc;
-	ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
-	desc.Width = srcDesc.Width;
-	desc.Height = srcDesc.Height;
-	desc.MipLevels = 1;
-	desc.ArraySize = 1;
-	desc.Format = DXGI_FORMAT_R32_FLOAT;
-	desc.SampleDesc = srcDesc.SampleDesc;
-	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-	desc.Usage = D3D11_USAGE_STAGING;
-
-	HRESULT hr;
-
-	ID3D11Texture2D* texture;
-	hr = D3D::GetDevice()->CreateTexture2D(&desc, NULL, &texture);
-	assert(SUCCEEDED(hr));
-
-	hr = D3DX11LoadTextureFromTexture(D3D::GetDC(), tex, NULL, texture);
-	assert(SUCCEEDED(hr));
-
-	float* temp = new float[width * height];
-
-	D3D11_MAPPED_SUBRESOURCE map;
-	D3D::GetDC()->Map(texture, 0, D3D11_MAP_READ, NULL, &map);
-	{
-		memcpy(temp, map.pData, sizeof(float) * width * height);
-	}
-	D3D::GetDC()->Unmap(texture, 0);
-
-	SAFE_DELETE_ARRAY(datas);
-	datas = new float[width * height];
-
-	for (int i = 0; i < (int)(width * height); i++)
-		datas[i] = (float)temp[i];
-
-	//D3DXFloat16To32Array(datas, temp, width * height);
-
-	//for (int i = 0; i < (int)(width * height); i++)
-	//	datas[i] = (float)datas[i] * 255.0f / maxHeight;
-
-	//BinaryWriter* w = new BinaryWriter();
-
-	//w->Open(file);
-	//
-	//w->Byte(datas, width * height);
-
-	//w->Close();
-
-	//SAFE_DELETE(w);
-
-	SAFE_DELETE_ARRAY(temp);
-
-	SAFE_RELEASE(texture);
-}
-
 void HeightMap::Save(wstring file, ID3D11ShaderResourceView * srv)
 {
 	saveShader->AsShaderResource("Input")->SetResource(srv);
@@ -110,22 +50,13 @@ void HeightMap::Save(wstring file, ID3D11ShaderResourceView * srv)
 
 	saveShader->Dispatch(0, 0, 256, 256, 1);
 
-	BYTE* temp = new BYTE[width * height];
-
 	vector<ComputeBuffer> buffer(width * height);
 	cOutput->Read(&buffer[0]);
 
+	BYTE* temp = new BYTE[width * height];
+
 	for (int i = 0; i < width * height; i++)
 		temp[i] = (BYTE)(buffer[i].data * 255.0f / maxHeight);
-
-	//D3DXFLOAT16* temp = new D3DXFLOAT16[width * height];
-
-	//for (int i = 0; i < width * height; i++)
-	//	temp[i] = buffer[i].data;
-
-	//D3DXFloat16To32Array(datas, temp, width * height);
-
-	//SAFE_DELETE_ARRAY(temp);
 
 	BinaryWriter* w = new BinaryWriter();
 
@@ -207,10 +138,6 @@ void HeightMap::Build(OUT ID3D11Texture2D** tex, OUT ID3D11ShaderResourceView** 
 	desc.MipLevels = 1;
 	desc.MiscFlags = 0;
 	desc.Usage = D3D11_USAGE_DEFAULT;
-
-	//D3DXFLOAT16* temp = new D3DXFLOAT16[width * height];
-
-	//D3DXFloat32To16Array(temp, datas, width*height);
 
 	D3D11_SUBRESOURCE_DATA data = { 0 };
 	data.pSysMem = datas;

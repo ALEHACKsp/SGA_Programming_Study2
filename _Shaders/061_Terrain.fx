@@ -265,7 +265,7 @@ DomainOutput DS(ConstantOutput input, float2 uvw : SV_DomainLocation, const Outp
     output.Position = mul(float4(output.wPosition, 1), View);
     output.Position = mul(output.Position, Projection);
 
-    output.BrushColor = BrushColor(output.wPosition + float3(512, 0, 512));
+    output.BrushColor = BrushColor(output.wPosition);
 
     return output;
 }

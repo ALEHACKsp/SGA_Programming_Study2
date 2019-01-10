@@ -7,7 +7,6 @@ public:
 	~HeightMap();
 
 	void Load(wstring file);
-	void Save(wstring file, ID3D11Texture2D* tex);
 	void Save(wstring file, ID3D11ShaderResourceView* srv);
 
 	UINT Width() { return width; }

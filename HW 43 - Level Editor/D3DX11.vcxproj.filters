@@ -201,6 +201,15 @@
     <ClCompile Include="Executes\TestTerrain.cpp">
       <Filter>Executes\Test</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Billboard.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Command\BrushCommand.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
+    <ClCompile Include="Command\BillboardCommand.cpp">
+      <Filter>Command</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -424,6 +433,18 @@
     <ClInclude Include="Executes\TestTerrain.h">
       <Filter>Executes\Test</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Billboard.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Command\Command.h">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Command\BrushCommand.h">
+      <Filter>Command</Filter>
+    </ClInclude>
+    <ClInclude Include="Command\BillboardCommand.h">
+      <Filter>Command</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Systems">
@@ -473,6 +494,9 @@
     </Filter>
     <Filter Include="Executes\Test">
       <UniqueIdentifier>{415972e1-546e-421a-b88d-21663a93c3e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Command">
+      <UniqueIdentifier>{0579eb70-84d4-48b8-b36e-5065c1745f02}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

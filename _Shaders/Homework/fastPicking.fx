@@ -29,6 +29,7 @@ SamplerState HeightMapSampler
 
 float Width;
 float Height;
+float MaxHeight;
 
 //-----------------------------------------------------------------------------
 // Vertex Shader
@@ -191,6 +192,7 @@ struct DomainOutput
     float2 TileUv : Uv1;
 
     float2 PixelUv : Uv2;
+    float PixelHeight : Height1;
 };
 
 [domain("quad")]
@@ -217,6 +219,7 @@ DomainOutput DS(ConstantOutput input, float2 uvw : SV_DomainLocation, const Outp
     output.Position = mul(output.Position, Projection);
 
     output.PixelUv = float2((output.wPosition.x + 512) / Width, (output.wPosition.z + 512) / Height);
+    output.PixelHeight = output.wPosition.y / MaxHeight;
 
     return output;
 }
@@ -277,7 +280,7 @@ float4 PS(DomainOutput input) : SV_TARGET
  //   color = lerp(color, c3, t.b);
  //   color = lerp(color, c4, t.a);
 
-    float4 color = float4(input.PixelUv, 0, 1);
+    float4 color = float4(input.PixelUv, input.PixelHeight, 1);
 
     return color;
 }

@@ -25,8 +25,8 @@ void Brush(int3 groupThreadId : SV_GroupThreadId, int3 dispatchThreadId : SV_Dis
     int width, height;
     Output.GetDimensions(width, height);
 
-    int posX = int(Location.x) * 2;
-    int posY = height - int(Location.z) * 2;
+    int posX = int(Location.x + 512.0f) * 2;
+    int posY = height - int(Location.z + 512.0f) * 2;
 
     int size = Range * 2;
 
@@ -42,7 +42,7 @@ void Brush(int3 groupThreadId : SV_GroupThreadId, int3 dispatchThreadId : SV_Dis
         {
             for (int y = bottom; y <= top; y++)
             {
-                float2 pos = float2(x / 2, (height - y) / 2);
+                float2 pos = float2(x / 2 - 512.0f, (height - y) / 2 - 512.0f);
                 float temp = Capacity;
 
 				// Check Circle

@@ -14,6 +14,8 @@
 
 void Main::Initialize()
 {
+	srand((UINT)time(NULL));
+
 	Context::Create();
 
 	Context::Get()->GetMainCamera()->RotationDegree(0, 0);

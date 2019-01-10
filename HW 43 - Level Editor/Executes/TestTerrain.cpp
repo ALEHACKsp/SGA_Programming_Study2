@@ -15,14 +15,14 @@ TestTerrain::TestTerrain()
 	{
 		Terrain::InitDesc desc =
 		{
-			Textures + L"Terrain/terrain3.raw",
+			Textures + L"Terrain/terrain.raw",
 			50.0f,
 			2049, 2049,
 			
 			// LayerMapFile[5]
 			{
-				Textures + L"Dirt3.png",
-				//Textures + L"Terrain/grass.png",
+				//Textures + L"Dirt3.png",
+				Textures + L"Terrain/grass.png",
 				Textures + L"Terrain/darkdirt.png",
 				Textures + L"Terrain/stone.png",
 				Textures + L"Terrain/lightdirt.png",
