@@ -3,6 +3,8 @@
 class IExecute
 {
 public:
+	virtual ~IExecute() {}
+
 	virtual void Initialize() = 0;
 	virtual void Ready() = 0;
 	virtual void Destroy() = 0;

@@ -42,10 +42,20 @@ VertexOutput VS(VertexInput input)
 // Geometry Shader
 //-----------------------------------------------------------------------------
 
+float3 WorldTangent(float3 tangent, matrix world)
+{
+    tangent = normalize(mul(tangent, (float3x3) world));
+
+    return tangent;
+}
+
 struct GeometryOutput
 {
     float4 Position : SV_POSITION0;
-    //float3 Normal : NORMAL0;
+    
+	float3 Normal : NORMAL0;
+    float3 Tangent : TANGENT0;
+
     float2 Uv : UV0;
 
     int TextureId : TEXTURE0;
@@ -88,7 +98,9 @@ void GS(point VertexOutput input[1], inout TriangleStream<GeometryOutput> stream
 		output.Position = mul(v[i], View);
         output.Position = mul(output.Position, Projection);
 
-        //output.Normal = look;
+        output.Normal = look;
+        output.Tangent = right;
+
         output.Uv = TexCoord[i];
 
         output.InstanceId = input[0].InstanceId;
@@ -134,6 +146,22 @@ void GS2(point VertexOutput input[1], inout TriangleStream<GeometryOutput> strea
     v[2] = float4(position - halfWidth * right - halfHeight * up, 1.0f);
     v[3] = float4(position - halfWidth * right + halfHeight * up, 1.0f);
 
+	// 정규 직교
+    float3 e0 = v[1] - v[0];
+    float3 e1 = v[2] - v[0];
+
+    float u0 = TexCoord[1].x - TexCoord[0].x;
+    float u1 = TexCoord[2].x - TexCoord[0].x;
+    float v0 = TexCoord[1].y - TexCoord[0].y;
+    float v1 = TexCoord[2].y - TexCoord[0].y;
+    float r = 1.0f / (u0 * v1 - v0 * u1);
+
+	// tangent 벡터
+    float3 tangent;
+    tangent.x = r * (v1 * e0.x - v0 * e1.x);
+    tangent.y = r * (v1 * e0.y - v0 * e1.y);
+    tangent.z = r * (v1 * e0.z - v0 * e1.z);
+
     GeometryOutput output;
 	[unroll]
     for (int i = 0; i < 4; i++)
@@ -144,7 +172,10 @@ void GS2(point VertexOutput input[1], inout TriangleStream<GeometryOutput> strea
         output.Position = mul(v[i], View);
         output.Position = mul(output.Position, Projection);
 
-        //output.Normal = look;
+        output.Normal = look;
+
+        output.Tangent = normalize(tangent);
+
         output.Uv = TexCoord[i];
 
         output.InstanceId = input[0].InstanceId;
@@ -162,14 +193,43 @@ void GS2(point VertexOutput input[1], inout TriangleStream<GeometryOutput> strea
 Texture2DArray Maps;
 SamplerState Sampler;
 
+Texture2DArray NormalMaps;
+
 uint instanceCount;
 float factor = 0.95f;
+
+void NormalMapping(inout float4 color, float4 normalMap, float3 normal, float3 tangent)
+{
+    float3 N = normal; // Z축이랑 매핑됨
+    float3 T = normalize(tangent - dot(tangent, N) * N); // X 이 식이 그람슈미트 식
+    float3 B = cross(T, N); // Y
+
+    float3x3 TBN = float3x3(T, B, N);
+
+	// rgb 0~1 방향으로 만드는거
+    float3 coord = 2.0f * normalMap - 1.0f;
+    float3 bump = mul(coord, TBN); // max에선 normal mapping을 bump mapping이라 부름
+
+    float intensity = saturate(dot(bump, -LightDirection));
+    color = color * intensity;
+}
 
 float4 PS(GeometryOutput input) : SV_TARGET
 {
     float3 uvw = float3(input.Uv, input.TextureId);
 
     float4 color = Maps.Sample(Sampler, uvw);
+
+    float alpha = color.a;
+
+    float4 normal = NormalMaps.Sample(Sampler, uvw);
+
+    if (length(normal) > 0)
+        NormalMapping(color, normal, input.Normal, input.Tangent);
+
+    //color *= dot(-LightDirection, input.Normal);
+
+    color.a = alpha;
 
     clip(color.a - 0.5f);
 

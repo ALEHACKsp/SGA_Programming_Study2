@@ -39,12 +39,14 @@
     <ClInclude Include="Framework.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Model\ModelBone.h" />
-    <ClInclude Include="Model\ModelClip.h" />
-    <ClInclude Include="Model\ModelKeyframe.h" />
+    <ClInclude Include="Model\ModelClip.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Model\ModelMesh.h" />
     <ClInclude Include="Model\ModelMeshPart.h" />
-    <ClInclude Include="Model\ModelTweener.h" />
-    <ClInclude Include="Objects\GameAnimModel.h" />
+    <ClInclude Include="Objects\GameAnimator.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Objects\GameModel.h" />
     <ClInclude Include="Objects\GameRender.h" />
     <ClInclude Include="Renders\CBuffer.h" />
@@ -97,13 +99,15 @@
     <ClCompile Include="Environment\TerrainRender.cpp" />
     <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Model\ModelBone.cpp" />
-    <ClCompile Include="Model\ModelClip.cpp" />
-    <ClCompile Include="Model\ModelKeyframe.cpp" />
+    <ClCompile Include="Model\ModelClip.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Model\ModelMesh.cpp" />
     <ClCompile Include="Model\ModelMeshPart.cpp" />
     <ClCompile Include="Model\ModelReader.cpp" />
-    <ClCompile Include="Model\ModelTweener.cpp" />
-    <ClCompile Include="Objects\GameAnimModel.cpp" />
+    <ClCompile Include="Objects\GameAnimator.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Objects\GameModel.cpp" />
     <ClCompile Include="Objects\GameRender.cpp" />
     <ClCompile Include="Renders\CBuffer.cpp" />

@@ -24,8 +24,8 @@ public:
 	ModelMesh* MeshByIndex(UINT index) { return meshes[index]; }
 	ModelMesh* MeshByName(wstring name);
 
-	void ReadMaterial(wstring folder, wstring file);
-	void ReadMesh(wstring folder, wstring file);
+	void ReadMaterial(wstring file);
+	void ReadMesh(wstring file);
 
 	// ±âº»À¸·Î ¶ç¿ï¶© ÀÌ³à¼® ½áµµ µÊ
 	void CopyGlobalBoneTo(vector<D3DXMATRIX>& transforms);

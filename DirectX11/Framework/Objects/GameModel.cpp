@@ -3,11 +3,11 @@
 
 #include "../Model/ModelMeshPart.h"
 
-GameModel::GameModel(wstring shaderFile, wstring matFolder, wstring matFile, wstring meshFolder, wstring meshFile)
+GameModel::GameModel(wstring shaderFile, wstring matFile, wstring meshFile)
 {
 	model = new Model();
-	model->ReadMaterial(matFolder, matFile);
-	model->ReadMesh(meshFolder, meshFile);
+	model->ReadMaterial(matFile);
+	model->ReadMesh(meshFile);
 
 	model->CopyGlobalBoneTo(transforms);
 

@@ -33,7 +33,6 @@ void TestTerrain::Initialize()
 		};
 		
 		terrain = new Terrain(desc);
-		ProgressBar::Get()->Set(1.0f, 40);
 		terrain->Initialize();
 	}
 }

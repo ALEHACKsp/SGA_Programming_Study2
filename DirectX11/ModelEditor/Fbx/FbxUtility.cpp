@@ -2,14 +2,15 @@
 #include "FbxUtility.h"
 #include "FbxType.h"
 
-FbxAxisSystem FbxUtility::Axis = FbxAxisSystem::DirectX;
+//FbxAxisSystem FbxUtility::Axis = FbxAxisSystem::DirectX;
+bool FbxUtility::bRightHand = false;
 
-// Scale(1, 1, -1) 마야 일 경우 z축만 뒤집으면 됨
+// Scale(1, 1, -1) 마야 일 경우 z축만 뒤집으면 됨, RotationY(180.0f)
 const D3DXMATRIX FbxUtility::Negative =
 {
-	1, 0, -8.74227766e-08f, 0,
+	-1, 0, 0, 0,
 	0, 1, 0, 0,
-	8.74227766e-08f, 0, -1, 0,
+	0, 0, 1, 0,
 	0, 0, 0, 1
 };
 
@@ -65,7 +66,8 @@ D3DXMATRIX FbxUtility::ToMatrix(FbxAMatrix & matrix)
 
 	w = s * r * t;
 
-	if (Axis == FbxAxisSystem::MayaYUp)
+	//if (Axis == FbxAxisSystem::MayaYUp)
+	if(bRightHand == true)
 		return Negative * w * Negative;
 
 	return w;
@@ -75,7 +77,8 @@ D3DXVECTOR3 FbxUtility::ToPosition(FbxVector4 & vec)
 {
 	D3DXVECTOR3 temp = ToVector3(vec);
 
-	if (Axis == FbxAxisSystem::MayaYUp)
+	//if (Axis == FbxAxisSystem::MayaYUp)
+	if (bRightHand == true)
 		D3DXVec3TransformCoord(&temp, &temp, &Negative);
 
 	return temp;
@@ -85,7 +88,8 @@ D3DXVECTOR3 FbxUtility::ToNormal(FbxVector4 & vec)
 {
 	D3DXVECTOR3 temp = ToVector3(vec);
 
-	if (Axis == FbxAxisSystem::MayaYUp)
+	//if (Axis == FbxAxisSystem::MayaYUp)
+	if (bRightHand == true)
 		D3DXVec3TransformNormal(&temp, &temp, &Negative);
 
 	return temp;
@@ -198,7 +202,8 @@ D3DXVECTOR2 FbxUtility::GetUv(FbxMesh * mesh, int cpIndex, int uvIndex)
 		break;
 	}
 
-	if (Axis == FbxAxisSystem::MayaYUp)
+	//if (Axis == FbxAxisSystem::MayaYUp)
+	if (bRightHand == true)
 		result.y = 1.0f - result.y;
 
 	return result;

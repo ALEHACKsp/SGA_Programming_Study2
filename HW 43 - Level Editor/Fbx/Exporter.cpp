@@ -325,7 +325,6 @@ void Fbx::Exporter::ReadMeshData(FbxNode * node, int parentBone)
 		D3DXVECTOR3 uv1 = vertices[index1]->Vertex.Uv;
 		D3DXVECTOR3 uv2 = vertices[index2]->Vertex.Uv;
 
-
 		// 정규 직교
 		D3DXVECTOR3 e0 = p1 - p0;
 		D3DXVECTOR3 e1 = p2 - p0;

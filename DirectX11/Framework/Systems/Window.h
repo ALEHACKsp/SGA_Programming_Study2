@@ -4,7 +4,6 @@ class Window
 {
 public:
 	static WPARAM Run(class IExecute* main);
-	static void Progress(float val) { progress = val; }
 
 private:
 	static void Create();
@@ -19,6 +18,5 @@ private:
 	static class IExecute* mainExecute;
 
 	static bool bInitialize;
-	static float progress; // 나중에 클래스로 만들어줘야함
 	static mutex* mu;
 };

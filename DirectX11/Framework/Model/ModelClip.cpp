@@ -5,7 +5,6 @@
 #include "ModelBone.h"
 
 ModelClip::ModelClip(wstring file)
-	: bRepeat(false), speed(1.0f), playTime(0.0f), bLockRoot(false)
 {
 	BinaryReader* r = new BinaryReader();
 	r->Open(file);
@@ -19,22 +18,18 @@ ModelClip::ModelClip(wstring file)
 	for (UINT i = 0; i < keyframesCount; i++)
 	{
 		ModelKeyframe* keyframe = new ModelKeyframe();
-		keyframe->boneName = String::ToWString(r->String());
-
-		keyframe->duration = duration;
-		keyframe->frameCount = frameCount;
-		keyframe->frameRate = frameRate;
+		keyframe->BoneName = String::ToWString(r->String());
 
 		UINT size = r->UInt();
 		if (size > 0)
 		{
-			keyframe->transforms.assign(size, ModelKeyframe::Transform());
+			keyframe->Transforms.assign(size, ModelKeyframeData());
 
-			void* ptr = (void *)&keyframe->transforms[0];
-			r->Byte(&ptr, sizeof(ModelKeyframe::Transform) * size);
+			void* ptr = (void *)&keyframe->Transforms[0];
+			r->Byte(&ptr, sizeof(ModelKeyframeData) * size);
 		}
 
-		keyframeMap.insert(Pair(keyframe->boneName, keyframe));
+		keyframeMap[keyframe->BoneName] = keyframe;
 	}
 
 	r->Close();
@@ -43,76 +38,15 @@ ModelClip::ModelClip(wstring file)
 
 ModelClip::~ModelClip()
 {
-	for (Pair keyframe : keyframeMap)
-		SAFE_DELETE(keyframe.second);
+	unordered_map<wstring, ModelKeyframe *>::iterator iter;
+	for (iter = keyframeMap.begin(); iter != keyframeMap.end(); iter++)
+		SAFE_DELETE(iter->second);
 }
 
-void ModelClip::Reset()
+ModelKeyframe * ModelClip::Keyframe(wstring name)
 {
-	bRepeat = false;
-	speed = 1.0f;
-	playTime = 0.0f;
-}
+	if (keyframeMap.count(name) < 1) 
+		return NULL;
 
-D3DXMATRIX ModelClip::GetKeyframeMatrix(ModelBone * bone, float time)
-{
-	wstring boneName = bone->Name();
-
-	unordered_map<wstring, ModelKeyframe*>::iterator it;
-	if ((it = keyframeMap.find(boneName)) == keyframeMap.end())
-	{
-		D3DXMATRIX temp;
-		D3DXMatrixIdentity(&temp);
-
-		return temp;
-	}
-
-	ModelKeyframe* keyframe = keyframeMap.at(boneName);
-
-	playTime += speed * time; // time = deltaTime
-	if (bRepeat == true)
-	{
-		if (playTime >= duration)
-		{
-			// 나눈 나머지 연산인데 float이라 빼는 식으로 하는거
-			while (playTime - duration >= 0)
-				playTime -= duration;
-		}
-	}
-	else
-	{
-		if (playTime >= duration)
-			playTime = duration;
-	}
-
-	D3DXMATRIX invGlobal = bone->Global();
-	D3DXMatrixInverse(&invGlobal, NULL, &invGlobal);
-	
-	D3DXMATRIX animation = keyframe->GetInterpolatedMatrix(playTime, bRepeat);
-
-	D3DXMATRIX parent;
-	int parentIndex = bone->ParentIndex();
-	// root는 pass
-	if (parentIndex < 0)
-	{
-		if (bLockRoot == true)
-			D3DXMatrixIdentity(&parent);
-		else
-			parent = animation;
-	}
-	else
-	{
-		parent = animation * bone->Parent()->Global();
-	}
-
-	return invGlobal * parent;
-	//return parent;
-}
-
-void ModelClip::UpdateKeyframe(ModelBone * bone, float time)
-{
-	D3DXMATRIX animation = GetKeyframeMatrix(bone, time);
-
-
-	bone->Local(animation);
+	return keyframeMap[name];
 }

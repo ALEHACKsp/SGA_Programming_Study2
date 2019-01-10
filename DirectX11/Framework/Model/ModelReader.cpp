@@ -3,18 +3,17 @@
 #include "ModelBone.h"
 #include "ModelMesh.h"
 #include "ModelMeshPart.h"
-
 #include "../Utilities/Xml.h"
 #include "../Utilities/BinaryFile.h"
 
-void Model::ReadMaterial(wstring folder, wstring file)
+void Model::ReadMaterial(wstring file)
 {
-	Models::LoadMaterial(folder + file, &materials);
+	Models::LoadMaterial(file, &materials);
 }
 
-void Model::ReadMesh(wstring folder, wstring file)
+void Model::ReadMesh(wstring file)
 {
-	Models::LoadMesh(folder + file, &bones, &meshes);
+	Models::LoadMesh(file, &bones, &meshes);
 
 	BindingBone();
 	BindingMesh();
@@ -43,9 +42,10 @@ void Model::BindingMesh()
 	{
 		for (ModelBone* bone : bones)
 		{
-			if (mesh->parentBoneIndex == bone->index) 
+			if (mesh->parentBoneIndex == bone->index)
 			{
 				mesh->parentBone = bone;
+
 				break;
 			}
 		}
@@ -57,6 +57,7 @@ void Model::BindingMesh()
 				if (material->Name() == part->materialName)
 				{
 					part->material = material;
+
 					break;
 				}
 			}
@@ -66,8 +67,9 @@ void Model::BindingMesh()
 	}
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////
-map<wstring, Models::MeshData> Models::meshDataMap;
+
 map<wstring, vector<Material *>> Models::materialMap;
 void Models::LoadMaterial(wstring file, vector<Material*>* materials)
 {
@@ -87,12 +89,10 @@ void Models::ReadMaterialData(wstring file)
 {
 	vector<Material *> materials;
 
-	Xml::XMLDocument * document = new Xml::XMLDocument();
+	Xml::XMLDocument* document = new Xml::XMLDocument();
 
-	wstring path = file;
-
-	Xml::XMLError error = document->LoadFile(
-		String::ToString(path).c_str());
+	wstring tempFile = file;
+	Xml::XMLError error = document->LoadFile(String::ToString(tempFile).c_str());
 	assert(error == Xml::XML_SUCCESS);
 
 	Xml::XMLElement* root = document->FirstChildElement();
@@ -108,9 +108,30 @@ void Models::ReadMaterialData(wstring file)
 		material->Name(String::ToWString(node->GetText()));
 
 
+		wstring directory = Path::GetDirectoryName(tempFile);
+
 		node = node->NextSiblingElement();
+		wstring diffuseTexture = String::ToWString(node->GetText());
+		if (diffuseTexture.length() > 0)
+			material->SetDiffuseMap(directory + diffuseTexture);
+
+		node = node->NextSiblingElement();
+		wstring specularTexture = String::ToWString(node->GetText());
+		if (specularTexture.length() > 0)
+			material->SetSpecularMap(directory + specularTexture);
+
+		node = node->NextSiblingElement();
+		wstring normalTexture = String::ToWString(node->GetText());
+		if (normalTexture.length() > 0)
+			material->SetNormalMap(directory + normalTexture);
+
+
 		D3DXCOLOR dxColor;
-		Xml::XMLElement * color = node->FirstChildElement();
+		Xml::XMLElement* color;
+
+		//DiffuseColor
+		node = node->NextSiblingElement();
+		color = node->FirstChildElement();
 		dxColor.r = color->FloatText();
 
 		color = color->NextSiblingElement();
@@ -124,28 +145,42 @@ void Models::ReadMaterialData(wstring file)
 		material->SetDiffuse(dxColor);
 
 
+		//SpecularColor
 		node = node->NextSiblingElement();
-		wstring diffuseTexture = String::ToWString(node->GetText());
-		
-		// 폴더명만 가지고오는 함수
-		wstring directory = Path::GetDirectoryName(file);
+		color = node->FirstChildElement();
+		dxColor.r = color->FloatText();
 
-		if (diffuseTexture.length() > 0)
-			material->SetDiffuseMap(directory + diffuseTexture);
+		color = color->NextSiblingElement();
+		dxColor.g = color->FloatText();
+
+		color = color->NextSiblingElement();
+		dxColor.b = color->FloatText();
+
+		color = color->NextSiblingElement();
+		dxColor.a = color->FloatText();
+		material->SetSpecular(dxColor);
+
+
+		node = node->NextSiblingElement();
+		material->SetShininess(node->FloatText());
 
 		materials.push_back(material);
+
 		matNode = matNode->NextSiblingElement();
 	} while (matNode != NULL);
 
 	materialMap[file] = materials;
-
 	SAFE_DELETE(document);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+map<wstring, Models::MeshData> Models::meshDataMap;
 void Models::LoadMesh(wstring file, vector<class ModelBone*>* bones, vector<class ModelMesh*>* meshes)
 {
 	if (meshDataMap.count(file) < 1)
 		ReadMeshData(file);
+
 
 	MeshData data = meshDataMap[file];
 	for (size_t i = 0; i < data.Bones.size(); i++)
@@ -170,8 +205,8 @@ void Models::ReadMeshData(wstring file)
 	BinaryReader* r = new BinaryReader();
 	r->Open(file);
 
-	vector<ModelBone*> bones;
-	vector<ModelMesh*> meshes;
+	vector<ModelBone *> bones;
+	vector<ModelMesh *> meshes;
 
 	UINT count = 0;
 	count = r->UInt();
@@ -223,13 +258,14 @@ void Models::ReadMeshData(wstring file)
 			}
 
 			mesh->meshParts.push_back(meshPart);
-		} // for(k)
+		}//for(k)
 
 		meshes.push_back(mesh);
-	} // for(i)
+	}//for(i)
 
 	r->Close();
 	SAFE_DELETE(r);
+
 
 	MeshData data;
 	data.Bones.assign(bones.begin(), bones.end());

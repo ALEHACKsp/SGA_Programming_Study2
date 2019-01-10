@@ -5,7 +5,6 @@
 IExecute* Window::mainExecute = NULL;
 
 bool Window::bInitialize = false;
-float Window::progress = 0.0f;
 mutex* Window::mu = NULL;
 
 WPARAM Window::Run(IExecute * main)
@@ -222,7 +221,7 @@ void Window::MainRender()
 	mainExecute->PreRender();
 
 	D3D::Get()->SetRenderTarget();
-	D3D::Get()->Clear(D3DXCOLOR(0, 0, 0, 1));
+	D3D::Get()->Clear(D3DXCOLOR(0.5f, 0.5f, 0.5f, 1));
 	{
 		mainExecute->Render();
 	

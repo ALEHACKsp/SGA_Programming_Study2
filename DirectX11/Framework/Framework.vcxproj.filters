@@ -91,20 +91,11 @@
     <ClInclude Include="Model\ModelClip.h">
       <Filter>Models</Filter>
     </ClInclude>
-    <ClInclude Include="Model\ModelKeyframe.h">
-      <Filter>Models</Filter>
-    </ClInclude>
     <ClInclude Include="Model\ModelMesh.h">
       <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="Model\ModelMeshPart.h">
       <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelTweener.h">
-      <Filter>Models</Filter>
-    </ClInclude>
-    <ClInclude Include="Objects\GameAnimModel.h">
-      <Filter>Objects</Filter>
     </ClInclude>
     <ClInclude Include="Objects\GameModel.h">
       <Filter>Objects</Filter>
@@ -211,6 +202,9 @@
     <ClInclude Include="Utilities\ProgressBar.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\GameAnimator.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Draw\DebugLine.cpp">
@@ -261,9 +255,6 @@
     <ClCompile Include="Model\ModelClip.cpp">
       <Filter>Models</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ModelKeyframe.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
     <ClCompile Include="Model\ModelMesh.cpp">
       <Filter>Models</Filter>
     </ClCompile>
@@ -272,12 +263,6 @@
     </ClCompile>
     <ClCompile Include="Model\ModelReader.cpp">
       <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelTweener.cpp">
-      <Filter>Models</Filter>
-    </ClCompile>
-    <ClCompile Include="Objects\GameAnimModel.cpp">
-      <Filter>Objects</Filter>
     </ClCompile>
     <ClCompile Include="Objects\GameModel.cpp">
       <Filter>Objects</Filter>
@@ -377,6 +362,9 @@
     </ClCompile>
     <ClCompile Include="Utilities\ProgressBar.cpp">
       <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Objects\GameAnimator.cpp">
+      <Filter>Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

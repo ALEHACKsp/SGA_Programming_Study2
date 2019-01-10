@@ -95,20 +95,20 @@ void Models::Create()
 
 void Models::Delete()
 {
-	for (pair<wstring, vector<Material *>> temp : materialMap)
+	map<wstring, vector<Material *>>::iterator matIter;
+	for (matIter = materialMap.begin(); matIter != materialMap.end(); matIter++)
 	{
-		for (Material * material : temp.second)
+		for (Material * material : matIter->second)
 			SAFE_DELETE(material);
 	}
 
-	for (pair<wstring, MeshData> temp : meshDataMap)
+	map<wstring, MeshData>::iterator meshIter;
+	for (meshIter = meshDataMap.begin(); meshIter != meshDataMap.end(); meshIter++)
 	{
-		MeshData data = temp.second;
-
-		for (ModelBone* bone : data.Bones)
+		for (ModelBone* bone : meshIter->second.Bones)
 			SAFE_DELETE(bone);
 
-		for (ModelMesh* mesh : data.Meshes)
+		for (ModelMesh* mesh : meshIter->second.Meshes)
 			SAFE_DELETE(mesh);
 	}
 }

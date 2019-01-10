@@ -21,7 +21,7 @@ void Main::Initialize()
 	Context::Get()->GetMainCamera()->RotationDegree(0, 0);
 	Context::Get()->GetMainCamera()->Position(0, 0, -5);
 
-	((Freedom*)Context::Get()->GetMainCamera())->MoveSpeed(100.0f);
+	//((Freedom*)Context::Get()->GetMainCamera())->MoveSpeed(100.0f);
 	((Freedom*)Context::Get()->GetMainCamera())->RotationSpeed(20.0f);
 
 	Push(new TestModel());
@@ -132,7 +132,13 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR param, int 
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	//_CrtSetBreakAlloc(1686);
+	//_CrtSetBreakAlloc(521); // xml document
+	
+	// IExecute 소멸자 virtual 문제
+	//_CrtSetBreakAlloc(2197);
+	//_CrtSetBreakAlloc(478);
+
+	//_CrtSetBreakAlloc(487);
 
 	D3DDesc desc;
 	desc.AppName = L"D3D Game";

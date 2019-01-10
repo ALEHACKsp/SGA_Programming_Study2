@@ -18,6 +18,17 @@ Billboard::Billboard()
 	textureArray = new TextureArray(texturesPath);
 	shader->AsShaderResource("Maps")->SetResource(textureArray->GetSRV());
 
+	vector<wstring> normalMaps;
+	normalMaps.push_back(Textures + L"Billboard/tree_beech_a_nor.png");
+	normalMaps.push_back(Textures + L"Billboard/tree_beech_b_nor.png");
+	normalMaps.push_back(Textures + L"Billboard/tree_fir_a_nor.png");
+	normalMaps.push_back(Textures + L"Billboard/tree_fir_b_nor.png");
+	normalMaps.push_back(Textures + L"Billboard/tree_oak_a_nor.png");
+	normalMaps.push_back(Textures + L"Billboard/tree_oak_b_nor.png");
+
+	normalMapArray = new TextureArray(normalMaps);
+	shader->AsShaderResource("NormalMaps")->SetResource(normalMapArray->GetSRV());
+
 	Vertex vertex;
 	vertex.Position = D3DXVECTOR3(0, 0, 0);
 
@@ -55,6 +66,7 @@ Billboard::~Billboard()
 		SAFE_DELETE(texture);
 
 	SAFE_DELETE(textureArray);
+	SAFE_DELETE(normalMapArray);
 	SAFE_DELETE(shader);
 }
 

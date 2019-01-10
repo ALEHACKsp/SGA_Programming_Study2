@@ -10,9 +10,12 @@ ProgressBar * ProgressBar::Get()
 	return instance;
 }
 
-void ProgressBar::Create()
+void ProgressBar::Create(float step, float closeTime)
 {
 	instance = new ProgressBar();
+	instance->step = step;
+	instance->bOpen = true;
+	instance->closeTime = closeTime;
 }
 
 void ProgressBar::Delete()
@@ -20,39 +23,42 @@ void ProgressBar::Delete()
 	SAFE_DELETE(instance);
 }
 
-void ProgressBar::Set(float target, float timeOut)
+void ProgressBar::Set(float ratio)
 {
-	current = this->target;
-	this->target = target;
-	this->timeOut = timeOut;
-	this->time = Time::Get()->Running() + timeOut;
+	this->ratio = ratio;
 }
 
 void ProgressBar::Done()
 {
 	ratio = 1.0f;
+	deltaTime = 0;
 }
 
 void ProgressBar::Update()
 {
-	if (target - ratio <= Math::EPSILON)
-		ratio = target;
-	else
-		ratio = Math::Lerp(current, target, 1.0f - (time - Time::Get()->Running()) / timeOut);
+	if (bOpen == false) return;
+
+	if (ratio < 1.0f)
+		ratio += step * Time::Delta();
+	else {
+		deltaTime += Time::Delta();
+		if (deltaTime >= closeTime)
+			bOpen = false;
+	}
 }
 
 void ProgressBar::Render()
 {
-	ImGui::Begin("ProgressBar");
-	ImGui::ProgressBar(ratio);
-	ImGui::End();
+	if (bOpen) {
+		ImGui::Begin("ProgressBar");
+		ImGui::ProgressBar(ratio);
+		ImGui::End();
+	}
 }
 
 ProgressBar::ProgressBar()
 {
-	current = 0;
 	ratio = 0;
-	target = 0;
 }
 
 ProgressBar::~ProgressBar()

@@ -16,5 +16,6 @@ public:
 	virtual void ResizeScreen() override;
 
 private:
-
+	vector<GameModel*> models;
+	GameAnimator* animator;
 };

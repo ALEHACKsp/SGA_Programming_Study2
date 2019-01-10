@@ -7,10 +7,8 @@
 class GameModel : public GameRender
 {
 public :
-	GameModel(wstring shaderFile,
-		wstring matFolder, wstring matFile,
-		wstring meshFolder, wstring meshFile);
-	virtual ~GameModel();
+	GameModel(wstring shaderFile, wstring matFile, wstring meshFile);
+	~GameModel();
 
 	virtual void Update();
 	void PreRender();

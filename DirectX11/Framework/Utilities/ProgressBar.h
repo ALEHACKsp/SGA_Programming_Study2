@@ -5,10 +5,10 @@ class ProgressBar
 public:
 	static ProgressBar* Get();
 
-	static void Create();
+	static void Create(float step = 1.0f, float closeTime = 5.0f);
 	static void Delete();
 
-	void Set(float target, float timeOut = 30.0f);
+	void Set(float ratio);
 	void Done();
 
 	void Update();
@@ -20,10 +20,10 @@ private:
 
 	static ProgressBar* instance;
 
-	float time;
-	float timeOut;
-
-	float current;
-	float target;
+	float step;
 	float ratio;
+
+	bool bOpen;
+	float deltaTime;
+	float closeTime;
 };

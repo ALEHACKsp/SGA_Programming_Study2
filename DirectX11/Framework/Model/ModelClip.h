@@ -1,6 +1,20 @@
 #pragma once
 
-#include "ModelKeyframe.h"
+struct ModelKeyframeData
+{
+	float Time;
+
+	D3DXVECTOR3 Scale;
+	D3DXQUATERNION Rotation;
+	D3DXVECTOR3 Translation;
+};
+
+struct ModelKeyframe
+{
+	wstring BoneName;
+	vector<ModelKeyframeData> Transforms;
+};
+
 
 class ModelClip
 {
@@ -8,17 +22,11 @@ public:
 	ModelClip(wstring file);
 	~ModelClip();
 
-	void Reset();
-	
-	D3DXMATRIX GetKeyframeMatrix(class ModelBone* bone, float time);
+	float Duration() { return duration; }
+	float FrameRate() { return frameRate; }
+	UINT FrameCount() { return frameCount; }
 
-	void UpdateKeyframe(ModelBone * bone, float time);
-
-	void LockRoot(bool val) { bLockRoot = val; }
-	void Repeat(bool val) { bRepeat = val; }
-	void Speed(float val) { speed = val; }
-	void StartTime(float val) { playTime = val; }
-
+	ModelKeyframe* Keyframe(wstring name);
 private:
 	wstring name;
 
@@ -26,12 +34,5 @@ private:
 	float frameRate;
 	UINT frameCount;
 
-	bool bLockRoot;
-	bool bRepeat;
-	float speed;
-	float playTime;
-
-	//vector<class ModelKeyframe *> keyframes; // 너무 느림
-	typedef pair<wstring, ModelKeyframe*> Pair;
-	unordered_map<wstring, ModelKeyframe*> keyframeMap; // hash table로 바꾸심
+	unordered_map<wstring, ModelKeyframe *> keyframeMap;
 };

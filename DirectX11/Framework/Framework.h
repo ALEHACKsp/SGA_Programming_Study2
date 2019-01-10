@@ -59,11 +59,9 @@ using namespace std;
 #pragma comment(lib, "directxtex.lib")
 
 const wstring Shaders = L"../../_Shaders/";
-const wstring Contents = L"../../_Contents/";
 const wstring Textures = L"../../_Textures/";
 const wstring Assets = L"../../_Assets/";
-const wstring Models = L"../../_SkinnedModel/";
-const wstring Materials = L"../../_Materials/";
+const wstring Models = L"../../_ModelsEx/";
 
 #define SAFE_RELEASE(p){ if(p){ (p)->Release(); (p) = NULL; } }
 #define SAFE_DELETE(p){ if(p){ delete (p); (p) = NULL; } }
@@ -111,4 +109,4 @@ const wstring Materials = L"../../_Materials/";
 
 #include "./Objects/GameRender.h"
 #include "./Objects/GameModel.h"
-#include "./Objects/GameAnimModel.h"
+#include "./Objects/GameAnimator.h"

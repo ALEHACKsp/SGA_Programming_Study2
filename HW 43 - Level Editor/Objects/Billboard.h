@@ -32,6 +32,7 @@ private:
 	vector<wstring> texturesPath;
 	vector<Texture*> textures;
 	TextureArray* textureArray;
+	TextureArray* normalMapArray;
 	
 private:
 	bool bRandom;

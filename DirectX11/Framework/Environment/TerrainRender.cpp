@@ -56,7 +56,7 @@ void TerrainRender::Initialize()
 
 	CalcAllPatchBoundsY();
 
-	//CreateBlendMap();
+	CreateBlendMap();
 }
 
 void TerrainRender::Ready(Material* material)

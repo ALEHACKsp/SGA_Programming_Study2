@@ -3,7 +3,7 @@
 class FbxUtility
 {
 public:
-	static FbxAxisSystem Axis;
+	static bool bRightHand;
 	static const D3DXMATRIX Negative;
 
 	static D3DXVECTOR2 ToVector2(FbxVector2& vec);
