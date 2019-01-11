@@ -23,6 +23,9 @@ public:
 	void LoadHeightMap(wstring fileName);
 	void SaveHeightMap(wstring fileName);
 
+	void LoadBillboard(wstring fileName);
+	void SaveBillboard(wstring fileName);
+
 	void ImGuiRender();
 
 	ID3D11Texture2D* GetHeightMapTex() { return heightMapTex; }

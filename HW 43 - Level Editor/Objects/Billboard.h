@@ -10,6 +10,7 @@ public:
 	~Billboard();
 
 	void ImGuiRender(bool bStart = true, bool bEnd = true);
+	void PreRender(Shader* shader);
 	void Render();
 	void AddInstance(D3DXVECTOR3& position);
 	void AddInstance(vector<D3DXVECTOR3>& vec);
@@ -19,6 +20,12 @@ public:
 	void SetCount(int val) { instanceCount = val; }
 	int* Factor() { return &factor; }
 	void UpdateFactor(int val) { factor += val; if (factor <= 0) factor = 1; }
+
+	TextureArray* GetTextureArray() { return textureArray; }
+
+	void Save(wstring file);
+	void Load(wstring file);
+	void Clear();
 
 private:
 	void CreateInstance();

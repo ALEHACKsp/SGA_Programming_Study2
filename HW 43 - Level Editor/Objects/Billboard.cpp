@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Billboard.h"
 
+#include "Utilities/BinaryFile.h"
+
 Billboard::Billboard()
 {
 	shader = new Shader(Shaders + L"Homework/Billboard.fx");
@@ -75,16 +77,32 @@ void Billboard::ImGuiRender(bool bStart, bool bEnd)
 	if(bStart)
 		ImGui::Begin("Billboard");
 
-	ImGui::Checkbox("Tex Random", &bRandom);
+	ImGui::Checkbox("Random", &bRandom);
+	ImGui::SameLine(100);
+	if (ImGui::SmallButton("Clear")) Clear();
+
+	ImGui::DragFloat2("Size", (float*)&scale, 0.1f);
+
 	if (ImGui::SliderInt("Id", &texId, 0, textures.size() - 1))
 		bRandom = false;
 
 	ImGui::Image(textures[texId]->SRV(), ImVec2(50, 50));
 
-	ImGui::DragFloat2("Size", (float*)&scale, 0.1f);
-
 	if(bEnd)
 		ImGui::End();
+}
+
+void Billboard::PreRender(Shader * shader)
+{
+	//shader->AsShaderResource("Maps")->SetResource(textureArray->GetSRV());
+
+	UINT stride[2] = { sizeof(Vertex), sizeof(VertexWorld) };
+	UINT offset[2] = { 0, 0 };
+
+	D3D::GetDC()->IASetVertexBuffers(0, 2, vertexBuffer, stride, offset);
+	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	shader->DrawInstanced(1, 0, 1, instanceCount);
 }
 
 void Billboard::Render()
@@ -143,6 +161,46 @@ void Billboard::AddInstance(vector<D3DXVECTOR3>& vec)
 	}
 
 	D3D::GetDC()->UpdateSubresource(vertexBuffer[1], 0, NULL, &vertices[0], sizeof(VertexWorld) * instanceCount, 0);
+}
+
+void Billboard::Save(wstring file)
+{
+	BinaryWriter* w = new BinaryWriter();
+
+	w->Open(file);
+
+	w->Int(instanceCount);
+
+	w->Byte(&vertices[0], sizeof(VertexWorld) * instanceCount);
+
+	w->Close();
+
+	SAFE_DELETE(w);
+}
+
+void Billboard::Load(wstring file)
+{
+	BinaryReader* r = new BinaryReader();
+	r->Open(file);
+
+	instanceCount = r->Int();
+	
+	VertexWorld* temp = new VertexWorld[instanceCount];
+	r->Byte((void**)&temp, sizeof(VertexWorld) * instanceCount);
+
+	r->Close();
+	SAFE_DELETE(r);
+
+	vertices.assign(temp, temp + instanceCount);
+	D3D::GetDC()->UpdateSubresource(vertexBuffer[1], 0, NULL, &vertices[0], sizeof(VertexWorld) * instanceCount, 0);
+
+	SAFE_DELETE_ARRAY(temp);
+}
+
+void Billboard::Clear()
+{
+	instanceCount = 0;
+	vertices.clear();
 }
 
 void Billboard::CreateInstance()

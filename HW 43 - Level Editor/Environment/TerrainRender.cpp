@@ -183,6 +183,7 @@ void TerrainRender::Initialize()
 	fastPickingShader->AsScalar("Width")->SetFloat(1024);
 	fastPickingShader->AsScalar("Height")->SetFloat(1024);
 	fastPickingShader->AsScalar("MaxHeight")->SetFloat(terrain->GetHeightMap()->MaxHeight());
+	fastPickingShader->AsShaderResource("BillboardTextures")->SetResource(billboard->GetTextureArray()->GetSRV());
 
 	billboard->GetShader()->AsScalar("MaxHeight")->SetFloat(terrain->GetHeightMap()->MaxHeight());
 }
@@ -231,6 +232,7 @@ void TerrainRender::Update()
 	}
 
 	if (Keyboard::Get()->Down('C')) bWireFrame = !bWireFrame;
+	if (Keyboard::Get()->Down('Z')) selectEdit = (selectEdit++) % 2;
 
 	// Pick
 	if (Pick(&pickPos) && !ImGui::IsAnyWindowHovered() && !ImGui::IsAnyItemActive()) {
@@ -289,6 +291,8 @@ void TerrainRender::PreRender()
 
 		fastPickingShader->AsMatrix("World")->SetMatrix(world);
 		fastPickingShader->DrawIndexed(0, 0, patchQuadFacesCount * 4);
+
+		billboard->PreRender(fastPickingShader);
 	}
 }
 
@@ -354,7 +358,7 @@ bool TerrainRender::Pick(OUT D3DXVECTOR3 * val)
 	D3DXCOLOR result = Textures::ReadPixel(rtv->Texture(), position.x, position.y);
 
 	x = result.r * 1024 - 512;
-	y = result.b * terrain->GetHeightMap()->MaxHeight();
+	y = result.b;
 	z = result.g * 1024 - 512;
 
 	(*val) = D3DXVECTOR3(x, y, z);
@@ -384,12 +388,25 @@ void TerrainRender::SaveHeightMap(wstring fileName)
 	terrain->GetHeightMap()->Save(fileName, heightMapSRV);
 }
 
+void TerrainRender::LoadBillboard(wstring fileName)
+{
+	billboard->Load(fileName);
+}
+
+void TerrainRender::SaveBillboard(wstring fileName)
+{
+	billboard->Save(fileName);
+}
+
 void TerrainRender::ImGuiRender()
 {
 	// wheel test
 	//ImGui::Text("Wheel %.1f", ImGui::GetIO().MouseWheel);
 
-	ImGui::Text("%f %f %f", pickPos.x, pickPos.y, pickPos.z);
+	ImGui::Text("Pos %f %f", pickPos.x, pickPos.z);
+	string check = "Pick ";
+	check += pickPos.y == 1.0f ? "True" : "False";
+	ImGui::Text(check.c_str());
 
 	ImGui::Checkbox("WireFrame", &bWireFrame);
 
@@ -463,7 +480,22 @@ void TerrainRender::ImGuiRender()
 
 		ImGui::NextColumn();
 
-		ImGui::RadioButton("Single", &brush.Type, 0);
+		ImGui::RadioButton("One", &brush.Type, 0);
+
+		ImGui::SameLine(70);
+		if (ImGui::SmallButton("Save"))
+		{
+			func = bind(&TerrainRender::SaveBillboard, this, placeholders::_1);
+			Path::SaveFileDialog(L"", L"Billboard Files(*.billboard)\0*.billboard\0", L"./", func);
+		}
+
+		ImGui::SameLine(115);
+		if (ImGui::SmallButton("Load"))
+		{
+			func = bind(&TerrainRender::LoadBillboard, this, placeholders::_1);
+			Path::OpenFileDialog(L"", L"Billboard Files(*.billboard)\0*.billboard\0", L"./", func);
+		}
+
 		ImGui::RadioButton("Rect", &brush.Type, 1);
 		ImGui::SameLine(80);
 		ImGui::RadioButton("Circle", &brush.Type, 2);
