@@ -7,6 +7,7 @@ GameAnimator::GameAnimator(wstring shaderFile, wstring materialFile, wstring mes
 	: mode(Mode::Stop)
 	, currentClip(0), currentKeyframe(0), nextKeyframe(0)
 	, frameTime(0.0f), frameFactor(0.0f)
+	, playTime(0.0f)
 {
 	model = new Model();
 	model->ReadMaterial(materialFile);
@@ -20,6 +21,8 @@ GameAnimator::GameAnimator(wstring shaderFile, wstring materialFile, wstring mes
 
 	boneTransforms.assign(model->BoneCount(), D3DXMATRIX());
 	renderTransforms.assign(model->BoneCount(), D3DXMATRIX());
+
+	playRate = 1.0f;
 }
 
 GameAnimator::~GameAnimator()
@@ -32,24 +35,58 @@ GameAnimator::~GameAnimator()
 
 void GameAnimator::Update()
 {
+	if (Mode::Play != mode) return;
+
 	frameTime += Time::Delta();
+	playTime += Time::Delta();
 
 	ModelClip* clip = clips[currentClip];
 	float invFrameRate = 1.0f / clip->FrameRate();
 
-	if (frameTime > invFrameRate)
+	if (playTime > (invFrameRate / playRate))
 	{
-		frameTime = 0;
-
+		playTime -= (invFrameRate / playRate);
 		currentKeyframe = (currentKeyframe + 1) % clip->FrameCount();
 		nextKeyframe = (currentKeyframe + 1) % clip->FrameCount();
+	}
 
+	frameFactor = playTime / (invFrameRate / playRate);
+
+	if (frameTime > invFrameRate)
+	{
+		frameTime -= invFrameRate;
 		UpdateBone();
 	}
 }
 
 void GameAnimator::Render()
 {
+	ImGui::Begin("Animator");
+
+	if (ImGui::Button("Play")) Play();
+	ImGui::SameLine(60);
+	if (ImGui::Button("Pause")) Pause();
+	ImGui::SameLine(120);
+	if (ImGui::Button("Stop")) Stop();
+
+	if (ImGui::SliderInt("Frame", &currentKeyframe, 0, clips[currentClip]->FrameCount()))
+	{
+		currentKeyframe = (currentKeyframe + 1) % clips[currentClip]->FrameCount();
+		nextKeyframe = (currentKeyframe + 1) % clips[currentClip]->FrameCount();
+		
+		frameTime = 0;
+		playTime = 0;
+		UpdateBone();
+	}
+
+	if (ImGui::DragFloat("Speed", &playRate, 0.1f))
+	{
+		if (playRate <= 0.0f)
+			playRate = 0;
+	}
+
+	ImGui::End();
+
 	for (Material* material : model->Materials())
 	{
 		const float* data = renderTransforms[0];
@@ -65,6 +102,16 @@ void GameAnimator::Render()
 void GameAnimator::AddClip(wstring clipFile)
 {
 	clips.push_back(new ModelClip(clipFile));
+	UpdateBone();
+}
+
+void GameAnimator::Stop() 
+{
+	this->mode = Mode::Stop;
+	currentKeyframe = 0;
+	nextKeyframe = 0;
+	playTime = frameTime = 0;
+	UpdateBone();
 }
 
 void GameAnimator::UpdateBone()
@@ -90,6 +137,7 @@ void GameAnimator::UpdateBone()
 		D3DXVECTOR3 s1 = current.Scale;
 		D3DXVECTOR3 s2 = next.Scale;
 
+		// frameFactor도 lerp해서 넣어줘야함
 		D3DXVECTOR3 s;
 		D3DXVec3Lerp(&s, &s1, &s2, frameFactor);
 		D3DXMatrixScaling(&S, s.x, s.y, s.z);

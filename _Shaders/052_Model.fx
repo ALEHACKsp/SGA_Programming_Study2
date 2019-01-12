@@ -38,8 +38,8 @@ VertexOutput VS_Animation(VertexTextureNormalTangentBlend input)
     output.Position = mul(output.Position, View);
     output.Position = mul(output.Position, Projection);
 
-    output.Normal = mul(input.Normal, (float3x3) World);
-    output.Tangent = mul(input.Tangent, (float3x3) World);
+    output.Normal = WorldNormal(input.Normal);
+    output.Tangent = WorldTangent(input.Tangent);
 
     output.Uv = input.Uv;
 
@@ -61,15 +61,35 @@ SamplerState Sampler
 
 float4 PS(VertexOutput input) : SV_TARGET
 {
+
+    float4 color = 0;
+
     float4 diffuse = DiffuseMap.Sample(Sampler, input.Uv);
 
-    float3 normal = normalize(input.Normal);
-    float NDotL = dot(-LightDirection, normal);
+    //float3 normal = normalize(input.Normal);
+    //float NDotL = dot(-LightDirection, normal);
 
     //return diffuse;
-    return diffuse * NDotL;
+    //return diffuse * NDotL;
     //return diffuse * NDotL * LightColor;
     //return saturate(diffuse + LightColor) * NDotL;
+
+    if (length(diffuse) > 0)
+        DiffuseLighting(color, diffuse, input.Normal);
+    else
+        DiffuseLighting(color, input.Normal);
+
+    float4 normal = NormalMap.Sample(Sampler, input.Uv);
+    if (length(normal) > 0)
+        NormalMapping(color, normal, input.Normal, input.Tangent);
+
+    float4 specular = SpecularMap.Sample(Sampler, input.Uv);
+    if (length(specular) > 0)
+        SpecularLighting(color, specular, input.Normal);
+    else
+        SpecularLighting(color, input.Normal);
+
+	return color;
 }
 
 //-----------------------------------------------------------------------------

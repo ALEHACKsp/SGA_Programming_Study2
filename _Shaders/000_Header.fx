@@ -148,6 +148,14 @@ float3 WorldNormal(float3 normal)
     return normalize(mul(normal, (float3x3) World));
 }
 
+
+float3 WorldTangent(float3 tangent)
+{
+    tangent = normalize(mul(tangent, (float3x3) World));
+
+    return tangent;
+}
+
 //-----------------------------------------------------------------------------
 // Lighting
 //-----------------------------------------------------------------------------
@@ -318,3 +326,65 @@ void ComputeSpotLight(Material m, SpotLight l, float3 position, float3 normal, f
     diffuse *= attenuate;
     specular *= attenuate;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+// 색상만을 쓸 때
+void DiffuseLighting(inout float4 color, float3 normal)
+{
+    //float3 light = _direction * -1;
+    // 빛의 강도
+    // saturate 0 ~ 1까지 제한해주는 함수
+    float intensity = saturate(dot(normal, -LightDirection));
+
+    color = color + Diffuse * intensity;
+}
+
+void DiffuseLighting(inout float4 color, float4 diffuse, float3 normal)
+{
+    //float3 light = _direction * -1;
+    // 빛의 강도
+    // saturate 0 ~ 1까지 제한해주는 함수
+    float intensity = saturate(dot(normal, -LightDirection));
+
+    color = color + Diffuse * diffuse * intensity;
+    //color = color + diffuse * intensity;
+}
+
+// viewDirection 정점으로부터 카메라 방향
+void SpecularLighting(inout float4 color, float3 normal)
+{
+    float3 reflection = reflect(LightDirection, normal);
+    float intensity = saturate(dot(reflection, ViewDirection));
+    float specular = pow(intensity, Shininess);
+
+    color = color + Specular * specular;
+}
+
+void SpecularLighting(inout float4 color, float4 specularMap, float3 normal)
+{
+    float3 reflection = reflect(LightDirection, normal);
+    float intensity = saturate(dot(reflection, ViewDirection));
+    float specular = pow(intensity, Shininess);
+
+    color = color + Specular * specular * specularMap;
+}
+
+void NormalMapping(inout float4 color, float4 normalMap, float3 normal, float3 tangent)
+{
+    float3 N = normal; // Z축이랑 매핑됨
+    float3 T = normalize(tangent - dot(tangent, N) * N); // X 이 식이 그람슈미트 식
+    float3 B = cross(T, N); // Y
+
+    float3x3 TBN = float3x3(T, B, N);
+
+	// rgb 0~1 방향으로 만드는거
+    float3 coord = 2.0f * normalMap - 1.0f;
+    float3 bump = mul(coord, TBN); // max에선 normal mapping을 bump mapping이라 부름
+
+    float intensity = saturate(dot(bump, -LightDirection));
+    color = color * intensity;
+}
+
+///////////////////////////////////////////////////////////////////////////////

@@ -18,11 +18,14 @@ void Main::Initialize()
 
 	Context::Create();
 
-	Context::Get()->GetMainCamera()->RotationDegree(0, 0);
-	Context::Get()->GetMainCamera()->Position(0, 0, -5);
+	Context::Get()->GetGlobalLight()->Direction = D3DXVECTOR3(-1, -1, 1);
+	Context::Get()->ChangeGlobalLight();
 
-	//((Freedom*)Context::Get()->GetMainCamera())->MoveSpeed(100.0f);
-	((Freedom*)Context::Get()->GetMainCamera())->RotationSpeed(20.0f);
+	Context::Get()->GetMainCamera()->RotationDegree(15, 0);
+	Context::Get()->GetMainCamera()->Position(0, 1.5f, -3);
+
+	((Freedom*)Context::Get()->GetMainCamera())->MoveSpeed(10.0f);
+	//((Freedom*)Context::Get()->GetMainCamera())->RotationSpeed(20.0f);
 
 	Push(new TestModel());
 }
@@ -139,6 +142,8 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR param, int 
 	//_CrtSetBreakAlloc(478);
 
 	//_CrtSetBreakAlloc(487);
+	
+	//_CrtSetBreakAlloc(486);
 
 	D3DDesc desc;
 	desc.AppName = L"D3D Game";

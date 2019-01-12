@@ -21,7 +21,4 @@ public:
 
 	static string GetMaterialName(FbxMesh* mesh, int polygonIndex, int cpIndex);
 	static D3DXVECTOR2 GetUv(FbxMesh* mesh, int cpIndex, int uvIndex);
-
-	static D3DXVECTOR4 ToVertexIndices(vector<struct FbxVertexWeightData>& weights);
-	static D3DXVECTOR4 ToVertexWeights(vector<struct FbxVertexWeightData>& weights);
 };

@@ -6,10 +6,10 @@ Material::Material()
 	, diffuseMap(NULL), specularMap(NULL), normalMap(NULL)
 	, buffer(NULL)
 {
-	color.Ambient = D3DXCOLOR(0, 0, 0, 1);
-	color.Diffuse = D3DXCOLOR(0, 0, 0, 1);
-	color.Specular = D3DXCOLOR(0, 0, 0, 1);
-	color.Shininess = 0;
+	color.Ambient = D3DXCOLOR(1, 1, 1, 1);
+	color.Diffuse = D3DXCOLOR(1, 1, 1, 1);
+	color.Specular = D3DXCOLOR(1, 1, 1, 1);
+	color.Shininess = 1;
 }
 
 Material::Material(wstring shaderFile)
@@ -17,10 +17,10 @@ Material::Material(wstring shaderFile)
 {
 	assert(shaderFile.length() > 0);
 
-	color.Ambient = D3DXCOLOR(0, 0, 0, 1);
-	color.Diffuse = D3DXCOLOR(0, 0, 0, 1);
-	color.Specular = D3DXCOLOR(0, 0, 0, 1);
-	color.Shininess = 0;
+	color.Ambient = D3DXCOLOR(1, 1, 1, 1);
+	color.Diffuse = D3DXCOLOR(1, 1, 1, 1);
+	color.Specular = D3DXCOLOR(1, 1, 1, 1);
+	color.Shininess = 1;
 
 	SetShader(shaderFile);
 }

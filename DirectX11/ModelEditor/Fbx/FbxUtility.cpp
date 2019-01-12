@@ -8,9 +8,9 @@ bool FbxUtility::bRightHand = false;
 // Scale(1, 1, -1) 마야 일 경우 z축만 뒤집으면 됨, RotationY(180.0f)
 const D3DXMATRIX FbxUtility::Negative =
 {
-	-1, 0, 0, 0,
+	1, 0, 0, 0,
 	0, 1, 0, 0,
-	0, 0, 1, 0,
+	0, 0, -1, 0,
 	0, 0, 0, 1
 };
 
@@ -209,38 +209,3 @@ D3DXVECTOR2 FbxUtility::GetUv(FbxMesh * mesh, int cpIndex, int uvIndex)
 	return result;
 }
 
-D3DXVECTOR4 FbxUtility::ToVertexIndices(vector<FbxVertexWeightData>& weights)
-{
-	D3DXVECTOR4 indices;
-	// 가중치는 4개 이상일 수 있음(디자이너 마음) 우리는 4개만 쓸 꺼
-	for (UINT i = 0; i < weights.size(); i++)
-	{
-		switch (i)
-		{
-			case 0: indices.x = (float)weights[i].Index; break;
-			case 1: indices.x = (float)weights[i].Index; break;
-			case 2: indices.x = (float)weights[i].Index; break;
-			case 3: indices.x = (float)weights[i].Index; break;
-		}
-	}
-
-	return indices;
-}
-
-D3DXVECTOR4 FbxUtility::ToVertexWeights(vector<FbxVertexWeightData>& weights)
-{
-	D3DXVECTOR4 weight;
-	// 가중치는 4개 이상일 수 있음(디자이너 마음) 우리는 4개만 쓸 꺼
-	for (UINT i = 0; i < weights.size(); i++)
-	{
-		switch (i)
-		{
-		case 0: weight.x = (float)weights[i].Weight; break;
-		case 1: weight.x = (float)weights[i].Weight; break;
-		case 2: weight.x = (float)weights[i].Weight; break;
-		case 3: weight.x = (float)weights[i].Weight; break;
-		}
-	}
-
-	return weight;
-}

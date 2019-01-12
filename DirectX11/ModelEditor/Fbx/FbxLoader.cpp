@@ -28,24 +28,30 @@ FbxLoader::FbxLoader(wstring file, wstring saveFolder, wstring saveName)
 
 	FbxAxisSystem axis = scene->GetGlobalSettings().GetAxisSystem();
 	FbxUtility::bRightHand = axis.GetCoorSystem() == FbxAxisSystem::eRightHanded;
-
+	
+	// 여기 뭔가 이상하다고 하심 나중에 다시 고치실꺼
 	FbxSystemUnit unit = scene->GetGlobalSettings().GetSystemUnit();
 	if (unit != FbxSystemUnit::m)
 	{
 		FbxSystemUnit::ConversionOptions option =
 		{
-			false, true, true, true, true, true,
+			false, false, false, true, true, true,
 		};
 
 		FbxSystemUnit::m.ConvertScene(scene, option);
 	}
+	
+	// 모든 요소 해서 오래걸림
+	//FbxGeometryConverter gc(manager);
+	//gc.Triangulate(scene, true);
 
-	FbxGeometryConverter gc(manager);
-	gc.Triangulate(scene, true);
+	converter = new FbxGeometryConverter(manager);
 }
 
 FbxLoader::~FbxLoader()
 {
+	SAFE_DELETE(converter);
+
 	ios->Destroy();
 	importer->Destroy();
 	scene->Destroy();
@@ -236,8 +242,11 @@ void FbxLoader::ReadBoneData(FbxNode * node, int index, int parent)
 			bone->GlobalTransform = FbxUtility::ToMatrix(node->EvaluateGlobalTransform());
 			boneDatas.push_back(bone);
 
-			if (nodeType == FbxNodeAttribute::eMesh)
+			if (nodeType == FbxNodeAttribute::eMesh) {
+				converter->Triangulate(attribute, true, true);
+
 				ReadMeshData(node, index);
+			}
 		}//if(b)
 	}
 
@@ -260,60 +269,6 @@ void FbxLoader::ReadMeshData(FbxNode * node, int parentBone)
 {
 	FbxMesh* mesh = node->GetMesh();
 
-	for (int i = 0; i < mesh->GetControlPointsCount(); i++)
-	{
-		FbxControlPointData cp;
-		cp.Position = mesh->GetControlPointAt(i);
-		cpDatas[i] = cp;
-	}
-
-
-	int deformerCount = mesh->GetDeformerCount();
-	for (int i = 0; i < deformerCount; i++)
-	{
-		FbxDeformer* deformer = mesh->GetDeformer(i, FbxDeformer::eSkin);
-
-		FbxSkin* skin = reinterpret_cast<FbxSkin *>(deformer);
-		if (skin == NULL) continue;
-
-		for (int clusterIndex = 0; clusterIndex < skin->GetClusterCount(); clusterIndex++)
-		{
-			FbxCluster* cluster = skin->GetCluster(clusterIndex);
-			assert(cluster->GetLinkMode() == FbxCluster::eNormalize);
-
-			string linkName = cluster->GetLink()->GetName();
-			UINT boneIndex = GetBoneIndexByName(linkName);
-
-
-			FbxAMatrix transform;
-			FbxAMatrix linkTransform;
-
-			cluster->GetTransformMatrix(transform);
-			cluster->GetTransformLinkMatrix(linkTransform);
-
-			boneDatas[boneIndex]->LocalTransform = FbxUtility::ToMatrix(transform);
-			boneDatas[boneIndex]->GlobalTransform = FbxUtility::ToMatrix
-			(
-				linkTransform.Inverse() * transform
-			);
-
-
-			int* indices = cluster->GetControlPointIndices();
-			double* weights = cluster->GetControlPointWeights();
-
-			for (int indexCount = 0; indexCount < cluster->GetControlPointIndicesCount(); indexCount++)
-			{
-				FbxVertexWeightData vertexWeight;
-				vertexWeight.Index = boneIndex;
-				vertexWeight.Weight = weights[indexCount];
-
-				UINT cpIndex = indices[indexCount];
-				cpDatas[cpIndex].Datas.push_back(vertexWeight);
-			}
-		}//for(clusterIndex)
-	}//for(deformer)
-
-
 	vector<FbxVertex *> vertices;
 	for (int p = 0; p < mesh->GetPolygonCount(); p++)
 	{
@@ -328,8 +283,8 @@ void FbxLoader::ReadMeshData(FbxNode * node, int parentBone)
 			FbxVertex* vertex = new FbxVertex();
 			vertex->ControlPoint = cpIndex;
 
-
-			vertex->Vertex.Position = FbxUtility::ToPosition(cpDatas[cpIndex].Position);
+			FbxVector4 position = mesh->GetControlPointAt(cpIndex);
+			vertex->Vertex.Position = FbxUtility::ToPosition(position);
 
 			FbxVector4 normal;
 			mesh->GetPolygonVertexNormal(p, pvi, normal);
@@ -339,9 +294,6 @@ void FbxLoader::ReadMeshData(FbxNode * node, int parentBone)
 
 			int uvIndex = mesh->GetTextureUVIndex(p, pvi);
 			vertex->Vertex.Uv = FbxUtility::GetUv(mesh, cpIndex, uvIndex);
-
-			vertex->Vertex.BlendIndices = FbxUtility::ToVertexIndices(cpDatas[cpIndex].Datas);
-			vertex->Vertex.BlendWeights = FbxUtility::ToVertexWeights(cpDatas[cpIndex].Datas);
 
 			vertices.push_back(vertex);
 		}//for(vi)
@@ -404,6 +356,63 @@ void FbxLoader::ReadSkinData()
 	for (FbxMeshData* meshData : meshDatas)
 	{
 		FbxMesh* mesh = meshData->Mesh;
+
+
+		int deformerCount = mesh->GetDeformerCount();
+
+		vector<FbxBoneWeights> boneWeights;
+		boneWeights.assign(mesh->GetControlPointsCount(), FbxBoneWeights());
+
+		for (int i = 0; i < deformerCount; i++)
+		{
+			FbxDeformer* deformer = mesh->GetDeformer(i, FbxDeformer::eSkin);
+
+			FbxSkin* skin = reinterpret_cast<FbxSkin *>(deformer);
+			if (skin == NULL) continue;
+
+			for (int clusterIndex = 0; clusterIndex < skin->GetClusterCount(); clusterIndex++)
+			{
+				FbxCluster* cluster = skin->GetCluster(clusterIndex);
+				assert(cluster->GetLinkMode() == FbxCluster::eNormalize);
+
+				string linkName = cluster->GetLink()->GetName();
+				UINT boneIndex = GetBoneIndexByName(linkName);
+
+
+				FbxAMatrix transform;
+				FbxAMatrix linkTransform;
+
+				// 관절에 따라 본이 움직이므로 관절을 움직여주려고 관절의 transform을 가져오는거
+				cluster->GetTransformMatrix(transform);
+				cluster->GetTransformLinkMatrix(linkTransform);
+
+				boneDatas[boneIndex]->LocalTransform = FbxUtility::ToMatrix(transform);
+				boneDatas[boneIndex]->GlobalTransform = FbxUtility::ToMatrix(linkTransform);
+
+
+				for (int indexCount = 0; indexCount < cluster->GetControlPointIndicesCount(); indexCount++)
+				{
+					int temp = cluster->GetControlPointIndices()[indexCount];
+					double* weights = cluster->GetControlPointWeights(); // 가중치의 값은 max나 이런데서 미리 계산이 되어 있음
+
+					boneWeights[temp].AddWeights(boneIndex, (float)weights[indexCount]);
+				}
+			}//for(clusterIndex)
+		}//for(deformer)
+
+		for (UINT i = 0; i < boneWeights.size(); i++)
+			boneWeights[i].Normalize();
+
+		for (FbxVertex* vertex : meshData->Vertices)
+		{
+			int cpIndex = vertex->ControlPoint;
+
+			FbxBlendWeight weights;
+			boneWeights[cpIndex].GetBlendWeights(weights);
+			vertex->Vertex.BlendIndices = weights.Indices;
+			vertex->Vertex.BlendWeights = weights.Weights;
+		}
+
 
 		for (int i = 0; i < scene->GetMaterialCount(); i++)
 		{

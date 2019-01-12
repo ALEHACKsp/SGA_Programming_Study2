@@ -26,11 +26,11 @@ void TestModel::Initialize()
 
 void TestModel::Ready()
 {
-	models.push_back(new GameModel(
-		Shaders + L"052_Model.fx",
-		Models + L"Kachujin/Kachujin.material",
-		Models + L"Kachujin/Kachujin.mesh"
-	));
+	//models.push_back(new GameModel(
+	//	Shaders + L"052_Model.fx",
+	//	Models + L"Kachujin/Kachujin.material",
+	//	Models + L"Kachujin/Kachujin.mesh"
+	//));
 
 	animator = new GameAnimator(
 		Shaders + L"052_Model.fx",

@@ -17,9 +17,9 @@ public:
 
 	void AddClip(wstring clipFile);
 
-	void Play() { this->mode = Mode::Play; }
+	void Play() { mode = Mode::Play; }
 	void Pause() { this->mode = Mode::Pause; }
-	void Stop() { this->mode = Mode::Stop; }
+	void Stop();
 
 private:
 	void UpdateBone();
@@ -33,7 +33,10 @@ private:
 	int currentKeyframe;
 	int nextKeyframe;
 
+	float playRate;
+
 	float frameTime;
+	float playTime;
 	float frameFactor;
 
 	vector<D3DXMATRIX> boneTransforms;

@@ -43,6 +43,7 @@ private:
 	FbxImporter* importer;
 	FbxScene* scene;
 	FbxIOSettings* ios;
+	FbxGeometryConverter* converter;
 
 private:
 	void WriteXmlColor(Xml::XMLDocument* document,
@@ -60,8 +61,6 @@ private:
 
 	vector<struct FbxBoneData *> boneDatas;
 	vector<struct FbxMeshData *> meshDatas;
-
-	unordered_map<UINT, struct FbxControlPointData> cpDatas;
 };
 
 
