@@ -21,7 +21,7 @@ void TestModel::Initialize()
 	//	Models + L"Kachujin/", L"Samba_Dance"
 	//);
 	//loader->ExportAnimation(0);
-	SAFE_DELETE(loader);
+	//SAFE_DELETE(loader);
 }
 
 void TestModel::Ready()
@@ -32,12 +32,18 @@ void TestModel::Ready()
 	//	Models + L"Kachujin/Kachujin.mesh"
 	//));
 
-	animator = new GameAnimator(
+	models.push_back(new GameModel(
 		Shaders + L"052_Model.fx",
-		Models + L"Kachujin/Kachujin.material",
-		Models + L"Kachujin/Kachujin.mesh"
-	);
-	animator->AddClip(Models + L"Kachujin/Samba_Dance.animation");
+		Models + L"Tank/Tank.material",
+		Models + L"Tank/Tank.mesh"
+	));
+
+	//animators.push_back(new GameAnimator(
+	//	Shaders + L"052_Model.fx",
+	//	Models + L"Kachujin/Kachujin.material",
+	//	Models + L"Kachujin/Kachujin.mesh"
+	//));
+	//animators.back()->AddClip(Models + L"Kachujin/Samba_Dance.animation");
 }
 
 void TestModel::Destroy()
@@ -45,7 +51,8 @@ void TestModel::Destroy()
 	for (GameModel* model : models)
 		SAFE_DELETE(model);
 	
-	SAFE_DELETE(animator);
+	for (GameAnimator* animator : animators)
+		SAFE_DELETE(animator);
 }
 
 void TestModel::Update()
@@ -53,7 +60,8 @@ void TestModel::Update()
 	for (GameModel* model : models)
 		model->Update();
 
-	animator->Update();
+	for (GameAnimator* animator : animators)
+		animator->Update();
 }
 
 void TestModel::PreRender()
@@ -65,7 +73,8 @@ void TestModel::Render()
 	for (GameModel* model : models)
 		model->Render();
 
-	animator->Render();
+	for (GameAnimator* animator : animators)
+		animator->Render();
 }
 
 void TestModel::PostRender()

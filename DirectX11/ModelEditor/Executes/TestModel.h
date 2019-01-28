@@ -17,5 +17,5 @@ public:
 
 private:
 	vector<GameModel*> models;
-	GameAnimator* animator;
+	vector<GameAnimator*> animators;
 };

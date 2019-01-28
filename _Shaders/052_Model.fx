@@ -66,11 +66,11 @@ float4 PS(VertexOutput input) : SV_TARGET
 
     float4 diffuse = DiffuseMap.Sample(Sampler, input.Uv);
 
-    //float3 normal = normalize(input.Normal);
-    //float NDotL = dot(-LightDirection, normal);
+    float3 normal2 = normalize(input.Normal);
+    float NDotL = dot(-LightDirection, normal2);
 
     //return diffuse;
-    //return diffuse * NDotL;
+	//return diffuse * NDotL;
     //return diffuse * NDotL * LightColor;
     //return saturate(diffuse + LightColor) * NDotL;
 
@@ -86,8 +86,8 @@ float4 PS(VertexOutput input) : SV_TARGET
     float4 specular = SpecularMap.Sample(Sampler, input.Uv);
     if (length(specular) > 0)
         SpecularLighting(color, specular, input.Normal);
-    else
-        SpecularLighting(color, input.Normal);
+    //else
+    //    SpecularLighting(color, input.Normal);
 
 	return color;
 }

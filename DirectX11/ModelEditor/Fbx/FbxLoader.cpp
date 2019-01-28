@@ -29,7 +29,7 @@ FbxLoader::FbxLoader(wstring file, wstring saveFolder, wstring saveName)
 	FbxAxisSystem axis = scene->GetGlobalSettings().GetAxisSystem();
 	FbxUtility::bRightHand = axis.GetCoorSystem() == FbxAxisSystem::eRightHanded;
 	
-	// 여기 뭔가 이상하다고 하심 나중에 다시 고치실꺼
+	//// 여기 뭔가 이상하다고 하심 나중에 다시 고치실꺼
 	FbxSystemUnit unit = scene->GetGlobalSettings().GetSystemUnit();
 	if (unit != FbxSystemUnit::m)
 	{

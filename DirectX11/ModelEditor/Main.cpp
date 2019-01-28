@@ -4,9 +4,11 @@
 #include "Viewer\Freedom.h"
 
 #include "Executes\TestModel.h"
+#include "Executes\TestCsModel.h"
+#include "Executes\TestPlane.h"
 
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
+//#define _CRTDBG_MAP_ALLOC
+//#include <crtdbg.h>
 
 #ifdef _DEBUG
 #define DBG_NEW new(_CLIENT_BLOCK,__FILE__, __LINE__)
@@ -27,7 +29,9 @@ void Main::Initialize()
 	((Freedom*)Context::Get()->GetMainCamera())->MoveSpeed(10.0f);
 	//((Freedom*)Context::Get()->GetMainCamera())->RotationSpeed(20.0f);
 
+	Push(new TestPlane()); 
 	Push(new TestModel());
+	//Push(new TestCsModel());
 }
 
 void Main::Ready()

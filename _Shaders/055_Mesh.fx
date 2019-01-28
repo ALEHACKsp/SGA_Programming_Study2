@@ -105,6 +105,7 @@ float4 PS(VertexOutput input) : SV_TARGET
     float3 diffuse = float3(0, 0, 0);
     float3 specular = float3(0, 0, 0);
 
+    float4 texColor = DiffuseMap.Sample(Sampler, input.Uv);
 
     Material m = { Ambient, Diffuse, Specular, Shininess };
     DirectionalLight l = { LightAmbient, LightDiffuse, LightSpecular, LightDirection };
@@ -135,7 +136,7 @@ float4 PS(VertexOutput input) : SV_TARGET
         specular += S;
     }
 
-    float4 color = float4(ambient + diffuse + specular, 1);
+    float4 color = texColor * float4(ambient + diffuse, 1) + float4(specular, 1);
     color.a = Diffuse.a;
 
     return color;

@@ -6,11 +6,17 @@
     <ClCompile Include="Executes\TestModel.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
-    <ClCompile Include="Fbx\FbxUtility.cpp">
-      <Filter>Fbx</Filter>
+    <ClCompile Include="Executes\TestCsModel.cpp">
+      <Filter>Executes</Filter>
     </ClCompile>
     <ClCompile Include="Fbx\FbxLoader.cpp">
       <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="Fbx\FbxUtility.cpp">
+      <Filter>Fbx</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\TestPlane.cpp">
+      <Filter>Executes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -18,14 +24,20 @@
     <ClInclude Include="Executes\TestModel.h">
       <Filter>Executes</Filter>
     </ClInclude>
-    <ClInclude Include="Fbx\FbxUtility.h">
+    <ClInclude Include="Executes\TestCsModel.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Fbx\FbxLoader.h">
       <Filter>Fbx</Filter>
     </ClInclude>
     <ClInclude Include="Fbx\FbxType.h">
       <Filter>Fbx</Filter>
     </ClInclude>
-    <ClInclude Include="Fbx\FbxLoader.h">
+    <ClInclude Include="Fbx\FbxUtility.h">
       <Filter>Fbx</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\TestPlane.h">
+      <Filter>Executes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

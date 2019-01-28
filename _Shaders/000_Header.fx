@@ -346,7 +346,8 @@ void DiffuseLighting(inout float4 color, float4 diffuse, float3 normal)
     //float3 light = _direction * -1;
     // 빛의 강도
     // saturate 0 ~ 1까지 제한해주는 함수
-    float intensity = saturate(dot(normal, -LightDirection));
+    //float intensity = saturate(dot(normalize(normal), - LightDirection));
+    float intensity = dot(normalize(normal), -LightDirection);
 
     color = color + Diffuse * diffuse * intensity;
     //color = color + diffuse * intensity;
@@ -355,7 +356,7 @@ void DiffuseLighting(inout float4 color, float4 diffuse, float3 normal)
 // viewDirection 정점으로부터 카메라 방향
 void SpecularLighting(inout float4 color, float3 normal)
 {
-    float3 reflection = reflect(LightDirection, normal);
+    float3 reflection = reflect(LightDirection, normalize(normal));
     float intensity = saturate(dot(reflection, ViewDirection));
     float specular = pow(intensity, Shininess);
 
@@ -364,8 +365,9 @@ void SpecularLighting(inout float4 color, float3 normal)
 
 void SpecularLighting(inout float4 color, float4 specularMap, float3 normal)
 {
-    float3 reflection = reflect(LightDirection, normal);
+    float3 reflection = reflect(LightDirection, normalize(normal));
     float intensity = saturate(dot(reflection, ViewDirection));
+    //float intensity = dot(reflection, ViewDirection);
     float specular = pow(intensity, Shininess);
 
     color = color + Specular * specular * specularMap;
@@ -373,8 +375,8 @@ void SpecularLighting(inout float4 color, float4 specularMap, float3 normal)
 
 void NormalMapping(inout float4 color, float4 normalMap, float3 normal, float3 tangent)
 {
-    float3 N = normal; // Z축이랑 매핑됨
-    float3 T = normalize(tangent - dot(tangent, N) * N); // X 이 식이 그람슈미트 식
+    float3 N = normalize(normal); // Z축이랑 매핑됨
+    float3 T = normalize(normalize(tangent) - dot(normalize(tangent), N) * N); // X 이 식이 그람슈미트 식
     float3 B = cross(T, N); // Y
 
     float3x3 TBN = float3x3(T, B, N);
@@ -383,7 +385,8 @@ void NormalMapping(inout float4 color, float4 normalMap, float3 normal, float3 t
     float3 coord = 2.0f * normalMap - 1.0f;
     float3 bump = mul(coord, TBN); // max에선 normal mapping을 bump mapping이라 부름
 
-    float intensity = saturate(dot(bump, -LightDirection));
+    float intensity = dot(bump, -LightDirection);
+    //float intensity = saturate(dot(bump, -LightDirection));
     color = color * intensity;
 }
 

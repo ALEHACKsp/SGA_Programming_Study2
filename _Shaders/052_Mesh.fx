@@ -43,7 +43,15 @@ SamplerState Sampler
 
 float4 PS(VertexOutput input) : SV_TARGET
 {
-    return DiffuseMap.Sample(Sampler, input.Uv);
+    float4 diffuse = DiffuseMap.Sample(Sampler, input.Uv);
+
+    float3 normal = normalize(input.Normal);
+    float NDotL = dot(-LightDirection, normal);
+
+    //return diffuse;
+    return diffuse * NDotL;
+    //return diffuse * NDotL * LightColor;
+    //return saturate(diffuse + LightColor) * NDotL;
 }
 
 //-----------------------------------------------------------------------------
