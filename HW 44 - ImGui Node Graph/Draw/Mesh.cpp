@@ -112,6 +112,15 @@ void Mesh::Matrix(D3DXMATRIX * mat)
 	*mat = world;
 }
 
+void Mesh::SetMatrix(D3DXMATRIX & mat)
+{
+	D3DXQUATERNION Q;
+	D3DXMatrixDecompose(&scale, &Q, &position, &mat);
+	Math::QuatToPitchYawRoll(Q, rotation.x, rotation.y, rotation.z);
+	
+	UpdateWorld();
+}
+
 void Mesh::UpdateWorld()
 {
 	D3DXMATRIX S, R, T;

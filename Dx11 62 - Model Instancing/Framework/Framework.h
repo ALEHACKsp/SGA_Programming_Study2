@@ -109,6 +109,5 @@ const wstring Models = L"../../_ModelsEx2/";
 #include "./Draw/MeshSphere.h"
 #include "./Draw/MeshQuad.h"
 
-#include "./Objects/GameRender.h"
-#include "./Objects/GameModel.h"
-#include "./Objects/GameAnimator.h"
+#include "./Model/ModelInstance.h"
+#include "./Model/Model.h"

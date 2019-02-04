@@ -3,7 +3,7 @@
 class ModelInstance
 {
 public:
-	ModelInstance(class Model* model);
+	ModelInstance(class Model* model, wstring shaderFile);
 	~ModelInstance();
 
 	void AddWorld(D3DXMATRIX& world);

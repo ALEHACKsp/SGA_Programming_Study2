@@ -51,7 +51,7 @@ WPARAM Window::Run()
 
 			Time::Get()->Update();
 
-			if (ImGui::IsMouseHoveringAnyWindow() == false)
+			//if (ImGui::IsMouseHoveringAnyWindow() == false)
 			{
 				Keyboard::Get()->Update();
 				Mouse::Get()->Update();
@@ -64,7 +64,7 @@ WPARAM Window::Run()
 			program->PreRender();
 
 			D3D::Get()->SetRenderTarget();
-			D3D::Get()->Clear();
+			D3D::Get()->Clear(D3DXCOLOR(0,0,0,0));
 			{
 				program->Render();
 				ImGui::Render();

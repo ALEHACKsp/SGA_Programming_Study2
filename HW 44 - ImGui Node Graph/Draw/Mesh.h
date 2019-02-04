@@ -25,6 +25,7 @@ public:
 	void Scale(D3DXVECTOR3* vec);
 
 	void Matrix(D3DXMATRIX* mat);
+	void SetMatrix(D3DXMATRIX& mat);
 
 	void Pass(UINT val) { pass = val; }
 	UINT Pass() { return pass; }

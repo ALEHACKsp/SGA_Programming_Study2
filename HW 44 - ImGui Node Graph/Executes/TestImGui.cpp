@@ -5,27 +5,68 @@
 #include "Draw\Nodes.h"
 #include "Draw\BehaviorTree.h"
 
+#include "Draw/MeshCube.h"
+
+#include "Viewer/RenderTargetView.h"
+#include "Viewer/DepthStencilView.h"
+#include "Viewer/Viewport.h"
+
+#include "Objects\TestUnit.h"
+
 TestImGui::TestImGui()
 {
+	unit = new TestUnit();
+
 	behaviorTree = new BehaviorTree();
+	behaviorTree->AddBlackboard(unit);
+	behaviorTree->Init();
+
+	meshMaterial = new Material(Shaders + L"055_Mesh.fx");
+	meshMaterial->SetAmbient(1.0f, 1.0f, 1.0f);
+	meshMaterial->SetDiffuse(1.0f, 1.0f, 1.0f);
+	meshMaterial->SetSpecular(0.8f, 0.8f, 0.8f, 16.0f);
+	meshMaterial->SetDiffuseMap(Textures + L"White.png");
+
+	cube = new MeshCube(meshMaterial, 1, 1, 1);
+
+	rtv = new RenderTargetView(1280, 720);
+	dsv = new DepthStencilView(1280, 720);
+
+	D3DXMatrixIdentity(&matCube);
 }
+
 
 TestImGui::~TestImGui()
 {	
+	SAFE_DELETE(unit);
 	SAFE_DELETE(behaviorTree);
+
+	SAFE_DELETE(cube);
+	SAFE_DELETE(meshMaterial);
+
+	SAFE_DELETE(rtv);
+	SAFE_DELETE(dsv);
 }
 
 void TestImGui::Update()
 {
+	behaviorTree->Update();
 }
 
 void TestImGui::PreRender()
 {
+	Context::Get()->GetViewport()->RSSetViewport();
 
+	D3D::Get()->SetRenderTarget(rtv->RTV(), dsv->DSV());
+	D3D::Get()->Clear(4283782502U, rtv->RTV(), dsv->DSV());
+
+	cube->Render();
 }
 
 void TestImGui::Render()
 {
+	unit->Render();
+
 	static bool open = false;
 	ImGui::Checkbox("Node Graph Demo", &open);
 	if (open)
@@ -46,6 +87,86 @@ void TestImGui::Render()
 	if (open3) {
 		behaviorTree->Render();
 	}
+
+#pragma region ImGui Render & Gizmo Test
+	ImGui::Begin("Cube");
+	D3DXVECTOR3 pos;
+	cube->Position(&pos);
+	if (ImGui::DragFloat3("Pos##Cube", (float*)&pos, 0.1f)) {
+		cube->Position(pos);
+	}
+	D3DXVECTOR3 scale;
+	cube->Scale(&scale);
+	if (ImGui::DragFloat3("Scale##Cube", (float*)&scale, 0.1f)) {
+		cube->Scale(scale);
+	}
+	D3DXVECTOR3 rot;
+	cube->RotationDegree(&rot);
+	if (ImGui::DragFloat3("Rot##Cube", (float*)&rot, 0.1f)) {
+		cube->RotationDegree(rot);
+	}
+
+	ImGui::End();
+
+	ImGui::Begin("Gizmo");
+
+	static ImGuizmo::OPERATION operation(ImGuizmo::TRANSLATE);
+	static ImGuizmo::MODE mode(ImGuizmo::LOCAL);
+
+	ImGui::Columns(4);
+	ImGui::RadioButton("T", (int*)&operation, ImGuizmo::OPERATION::TRANSLATE);
+	ImGui::NextColumn();
+	ImGui::RadioButton("R", (int*)&operation, ImGuizmo::OPERATION::ROTATE);
+	ImGui::NextColumn();
+	ImGui::RadioButton("S", (int*)&operation, ImGuizmo::OPERATION::SCALE);
+	ImGui::NextColumn();
+	ImGui::RadioButton("B", (int*)&operation, ImGuizmo::OPERATION::BOUNDS);
+	ImGui::Columns(2);
+	ImGui::RadioButton("L", (int*)&mode, ImGuizmo::LOCAL);
+	ImGui::NextColumn();
+	ImGui::RadioButton("W", (int*)&mode, ImGuizmo::WORLD);
+	ImGui::Columns();
+	ImGui::End();
+
+	ImGui::Begin("Window", 0, ImGuiWindowFlags_NoMove);
+
+	ImVec2 framePos = ImGui::GetCursorPos() + ImGui::GetWindowPos();
+	ImVec2 frameSize = ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin();
+
+	frameSize.x -= static_cast<float>((static_cast<int>(frameSize.x) % 2 != 0) ? 1 : 0);
+	frameSize.y -= static_cast<float>((static_cast<int>(frameSize.y) % 2 != 0) ? 1 : 0);
+
+	ImGui::Image(rtv->SRV(), frameSize);
+
+	D3DXMATRIX V, P;
+	V = Context::Get()->GetView();
+	P = Context::Get()->GetProjection();
+
+	D3DXMATRIX W;
+	D3DXMatrixIdentity(&W);
+
+	//ImGuizmo::DrawGrid((float*)V, (float*)P, (float*)W, 10.0f);
+
+	cube->Matrix(&W);
+
+	ImGuizmo::SetDrawlist();
+	ImGuizmo::SetRect(framePos.x, framePos.y, frameSize.x, frameSize.y);
+
+	//ImGuizmo::DrawCube((float*)V, (float*)P, (float*)matCube);
+
+	// 난 할 필요 없음
+	//D3DXMatrixTranspose(&V, &V);
+	//D3DXMatrixTranspose(&P, &P);
+	//D3DXMatrixTranspose(&W, &W);
+
+	//EditTransform((float*)V, (float*)P, (float*)matCube);
+
+	ImGuizmo::Manipulate((float*)V, (float*)P, operation, mode, (float*)W);
+
+	cube->SetMatrix(W);
+
+	ImGui::End();
+#pragma endregion
 }
 
 void TestImGui::PostRender()

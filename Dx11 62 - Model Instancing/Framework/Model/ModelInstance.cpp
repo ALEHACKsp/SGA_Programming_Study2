@@ -4,10 +4,13 @@
 #include "Model.h"
 #include "ModelMesh.h"
 #include "ModelMeshPart.h"
+#include "ModelBone.h"
 
-ModelInstance::ModelInstance(Model * model)
+ModelInstance::ModelInstance(Model * model, wstring shaderFile)
 	: maxCount(0), model(model)
 {
+	for (Material* material : model->Materials())
+		material->SetShader(shaderFile);
 }
 
 ModelInstance::~ModelInstance()
@@ -19,12 +22,15 @@ ModelInstance::~ModelInstance()
 void ModelInstance::AddWorld(D3DXMATRIX& world)
 {
 	worlds[maxCount] = world;
+
 	UpdateTransforms(maxCount);
 
 	maxCount++;
 	
 	D3D11_MAPPED_SUBRESOURCE subResource;
-	for (UINT i = 0; i < model->MeshCount(); i++) {
+
+	for (UINT i = 0; i < model->MeshCount(); i++)
+	{
 		ID3D11Buffer* instanceBuffer = model->MeshByIndex(i)->InstanceBuffer();
 
 		D3D::GetDC()->Map(instanceBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
@@ -45,7 +51,6 @@ void ModelInstance::AddWorld(D3DXMATRIX& world)
 
 	for (Material* material: model->Materials())
 		material->GetShader()->AsSRV("Transforms")->SetResource(transSrv);
-	
 }
 
 void ModelInstance::Ready()
@@ -79,6 +84,8 @@ void ModelInstance::Update()
 
 void ModelInstance::Render()
 {
+	ImGui::DragInt("Count", (int*)&maxCount, 1, 0, 64);
+
 	for (ModelMesh* mesh : model->Meshes())
 		mesh->RenderInstance(maxCount);
 }
@@ -95,6 +102,7 @@ void ModelInstance::UpdateTransforms(UINT index)
 
 		int parentIndex = bone->ParentIndex();
 		if (parentIndex < 0)
+			//parentTransform = worlds[index];
 			D3DXMatrixIdentity(&parentTransform);
 		else
 			parentTransform = boneTransforms[parentIndex];

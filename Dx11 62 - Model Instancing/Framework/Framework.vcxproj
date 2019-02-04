@@ -46,10 +46,14 @@
     <ClInclude Include="Model\ModelMesh.h" />
     <ClInclude Include="Model\ModelMeshPart.h" />
     <ClInclude Include="Objects\GameAnimator.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
-    <ClInclude Include="Objects\GameModel.h" />
-    <ClInclude Include="Objects\GameRender.h" />
+    <ClInclude Include="Objects\GameModel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Objects\GameRender.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Renders\CBuffer.h" />
     <ClInclude Include="Renders\Context.h" />
     <ClInclude Include="Renders\CsResource.h" />
@@ -108,10 +112,14 @@
     <ClCompile Include="Model\ModelMeshPart.cpp" />
     <ClCompile Include="Model\ModelReader.cpp" />
     <ClCompile Include="Objects\GameAnimator.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Objects\GameModel.cpp" />
-    <ClCompile Include="Objects\GameRender.cpp" />
+    <ClCompile Include="Objects\GameModel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Objects\GameRender.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Renders\CBuffer.cpp" />
     <ClCompile Include="Renders\Context.cpp" />
     <ClCompile Include="Renders\CsResource.cpp" />

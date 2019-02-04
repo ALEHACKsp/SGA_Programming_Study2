@@ -62,7 +62,7 @@ void GameAnimator::Render()
 {
 	ImGui::Begin("Animator");
 
-	ImGui::Text("")
+	ImGui::Text("");
 
 	if (ImGui::Button("Play")) Play();
 	ImGui::SameLine(60);

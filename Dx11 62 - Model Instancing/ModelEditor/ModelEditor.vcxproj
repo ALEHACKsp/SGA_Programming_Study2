@@ -148,20 +148,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Executes\TestAnimation.cpp" />
     <ClCompile Include="Executes\TestModel.cpp" />
-    <ClCompile Include="Executes\TestBuffer.cpp" />
-    <ClCompile Include="Executes\TestInst.cpp" />
     <ClCompile Include="Fbx\FbxLoader.cpp" />
     <ClCompile Include="Fbx\FbxUtility.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Executes\TestAnimation.h" />
     <ClInclude Include="Executes\TestModel.h" />
-    <ClInclude Include="Executes\TestBuffer.h" />
-    <ClInclude Include="Executes\TestInst.h" />
     <ClInclude Include="Fbx\FbxLoader.h" />
     <ClInclude Include="Fbx\FbxType.h" />
     <ClInclude Include="Fbx\FbxUtility.h" />

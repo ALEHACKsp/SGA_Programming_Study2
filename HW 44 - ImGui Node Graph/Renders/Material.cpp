@@ -14,6 +14,7 @@ Material::Material()
 
 Material::Material(wstring shaderFile)
 	: diffuseMap(NULL), specularMap(NULL), normalMap(NULL)
+	, shader(NULL), buffer(NULL)
 {
 	assert(shaderFile.length() > 0);
 
@@ -21,6 +22,8 @@ Material::Material(wstring shaderFile)
 	color.Diffuse = D3DXCOLOR(0, 0, 0, 1);
 	color.Specular = D3DXCOLOR(0, 0, 0, 1);
 	color.Shininess = 0;
+
+	SetShader(shaderFile);
 }
 
 Material::~Material()

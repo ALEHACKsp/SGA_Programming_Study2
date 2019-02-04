@@ -34,8 +34,8 @@ void Main::Initialize()
 	//((Freedom*)Context::Get()->GetMainCamera())->RotationSpeed(20.0f);
 
 	//Push(new TestVertex);
-	//Push(new TestModel);
-	Push(new TestAnimation);
+	Push(new TestModel);
+	//Push(new TestAnimation);
 }
 
 void Main::Ready()

@@ -169,6 +169,7 @@
     <ClCompile Include="Draw\MeshQuad.cpp" />
     <ClCompile Include="Draw\MeshSphere.cpp" />
     <ClCompile Include="Draw\Nodes.cpp" />
+    <ClCompile Include="Draw\Unit.cpp" />
     <ClCompile Include="Executes\Export.cpp" />
     <ClCompile Include="Executes\TestImGui.cpp" />
     <ClCompile Include="Fbx\Exporter.cpp" />
@@ -185,6 +186,7 @@
     <ClCompile Include="Objects\GameAnimModel.cpp" />
     <ClCompile Include="Objects\GameModel.cpp" />
     <ClCompile Include="Objects\GameRender.cpp" />
+    <ClCompile Include="Objects\TestUnit.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Renders\CBuffer.cpp" />
     <ClCompile Include="Renders\Context.cpp" />
@@ -204,9 +206,11 @@
     <ClCompile Include="Utilities\String.cpp" />
     <ClCompile Include="Utilities\Xml.cpp" />
     <ClCompile Include="Viewer\Camera.cpp" />
+    <ClCompile Include="Viewer\DepthStencilView.cpp" />
     <ClCompile Include="Viewer\Fixity.cpp" />
     <ClCompile Include="Viewer\Freedom.cpp" />
     <ClCompile Include="Viewer\Perspective.cpp" />
+    <ClCompile Include="Viewer\RenderTargetView.cpp" />
     <ClCompile Include="Viewer\Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -224,6 +228,7 @@
     <ClInclude Include="Boundings\Ray.h" />
     <ClInclude Include="Draw\DebugLine.h" />
     <ClInclude Include="Draw\BehaviorTree.h" />
+    <ClInclude Include="Draw\IBlackboard.h" />
     <ClInclude Include="Draw\ILine.h" />
     <ClInclude Include="Draw\Mesh.h" />
     <ClInclude Include="Draw\MeshCube.h" />
@@ -232,6 +237,7 @@
     <ClInclude Include="Draw\MeshQuad.h" />
     <ClInclude Include="Draw\MeshSphere.h" />
     <ClInclude Include="Draw\Nodes.h" />
+    <ClInclude Include="Draw\Unit.h" />
     <ClInclude Include="Executes\Execute.h" />
     <ClInclude Include="Executes\Export.h" />
     <ClInclude Include="Executes\TestImGui.h" />
@@ -249,6 +255,7 @@
     <ClInclude Include="Objects\GameAnimModel.h" />
     <ClInclude Include="Objects\GameModel.h" />
     <ClInclude Include="Objects\GameRender.h" />
+    <ClInclude Include="Objects\TestUnit.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="Renders\CBuffer.h" />
     <ClInclude Include="Renders\Context.h" />
@@ -271,9 +278,11 @@
     <ClInclude Include="Utilities\String.h" />
     <ClInclude Include="Utilities\Xml.h" />
     <ClInclude Include="Viewer\Camera.h" />
+    <ClInclude Include="Viewer\DepthStencilView.h" />
     <ClInclude Include="Viewer\Fixity.h" />
     <ClInclude Include="Viewer\Freedom.h" />
     <ClInclude Include="Viewer\Perspective.h" />
+    <ClInclude Include="Viewer\RenderTargetView.h" />
     <ClInclude Include="Viewer\Viewport.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

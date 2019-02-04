@@ -1,5 +1,7 @@
 #pragma once
 
+#include "IBlackboard.h"
+
 enum NodeType {
 	Root, // 비헤이비어 트리 시작점, 단 하나의 연결만, Decorator, Service 못 붙임
 	// Composite : 해당 분기가 실행되는 기본 규칙 정의
@@ -9,16 +11,22 @@ enum NodeType {
 	Composite_Sequence, // Child Node 중 하나가 실패하면 Child의 실행 멈춤,
 	// Child Node가 실행에 실패하면 Sequecne 실패, 모든 Child Node가 실행에 성공해야 Sequecne 성공
 	Task, // AI의 이동이나 Blackboard의 값 조정과 같은 작업을 하는 Node, 이 Node에도 Decorator가 붙을 수 있음
+	Decorator, // *Node는 아님, Composite Node에 분기가 실행되는 동안 
+	// 정해진 빈도에 맞춰서 실행, 보통 검사를 하고 그 검사를 바탕으로 블랙보드의 내용을 업데이트하는데 사용
+	Service, // *Node는 아님, 조건절이라고도 부르는 것으로, Composite나 Task에 붙여서
+	// 분기나 노드가 실행될 것인지를 정의
 	End
 };
 
 static int NodeId = 0;
 
-ImColor NodeColor[] = {
-	ImColor(0.4f, 0.4f, 0.4f), // Root Color
-	ImColor(0.5f, 0.5f, 0.5f), // Composite_Selector Color
-	ImColor(0.5f, 0.5f, 0.5f), // Composite_Sequence Color
-	ImColor(0.5f, 0.1f, 0.7f), // Task Color
+static ImColor NodeColor[] = {
+	ImColor(0.4f, 0.4f, 0.4f, 0.5f), // Root Color
+	ImColor(0.5f, 0.5f, 0.5f, 0.5f), // Composite_Selector Color
+	ImColor(0.5f, 0.5f, 0.5f, 0.5f), // Composite_Sequence Color
+	ImColor(0.5f, 0.1f, 0.7f, 0.5f), // Task Color
+	ImColor(0.0f, 0.0f, 0.7f, 0.5f), // Decorator Color
+	ImColor(0.0f, 0.7f, 0.0f, 0.5f), // Service Color
 };
 
 struct Node
@@ -33,16 +41,20 @@ struct Node
 	Node* Parent;
 	vector<Node*> Childs;
 
+	vector<string> Decorators;
+	vector<string> Services;
+
 	Node(NodeType type, const ImVec2& pos, string name = "") 
 		: Type(type), Pos(pos), ID(NodeId), Parent(NULL), Order(-1)
 		, Color(NodeColor[type])
 	{
+	
 		switch (type)
 		{
 		case Root: Name = "Root"; Order = 0; break;
 		case Composite_Selector: Name = "Selector"; break;
 		case Composite_Sequence: Name = "Sequence"; break;
-		case Task: Name = name == "" ? "Task" : name; break;
+		case Task: Name = name; break;
 		}
 	}
 
@@ -52,19 +64,29 @@ struct Node
 	ImVec2 InDegreePos() { return ImVec2(Pos.x + Size.x / 2, Pos.y); }
 	// OutDegree 출력 차수 : 한 꼭짓점에서 나가는 변의 개수
 	ImVec2 OutDegreePos() { return ImVec2(Pos.x + Size.x / 2, Pos.y + Size.y); }
+
 };
 
 class BehaviorTree
 {
 public:
-	BehaviorTree(bool inited = true);
+	BehaviorTree();
 	~BehaviorTree();
-
+	
+	void Update();
 	void Render();
+
+	void AddBlackboard(IBlackboard* blackboard);
+	// blackboard가 다 들어오고 나서 init 시작해야함
+	void Init();
+
+	bool Progress(Node* node);
 
 private:
 	void Order();
-	void DFS(Node* node, int order);
+	void ResetOrder(Node* node);
+	void DFS(Node* node);
+	void LinkNode(Node* start, Node* end);
 
 private:
 	map<int, Node*> nodes;
@@ -75,6 +97,36 @@ private:
 	bool link_node;
 	int start_node, end_node;
 
+	bool bProgress;
+
+	//Node* runningNode;
+	//bool runningCheck; // running 이전에 나온 결과값
+	//stack<Node*> stk; // 재귀호출시 노드 저장하기 위한 stack
+
 private:
+	int orderNum; // 순서
 	map<int, bool> check;
+
+	float deltaTime;
+	float rate;
+
+private:
+	struct Blackboard {
+		string Name;
+
+		vector<string> Tasks;
+		map<string, function<TaskResult()> > TaskFuncs;
+
+		// key가 조금 애매함
+		vector<string> Keys;
+		map<string, function<void(OUT D3DXVECTOR3)> > KeyFuncs;
+
+		vector<string> Services;
+		map<string, function<void()> > ServiceFuncs;
+
+		vector<string> Decorators;
+		map<string, function<bool()> > DecoratorFuncs;
+	};
+
+	vector<Blackboard> blackboards;
 };

@@ -12,15 +12,6 @@
     <ClCompile Include="Executes\TestModel.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
-    <ClCompile Include="Executes\TestAnimation.cpp">
-      <Filter>Executes</Filter>
-    </ClCompile>
-    <ClCompile Include="Executes\TestBuffer.cpp">
-      <Filter>Executes</Filter>
-    </ClCompile>
-    <ClCompile Include="Executes\TestInst.cpp">
-      <Filter>Executes</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h" />
@@ -34,15 +25,6 @@
       <Filter>Fbx</Filter>
     </ClInclude>
     <ClInclude Include="Executes\TestModel.h">
-      <Filter>Executes</Filter>
-    </ClInclude>
-    <ClInclude Include="Executes\TestAnimation.h">
-      <Filter>Executes</Filter>
-    </ClInclude>
-    <ClInclude Include="Executes\TestBuffer.h">
-      <Filter>Executes</Filter>
-    </ClInclude>
-    <ClInclude Include="Executes\TestInst.h">
       <Filter>Executes</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,4 +16,5 @@ public:
 
 private:
 	vector<class Execute *> executes;
+	bool bWindow;
 };

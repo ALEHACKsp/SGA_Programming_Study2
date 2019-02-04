@@ -3,10 +3,7 @@
 #include "Systems\Window.h"
 #include "Viewer\Freedom.h"
 
-#include "Executes\TestInst.h"
 #include "Executes\TestModel.h"
-#include "Executes\TestAnimation.h"
-#include "Executes\TestBuffer.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include <crtdbg.h>
@@ -37,10 +34,7 @@ void Main::Initialize()
 	((Freedom*)Context::Get()->GetMainCamera())->MoveSpeed(10.0f);
 	//((Freedom*)Context::Get()->GetMainCamera())->RotationSpeed(20.0f);
 
-	Push(new TestInst);
-	//Push(new TestBuffer);
-	//Push(new TestModel);
-	//Push(new TestAnimation);
+	Push(new TestModel);
 }
 
 void Main::Ready()
