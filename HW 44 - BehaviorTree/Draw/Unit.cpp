@@ -69,23 +69,23 @@ string Unit::BlackboardName()
 	return name;
 }
 
-//void Unit::BlackboardKeys(OUT vector<string>& keys, OUT map<string, function<void(OUT D3DXVECTOR3)>>& funcs)
+//void Unit::BlackboardKeys(OUT vector<string>& keys, OUT map<string, function<void(OUT D3DXVECTOR3)>>& funcs, OUT map<string, string>& tips)
 //{
 //}
 
-void Unit::BlackboardServices(OUT vector<string>& services, OUT map<string, function<void()>>& funcs)
+void Unit::BlackboardServices(OUT vector<string>& services, OUT map<string, function<void()>>& funcs, OUT map<string, string>& tips)
 {
 	services.push_back("Test");
 	funcs.insert(make_pair(services.back(), bind(&Unit::ServiceTest, this)));
 }
 
-void Unit::BlackboardDecorators(OUT vector<string>& decorators, OUT map<string, function<bool()>>& funcs)
+void Unit::BlackboardDecorators(OUT vector<string>& decorators, OUT map<string, function<bool()>>& funcs, OUT map<string, string>& tips)
 {
 	decorators.push_back("Test");
 	funcs.insert(make_pair(decorators.back(), bind(&Unit::DecoratorTest, this)));
 }
 
-void Unit::BlackboardTasks(OUT vector<string>& tasks, OUT map<string, function<TaskResult()>>& funcs)
+void Unit::BlackboardTasks(OUT vector<string>& tasks, OUT map<string, function<TaskResult()>>& funcs, OUT map<string, string>& tips)
 {
 	tasks.push_back("Idle");
 	funcs.insert(make_pair(tasks.back(), bind(&Unit::Idle, this)));

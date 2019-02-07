@@ -23,13 +23,13 @@ public:
 	// IBlackboard을(를) 통해 상속됨
 	virtual string BlackboardName() override;
 
-	//virtual void BlackboardKeys(OUT vector<string>& keys, OUT map<string, function<void(OUT D3DXVECTOR3)>>& funcs) override;
+	//virtual void BlackboardKeys(OUT vector<string>& keys, OUT map<string, function<void(OUT D3DXVECTOR3)>>& funcs, OUT map<string, string>& tips) override;
 
-	virtual void BlackboardServices(OUT vector<string>& services, OUT map<string, function<void()>>& funcs) override;
+	virtual void BlackboardServices(OUT vector<string>& services, OUT map<string, function<void()>>& funcs, OUT map<string, string>& tips) override;
 
-	virtual void BlackboardDecorators(OUT vector<string>& decorators, OUT map<string, function<bool()>>& funcs) override;
+	virtual void BlackboardDecorators(OUT vector<string>& decorators, OUT map<string, function<bool()>>& funcs, OUT map<string, string>& tips) override;
 
-	virtual void BlackboardTasks(OUT vector<string>& tasks, OUT map<string, function<TaskResult()>>& funcs) override;
+	virtual void BlackboardTasks(OUT vector<string>& tasks, OUT map<string, function<TaskResult()>>& funcs, OUT map<string, string>& tips) override;
 
 private:
 
@@ -43,6 +43,9 @@ private:
 	bool IsMoneyEnough();
 	//bool IsThirsty();
 
+	// Service
+	void Reset();
+
 #pragma endregion
 
 private:
@@ -50,13 +53,10 @@ private:
 	int money;
 	State state;
 
-	bool bChoice;
 	Beverage choice;
 
 	string target;
 	int targetDist;
-
-	bool bBuyDrink;
 
 	stack<string> progress;
 };

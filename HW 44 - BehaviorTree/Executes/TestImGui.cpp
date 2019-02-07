@@ -25,7 +25,7 @@ TestImGui::TestImGui()
 	meshMaterial->SetAmbient(1.0f, 1.0f, 1.0f);
 	meshMaterial->SetDiffuse(1.0f, 1.0f, 1.0f);
 	meshMaterial->SetSpecular(0.8f, 0.8f, 0.8f, 16.0f);
-	meshMaterial->SetDiffuseMap(Textures + L"White.png");
+	meshMaterial->SetDiffuseMap(L"White.png");
 
 	cube = new MeshCube(meshMaterial, 1, 1, 1);
 

@@ -29,6 +29,8 @@ static ImColor NodeColor[] = {
 	ImColor(0.0f, 0.7f, 0.0f, 0.5f), // Service Color
 };
 
+enum NodeStatus { Status_False, Status_True, Status_Running };
+
 struct Node
 {
 	int ID;
@@ -38,6 +40,8 @@ struct Node
 	ImColor& Color;
 	int Order; // 실행 순서
 
+	NodeStatus Status;
+
 	Node* Parent;
 	vector<Node*> Childs;
 
@@ -46,14 +50,14 @@ struct Node
 
 	Node(NodeType type, const ImVec2& pos, string name = "") 
 		: Type(type), Pos(pos), ID(NodeId), Parent(NULL), Order(-1)
-		, Color(NodeColor[type])
+		, Color(NodeColor[type]), Status(Status_False)
 	{
 	
 		switch (type)
 		{
 		case Root: Name = "Root"; Order = 0; break;
 		case Composite_Selector: Name = "Selector"; break;
-		case Composite_Sequence: Name = "Sequence"; break;
+		case Composite_Sequence: Name = "Sequence"; Status = Status_True; break;
 		case Task: Name = name; break;
 		}
 	}
@@ -84,9 +88,16 @@ public:
 
 private:
 	void Order();
+	void Reset(bool bRoot = true);
 	void ResetOrder(Node* node);
+	void ResetStatus(Node* node = NULL);
 	void DFS(Node* node);
 	void LinkNode(Node* start, Node* end);
+
+	void Save(wstring fileName);
+	void Load(wstring fileName);
+
+	Node* Find(int id);
 
 private:
 	map<int, Node*> nodes;
@@ -98,10 +109,7 @@ private:
 	int start_node, end_node;
 
 	bool bProgress;
-
-	//Node* runningNode;
-	//bool runningCheck; // running 이전에 나온 결과값
-	//stack<Node*> stk; // 재귀호출시 노드 저장하기 위한 stack
+	bool bRunning;
 
 private:
 	int orderNum; // 순서
@@ -110,22 +118,29 @@ private:
 	float deltaTime;
 	float rate;
 
+	wstring saveFolder;
+	JsonHelper json;
+
 private:
 	struct Blackboard {
 		string Name;
 
 		vector<string> Tasks;
 		map<string, function<TaskResult()> > TaskFuncs;
+		map<string, string> TaskTips;
 
 		// key가 조금 애매함
-		vector<string> Keys;
-		map<string, function<void(OUT D3DXVECTOR3)> > KeyFuncs;
+		//vector<string> Keys;
+		//map<string, function<void(OUT D3DXVECTOR3)> > KeyFuncs;
+		//map<string, string> KeyTips;
 
 		vector<string> Services;
 		map<string, function<void()> > ServiceFuncs;
+		map<string, string> ServicesTips;
 
 		vector<string> Decorators;
 		map<string, function<bool()> > DecoratorFuncs;
+		map<string, string> DecoratorsTips;
 	};
 
 	vector<Blackboard> blackboards;

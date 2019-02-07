@@ -1,0 +1,84 @@
+{
+	"BehaviorTree" : 
+	[
+		{
+			"Childs" : 
+			[
+				7
+			],
+			"ID" : 0,
+			"Name" : "Root",
+			"NodeType" : "Root",
+			"Parent" : -1,
+			"Position" : 
+			[
+				335,
+				50
+			]
+		},
+		{
+			"Decorators" : 
+			[
+				"IsMoneyEnough"
+			],
+			"ID" : 2,
+			"Name" : "StandUp",
+			"NodeType" : "Task",
+			"Parent" : 7,
+			"Position" : 
+			[
+				231,
+				323
+			]
+		},
+		{
+			"ID" : 4,
+			"Name" : "BuyDrink",
+			"NodeType" : "Task",
+			"Parent" : 7,
+			"Position" : 
+			[
+				438,
+				235
+			]
+		},
+		{
+			"ID" : 5,
+			"Name" : "MoveToMyPosition",
+			"NodeType" : "Task",
+			"Parent" : -1,
+			"Position" : 
+			[
+				59,
+				244
+			]
+		},
+		{
+			"ID" : 6,
+			"Name" : "SitDown",
+			"NodeType" : "Task",
+			"Parent" : -1,
+			"Position" : 
+			[
+				546,
+				172
+			]
+		},
+		{
+			"Childs" : 
+			[
+				2,
+				4
+			],
+			"ID" : 7,
+			"Name" : "Selector",
+			"NodeType" : "Selector",
+			"Parent" : 0,
+			"Position" : 
+			[
+				297,
+				160
+			]
+		}
+	]
+}

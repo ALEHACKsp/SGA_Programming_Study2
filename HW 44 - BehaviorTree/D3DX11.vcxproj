@@ -160,6 +160,7 @@
     <ClCompile Include="..\_Libraries\ImGui\Source\imgui_demo.cpp" />
     <ClCompile Include="..\_Libraries\ImGui\Source\imgui_draw.cpp" />
     <ClCompile Include="..\_Libraries\ImGui\Source\imgui_widgets.cpp" />
+    <ClCompile Include="..\_Libraries\jsoncpp.cpp" />
     <ClCompile Include="Draw\DebugLine.cpp" />
     <ClCompile Include="Draw\BehaviorTree.cpp" />
     <ClCompile Include="Draw\Mesh.cpp" />
@@ -200,7 +201,7 @@
     <ClCompile Include="Systems\Time.cpp" />
     <ClCompile Include="Systems\Window.cpp" />
     <ClCompile Include="Utilities\BinaryFile.cpp" />
-    <ClCompile Include="Utilities\Json.cpp" />
+    <ClCompile Include="Utilities\JsonHelper.cpp" />
     <ClCompile Include="Utilities\Math.cpp" />
     <ClCompile Include="Utilities\Path.cpp" />
     <ClCompile Include="Utilities\String.cpp" />
@@ -272,7 +273,7 @@
     <ClInclude Include="Systems\Window.h" />
     <ClInclude Include="Utilities\BinaryFile.h" />
     <ClInclude Include="Utilities\Gizmo.h" />
-    <ClInclude Include="Utilities\Json.h" />
+    <ClInclude Include="Utilities\JsonHelper.h" />
     <ClInclude Include="Utilities\Math.h" />
     <ClInclude Include="Utilities\Path.h" />
     <ClInclude Include="Utilities\String.h" />

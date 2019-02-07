@@ -22,9 +22,6 @@
     <ClCompile Include="Utilities\BinaryFile.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Utilities\Json.cpp">
-      <Filter>Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Utilities\Math.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
@@ -174,6 +171,12 @@
     <ClCompile Include="Objects\TestUnit.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\_Libraries\jsoncpp.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\JsonHelper.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -199,9 +202,6 @@
       <Filter>Renders</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\BinaryFile.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Utilities\Json.h">
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\Math.h">
@@ -381,6 +381,9 @@
     </ClInclude>
     <ClInclude Include="Objects\TestUnit.h">
       <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\JsonHelper.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

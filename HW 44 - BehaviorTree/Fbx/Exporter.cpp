@@ -199,6 +199,8 @@ void Fbx::Exporter::WriteMaterial(wstring saveFolder, wstring fileName)
 
 	string file = String::ToString(saveFolder + fileName);
 	document->SaveFile(file.c_str());
+
+	SAFE_DELETE(document);
 }
 
 void Fbx::Exporter::ReadBoneData(FbxNode* node, int index, int parent)

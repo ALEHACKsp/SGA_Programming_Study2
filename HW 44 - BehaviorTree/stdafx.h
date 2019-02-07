@@ -54,9 +54,10 @@ using namespace std;
 #include "./ImGui/ImGuizmo.h"
 
 //Json Cpp
-#include <json/json.h>
-#pragma comment(lib, "jsoncpp.lib")
-#pragma warning( disable : 4996 )
+//#include <json/json.h>
+//#pragma comment(lib, "jsoncpp.lib")
+//#pragma warning( disable : 4996 )
+#include "json.h"
 
 //DirectXTex
 // 11은 이미지 몇개 안됨 추가 라이브러리 ms에 공개해준거 Texture
@@ -96,9 +97,9 @@ const wstring Materials = L"../_Materials/";
 #include "./Executes/Execute.h"
 
 #include "./Utilities/Math.h"
-#include "./Utilities/Json.h"
 #include "./Utilities/String.h"
 #include "./Utilities/Path.h"
+#include "./Utilities/JsonHelper.h"
 
 #include "./Boundings/Ray.h"
 #include "./Boundings/BBox.h"
