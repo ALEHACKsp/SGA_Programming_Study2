@@ -27,6 +27,8 @@ static ImColor NodeColor[] = {
 	ImColor(0.5f, 0.1f, 0.7f, 0.5f), // Task Color
 	ImColor(0.0f, 0.0f, 0.7f, 0.5f), // Decorator Color
 	ImColor(0.0f, 0.7f, 0.0f, 0.5f), // Service Color
+	ImColor(1.0f, 1.0f, 1.0f, 1.0f), // 6 Node Link Color
+	ImColor(0.8f, 0.8f, 0.1f, 1.0f), // 7 Progress Node Link Color 
 };
 
 enum NodeStatus { Status_False, Status_True, Status_Running };
@@ -39,6 +41,7 @@ struct Node
 	ImVec2 Pos, Size;
 	ImColor& Color;
 	int Order; // 실행 순서
+	bool Running; // Progress에서 실행되고 있는 Node인지
 
 	NodeStatus Status;
 
@@ -50,7 +53,7 @@ struct Node
 
 	Node(NodeType type, const ImVec2& pos, string name = "") 
 		: Type(type), Pos(pos), ID(NodeId), Parent(NULL), Order(-1)
-		, Color(NodeColor[type]), Status(Status_False)
+		, Color(NodeColor[type]), Status(Status_False), Running(false)
 	{
 	
 		switch (type)

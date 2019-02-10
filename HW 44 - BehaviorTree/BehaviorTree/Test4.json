@@ -1,0 +1,125 @@
+{
+	"BehaviorTree" : 
+	[
+		{
+			"Childs" : 
+			[
+				7
+			],
+			"ID" : 0,
+			"Name" : "Root",
+			"NodeType" : "Root",
+			"Parent" : -1,
+			"Position" : 
+			[
+				263,
+				37
+			]
+		},
+		{
+			"Childs" : 
+			[
+				2,
+				3,
+				4,
+				5,
+				6
+			],
+			"ID" : 1,
+			"Name" : "Sequence",
+			"NodeType" : "Sequence",
+			"Parent" : 7,
+			"Position" : 
+			[
+				320,
+				153
+			]
+		},
+		{
+			"ID" : 2,
+			"Name" : "StandUp",
+			"NodeType" : "Task",
+			"Parent" : 1,
+			"Position" : 
+			[
+				16,
+				208
+			]
+		},
+		{
+			"Decorators" : 
+			[
+				"IsMoneyEnough"
+			],
+			"ID" : 3,
+			"Name" : "MoveToVendingMachine",
+			"NodeType" : "Task",
+			"Parent" : 1,
+			"Position" : 
+			[
+				161,
+				278
+			]
+		},
+		{
+			"ID" : 4,
+			"Name" : "BuyDrink",
+			"NodeType" : "Task",
+			"Parent" : 1,
+			"Position" : 
+			[
+				375,
+				257
+			]
+		},
+		{
+			"ID" : 5,
+			"Name" : "MoveToMyPosition",
+			"NodeType" : "Task",
+			"Parent" : 1,
+			"Position" : 
+			[
+				493,
+				268
+			]
+		},
+		{
+			"ID" : 6,
+			"Name" : "SitDown",
+			"NodeType" : "Task",
+			"Parent" : 1,
+			"Position" : 
+			[
+				622,
+				197
+			]
+		},
+		{
+			"Childs" : 
+			[
+				1,
+				8
+			],
+			"ID" : 7,
+			"Name" : "Selector",
+			"NodeType" : "Selector",
+			"Parent" : 0,
+			"Position" : 
+			[
+				444,
+				65
+			]
+		},
+		{
+			"ID" : 8,
+			"Name" : "SitDown",
+			"NodeType" : "Task",
+			"Parent" : 7,
+			"Position" : 
+			[
+				634,
+				139
+			]
+		}
+	]
+}

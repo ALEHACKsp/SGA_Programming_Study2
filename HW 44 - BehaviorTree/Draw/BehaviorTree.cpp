@@ -43,7 +43,7 @@ void BehaviorTree::Render()
 
 	ImGui::BeginChild("Blackboard", ImVec2(100, 0));
 
-	if (ImGui::Checkbox("Progress", &bProgress) && bProgress == true)
+	if (ImGui::Checkbox("Progress", &bProgress))
 		ResetStatus();
 
 	ImGui::DragFloat("Rate", &rate, 0.1f, 0.1f, 5.0f);
@@ -184,9 +184,9 @@ void BehaviorTree::Render()
 	ImGui::Checkbox("Grid", &show_grid);
 
 	// Edit Node Color
-	for (int i = 0; i < NodeType::End; i++) {
+	for (int i = 0; i < NodeType::End + 2; i++) {
 		string label = "##Color" + to_string(i);
-		ImGui::SameLine((i + 1) * 25 + 50);
+		ImGui::SameLine((float)(i + 1) * 25 + 50);
 		ImGui::ColorEdit4(label.c_str(), (float*)&NodeColor[i], ImGuiColorEditFlags_NoInputs);
 	}
 
@@ -299,8 +299,10 @@ void BehaviorTree::Render()
 		ImColor node_bg_color = (node_hovered_in_scene == node->ID) ?
 			IM_COL32(75, 75, 75, 255) : IM_COL32(60, 60, 60, 255);
 
+		ImColor node_color = node->Running == true ? NodeColor[7] : IM_COL32(100, 100, 100, 255);
+
 		draw_list->AddRectFilled(node_rect_min, node_rect_max, node_bg_color, 4.0f);
-		draw_list->AddRect(node_rect_min, node_rect_max, IM_COL32(100, 100, 100, 255), 4.0f);
+		draw_list->AddRect(node_rect_min, node_rect_max, node_color, 4.0f);
 
 		// Root는 들어오는 값 없음
 		if (node->Type != NodeType::Root)
@@ -336,12 +338,13 @@ void BehaviorTree::Render()
 
 		if (link_node && node->ID == start_node) {
 			ImVec2 p2 = ImGui::GetMousePos();
-			draw_list->AddBezierCurve(p1, p1 + ImVec2(0, +50), p2 + ImVec2(0, -50), p2, IM_COL32(200, 200, 100, 255), 3.0f);
+			draw_list->AddBezierCurve(p1, p1 + ImVec2(0, +50), p2 + ImVec2(0, -50), p2, NodeColor[6], 3.0f);
 		}
 
 		for (Node* child : node->Childs) {
 			ImVec2 p2 = offset + child->InDegreePos();
-			draw_list->AddBezierCurve(p1, p1 + ImVec2(0, +50), p2 + ImVec2(0, -50), p2, IM_COL32(200, 200, 100, 255), 3.0f);
+			ImColor color = child->Running == true ? NodeColor[7] : NodeColor[6];
+			draw_list->AddBezierCurve(p1, p1 + ImVec2(0, +50), p2 + ImVec2(0, -50), p2, color, 3.0f);
 		}
 	}
 
@@ -659,6 +662,7 @@ void BehaviorTree::ResetStatus(Node * node)
 		ResetStatus(nodes[0]);
 	}
 	else {
+		node->Running = false;
 
 		switch (node->Type)
 		{
@@ -762,12 +766,12 @@ void BehaviorTree::Save(wstring fileName)
 		else
 			record["Parent"] = -1;
 		
-		for (int i = 0; i < node->Childs.size(); i++)
+		for (UINT i = 0; i < node->Childs.size(); i++)
 			record["Childs"][i] = node->Childs[i]->ID;
 			
-		for (int i = 0; i < node->Decorators.size(); i++)
+		for (UINT i = 0; i < node->Decorators.size(); i++)
 			record["Decorators"][i] = node->Decorators[i];
-		for (int i = 0; i < node->Services.size(); i++)
+		for (UINT i = 0; i < node->Services.size(); i++)
 			record["Services"][i] = node->Services[i];
 
 		json.Root()[jsonName].append(record);
@@ -805,10 +809,10 @@ void BehaviorTree::Load(wstring fileName)
 
 		Node* node = new Node(type, pos, name);
 
-		for (int i = 0; i < v["Decorators"].size(); i++)
+		for (UINT i = 0; i < v["Decorators"].size(); i++)
 			node->Decorators.push_back(v["Decorators"][i].asString());
 
-		for (int i = 0; i < v["Services"].size(); i++)
+		for (UINT i = 0; i < v["Services"].size(); i++)
 			node->Decorators.push_back(v["Services"][i].asString());
 
 		int id = v["ID"].asInt();
@@ -834,7 +838,7 @@ void BehaviorTree::Load(wstring fileName)
 		else
 			nodes[id]->Parent = NULL;
 
-		for (int i = 0; i < v["Childs"].size(); i++) {
+		for (UINT i = 0; i < v["Childs"].size(); i++) {
 			int childId = v["Childs"][i].asInt();
 			Node* child = Find(childId);
 			if (child != NULL) {
@@ -882,7 +886,7 @@ void BehaviorTree::Init()
 	for (Blackboard board : blackboards) {
 		int i = 0;
 		for (string task : board.Tasks) {
-			nodes.insert(make_pair(NodeId++, new Node(NodeType::Task, ImVec2((64 + 64 + 32 + 16) * i++ + 16, 64 * 3 + 16), task)));
+			nodes.insert(make_pair(NodeId++, new Node(NodeType::Task, ImVec2((float)(64 + 64 + 32 + 16) * i++ + 16, (float)64 * 3 + 16), task)));
 			end = nodes[NodeId - 1];
 
 			LinkNode(start, end);
@@ -941,12 +945,14 @@ bool BehaviorTree::Progress(Node * node)
 	}
 	// Composite or Task
 
-	bool check = node->Status;
+	bool check = node->Status == Status_False ? false : true;
 
 	switch (node->Type)
 	{
 		case Root: 
 		{
+			node->Running = true;
+
 			// 루트는 그냥 자식 실행하기만 하면 됨 (따로 처리할 필요 없음)
 			// 루트는 자식 하나여야함
 			for (Node* child : node->Childs) {
@@ -956,6 +962,8 @@ bool BehaviorTree::Progress(Node * node)
 		}
 		case Composite_Selector:
 		{
+			node->Running = true;
+
 			// 자식 중 하나가 실행에 성공하면 자손의 실행 멈춤 
 			// 하나라도 실행 성공하면 Selector 성공
 			// 모든 자손 실행 실패하면 실패
@@ -978,6 +986,8 @@ bool BehaviorTree::Progress(Node * node)
 		}
 		case Composite_Sequence:
 		{
+			node->Running = true;
+
 			// 자식 중 하나가 실행에 실패하면 실행 멈춤
 			// 모든 자손 실행이 성공해야 Sequence 성공
 			// 자손 하나라도 실패하면 실패
@@ -1002,6 +1012,8 @@ bool BehaviorTree::Progress(Node * node)
 		{
 			// running 중이 아니거나 running 일 땐 running 상태인 node만 task 실행
 			if (bRunning == false || (bRunning == true && node->Status == NodeStatus::Status_Running)) {
+				node->Running = true;
+
 				string task = node->Name;
 				// 블랙보드에서 task 찾아서 실행
 				for (Blackboard& board : blackboards) {
@@ -1023,9 +1035,13 @@ bool BehaviorTree::Progress(Node * node)
 					}
 				}
 			}
+			else {
+				node->Running = false;
+			}
+
 			break;
 		}
 	}
 
-	return node->Status;
+	return node->Status == Status_False ? false : true;
 }

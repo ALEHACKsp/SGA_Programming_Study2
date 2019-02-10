@@ -1,0 +1,50 @@
+{
+	"BehaviorTree" : 
+	[
+		{
+			"Childs" : 
+			[
+				1
+			],
+			"ID" : 0,
+			"Name" : "Root",
+			"NodeType" : "Root",
+			"Parent" : -1,
+			"Position" : 
+			[
+				208,
+				80
+			]
+		},
+		{
+			"Childs" : 
+			[
+				2
+			],
+			"Decorators" : 
+			[
+				"IsMoneyEnough"
+			],
+			"ID" : 1,
+			"Name" : "Sequence",
+			"NodeType" : "Sequence",
+			"Parent" : 0,
+			"Position" : 
+			[
+				245,
+				198
+			]
+		},
+		{
+			"ID" : 2,
+			"Name" : "StandUp",
+			"NodeType" : "Task",
+			"Parent" : 1,
+			"Position" : 
+			[
+				171,
+				339
+			]
+		}
+	]
+}
