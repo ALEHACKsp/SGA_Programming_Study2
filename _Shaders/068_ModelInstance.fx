@@ -53,6 +53,12 @@ VertexOutput VS(VertexInput input)
 // Pisxel Shader
 //-----------------------------------------------------------------------------
 
+//RasterizerState Cull
+//{
+//    //FillMode = Wireframe;
+//    FrontCounterClockwise = true;
+//};
+
 SamplerState Sampler;
 float4 PS(VertexOutput input) : SV_TARGET
 {
@@ -68,6 +74,8 @@ technique11 T0
 {
     pass P0
     {
+        //SetRasterizerState(Cull);
+
         SetVertexShader(CompileShader(vs_5_0, VS()));
         SetPixelShader(CompileShader(ps_5_0, PS()));
     }

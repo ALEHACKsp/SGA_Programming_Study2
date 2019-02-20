@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Material>
+        <Name>kachujin_MAT</Name>
+        <DiffuseFile>../../_ModelsEx3/Kachujin/Kachujin_diffuse.png</DiffuseFile>
+        <SpecularFile>../../_ModelsEx3/Kachujin/Kachujin_specular.png</SpecularFile>
+        <NormalFile>../../_ModelsEx3/Kachujin/Kachujin_normal.png</NormalFile>
+        <Diffuse>
+            <R>0.80000001</R>
+            <G>0.80000001</G>
+            <B>0.80000001</B>
+            <A>1</A>
+        </Diffuse>
+        <Specular>
+            <R>0.5</R>
+            <G>0.5</G>
+            <B>0.5</B>
+            <A>1</A>
+        </Specular>
+        <SpecularExp>20</SpecularExp>
+    </Material>
+</Materials>

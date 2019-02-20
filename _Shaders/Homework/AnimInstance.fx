@@ -1,4 +1,4 @@
-#include "../000_Header.fx"
+ï»¿#include "../000_Header.fx"
 
 //-----------------------------------------------------------------------------
 // Vertex Shader
@@ -33,7 +33,7 @@ int ClipId;
 
 struct VertexOutput
 {
-    float4 Position : SV_Position0; // 0¹Û¿¡ »ç¿ë ºÒ°¡ÇÔ
+    float4 Position : SV_Position0;
     float2 Uv : Uv0;
 };
 

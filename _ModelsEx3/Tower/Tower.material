@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Materials xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Material>
+        <Name>watchtower</Name>
+        <DiffuseFile>../../_ModelsEx3/Tower/Wood_Tower_Col.jpg</DiffuseFile>
+        <SpecularFile>../../_ModelsEx3/Tower/Wood_Tower_Col.jpg</SpecularFile>
+        <NormalFile>../../_ModelsEx3/Tower/Wood_Tower_Nor.jpg</NormalFile>
+        <Diffuse>
+            <R>0.39738566</R>
+            <G>0.39738566</G>
+            <B>0.39738566</B>
+            <A>1</A>
+        </Diffuse>
+        <Specular>
+            <R>1</R>
+            <G>1</G>
+            <B>1</B>
+            <A>0</A>
+        </Specular>
+        <SpecularExp>1</SpecularExp>
+    </Material>
+</Materials>

@@ -18,12 +18,12 @@ void TestModel::Initialize()
 
 	//SAFE_DELETE(loader);
 
-	//loader = new FbxLoader(
-	//	Assets + L"Tank/tank.fbx", 
-	//	Models + L"Tank/", L"Tank"
-	//);
-	//loader->ExportMaterial();
-	//loader->ExportMesh();
+	loader = new FbxLoader(
+		Assets + L"Tank/tank.fbx", 
+		Models + L"Tank/", L"Tank"
+	);
+	loader->ExportMaterial();
+	loader->ExportMesh();
 
 	SAFE_DELETE(loader);
 }

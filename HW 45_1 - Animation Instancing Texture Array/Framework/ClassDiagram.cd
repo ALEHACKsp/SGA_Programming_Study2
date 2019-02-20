@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MeshSphere" Collapsed="true">
+    <Position X="4.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAgAAACAAAAAAAAAAAAAAAAAAAQAAAIIAA=</HashCode>
+      <FileName>Draw\MeshSphere.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DebugLine" Collapsed="true">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAQAAAAAAAAAgCAAABAAAAAAAIAAACAABAAgEAAAAA=</HashCode>
+      <FileName>Draw\DebugLine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ILine" Collapsed="true">
+    <Position X="16.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>Draw\ILine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mesh" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQUAAAAAUAAIAkEQKAIAACABAwAElAARAQAABAAAA=</HashCode>
+      <FileName>Draw\Mesh.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeshCube" Collapsed="true">
+    <Position X="8.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAQAwAAAAAAAAAAAAAAAAAAQIAAAAAA=</HashCode>
+      <FileName>Draw\MeshCube.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeshCylinder" Collapsed="true">
+    <Position X="13.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAQCAAgAAAACAAABAAAAAAAQACgAIAA=</HashCode>
+      <FileName>Draw\MeshCylinder.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeshGrid" Collapsed="true">
+    <Position X="6.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAACABCQAAAAAAAAAAAAAAACQAgAAAAA=</HashCode>
+      <FileName>Draw\MeshGrid.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeshQuad" Collapsed="true">
+    <Position X="11" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAQAQAAAAAAAAAAAAAAAAAAQAAAEAAA=</HashCode>
+      <FileName>Draw\MeshQuad.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

@@ -3,8 +3,6 @@
 
 #include "Draw/Unit.h"
 
-#include "../Utilities/Xml.h"
-
 BehaviorTree::BehaviorTree()
 	: show_grid(true), node_selected(-1), scrolling(ImVec2(0,0))
 	, link_node(false), bProgress(false), bRunning(false)
