@@ -198,21 +198,21 @@ Texture2DArray NormalMaps;
 uint instanceCount;
 float factor = 0.95f;
 
-void NormalMapping(inout float4 color, float4 normalMap, float3 normal, float3 tangent)
-{
-    float3 N = normal; // Z축이랑 매핑됨
-    float3 T = normalize(tangent - dot(tangent, N) * N); // X 이 식이 그람슈미트 식
-    float3 B = cross(T, N); // Y
+//void NormalMapping(inout float4 color, float4 normalMap, float3 normal, float3 tangent)
+//{
+//    float3 N = normal; // Z축이랑 매핑됨
+//    float3 T = normalize(tangent - dot(tangent, N) * N); // X 이 식이 그람슈미트 식
+//    float3 B = cross(T, N); // Y
 
-    float3x3 TBN = float3x3(T, B, N);
+//    float3x3 TBN = float3x3(T, B, N);
 
-	// rgb 0~1 방향으로 만드는거
-    float3 coord = 2.0f * normalMap - 1.0f;
-    float3 bump = mul(coord, TBN); // max에선 normal mapping을 bump mapping이라 부름
+//	// rgb 0~1 방향으로 만드는거
+//    float3 coord = 2.0f * normalMap - 1.0f;
+//    float3 bump = mul(coord, TBN); // max에선 normal mapping을 bump mapping이라 부름
 
-    float intensity = saturate(dot(bump, -LightDirection));
-    color = color * intensity;
-}
+//    float intensity = saturate(dot(bump, -LightDirection));
+//    color = color * intensity;
+//}
 
 float4 PS(GeometryOutput input) : SV_TARGET
 {
